@@ -6,16 +6,212 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>湘雅医院糖尿病足互联网平台</title>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
     <link rel="stylesheet" href="./js/plugin/layui/css/layui.css">
     <link rel="stylesheet" href="./js/plugin/toastr/toastr.min.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./font/iconfont.css">
+    <style>
+        body {
+            background: url("./imgs/index_bg.jpg") no-repeat center;
+            background-size: cover;
+        }
+
+        .layout {
+            width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+            background-color: rgba(0, 204, 255, 0.2);
+            padding: 0 20px;
+            overflow: hidden;
+
+        }
+
+        .layout .header {
+            height: 100px;
+
+        }
+
+        .layout .header .logo {
+            height: 100%;
+            float: left;
+        }
+
+        .layout .header .nav {
+            float: right;
+            height: 100%;
+            display: flex;
+            width: 600px;
+        }
+
+        .layout .header .nav-item {
+            flex: 1;
+            height: 100%;
+            line-height: 100px;
+            font-size: 16px;
+            text-align: center;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .layout .header .nav-item:hover {
+            border-bottom: 2px solid blue;
+            color: blue;
+        }
+
+        .layout .banner {
+            height: 360px;
+            background: url("./imgs/index_banner.jpg") no-repeat center;
+            background-size: cover;
+        }
+
+        .layout .login-box {
+            height: calc(100% - 460px);
+            padding: 20px 0;
+            display: flex;
+        }
+
+        .layout .login-box .login-item {
+            height: 100%;
+            max-height: 375px;
+            background: #fff;
+            flex: 1;
+            text-align: center;
+            margin-right: 20px;
+            padding: 15px 0;
+            cursor: pointer;
+            overflow: hidden;
+            color: blueviolet;
+            border: 2px solid blueviolet;
+            border-radius: 20px;
+        }
+
+        .layout .login-box .login-item:nth-of-type(2) {
+            color: rgba(12, 76, 142, 1);
+            border: 2px solid rgba(12, 76, 142, 1);
+        }
+
+        .layout .login-box .login-item:nth-of-type(3) {
+            color: rgba(51, 204, 255, 1);
+            border: 2px solid rgba(51, 204, 255, 1);
+        }
+
+        .layout .login-box .icon-box {
+            overflow: hidden;
+            width: 200px;
+            margin: 0px auto;
+
+        }
+
+        @media only screen and (min-height: 900px) {
+            .layout .login-box {
+                height: 375px;
+                padding: 20px 0;
+            }
+
+            .layout .banner {
+                height: calc(100% - 475px);
+            }
+        }
+
+        .layout .login-box .login-item:last-child {
+            margin: 0;
+        }
+
+        .layout .login-box .login-item .icon,
+        .layout .login-box .login-item .icon-text {
+            font-size: 80px;
+            float: left;
+            height: 100px;
+            line-height: 100px;
+
+        }
+
+        .layout .login-box .login-item .icon-text {
+            font-size: 22px;
+            margin-left: 20px;
+
+        }
+
+        .layout .login-box .login-item p {
+            padding: 20px 0;
+            color: #999999;
+            font-size: 22px;
+            height: 120px;
+        }
+
+        .layout .login-box .login-item .login-btn {
+            margin: 40px 0;
+            padding: 10px 40px;
+            color: #fff;
+            font-size: 24px;
+            background: blueviolet;
+            border-radius: 14px;
+        }
+
+        .layout .login-box .login-item:nth-of-type(2) .login-btn {
+            background: rgba(12, 76, 142, 1);
+        }
+
+        .layout .login-box .login-item:nth-of-type(3) .login-btn {
+            background: rgba(51, 204, 255, 1);
+        }
+    </style>
 </head>
 
 <body>
+    <div class="layout">
+        <div class="header">
+            <div class="logo"></div>
+            <ul class="nav">
+                <li class="nav-item">找医生</li>
+                <li class="nav-item">患者与访客</li>
+                <li class="nav-item">健康图书馆</li>
+                <li class="nav-item">临床科研</li>
+                <li class="nav-item">关于我们</li>
+            </ul>
+        </div>
+        <div class="banner">
+
+        </div>
+        <div class="login-box">
+            <div class=" login-item ">
+                <div class="icon-box">
+                    <span class="icon iconfont icon-zhusheqi"></span>
+                    <i class="icon-text">我是患者</i>
+                </div>
+                <p>健康咨询、健康管理、患教中心</p>
+                <span class="login-btn">点击登录</span>
+            </div>
+            <div class=" login-item ">
+                <div class="icon-box">
+                    <span class="icon iconfont icon-zhusheqi"></span>
+                    <i class="icon-text">我是医生</i>
+                </div>
+                <p>健康咨询、健康管理、患教中心</p>
+                <span class="login-btn">点击登录</span>
+            </div>
+            <div class=" login-item ">
+                <div class="icon-box">
+                    <span class="icon iconfont icon-zhusheqi"></span>
+                    <i class="icon-text">科研人员</i>
+                </div>
+                <p>健康咨询、健康管理、患教中心</p>
+                <span class="login-btn">点击登录</span>
+            </div>
+
+        </div>
+
+    </div>
+
     <script src="./js/plugin/toastr/jquery.min.js"></script>
     <script src="./js/plugin/layui/layui.js"></script>
     <script src="./js/plugin/toastr/toastr.min.js"></script>
     <script>
-        
+
     </script>
 </body>
 
