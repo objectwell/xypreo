@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>湘雅医院糖尿病足互联网平台</title>
+    <link rel="stylesheet" href="../../js/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="../../js/plugin/toastr/toastr.min.css">
+    <link rel="stylesheet" href="../../font/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        .layout {
+            width: 100%;
+            height: 100%;
+            background: rgba(237, 241, 242, 1);
+            display: flex;
+        }
+
+        .doctor-info {
+            float: left;
+            height: 100%;
+            width: 220px;
+            overflow: hidden;
+            background: rgba(48, 47, 87, 1);
+            color: #fff;
+            font-family: '微軟正黑體 Bold', '微軟正黑體';
+        }
+
+        .doctor-workbench {
+            /* padding-left: 220px; */
+            height: 100%;
+            flex: 1;
+        }
+
+        .docoter-content {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .doctor-workbench .preview-nav {
+            height: 200px;
+            padding: 40px 10px;
+            overflow: hidden;
+            position: relative;
+            /* box-sizing: content-box; */
+        }
+
+        .doctor-workbench .nav:hover>.nav-operation {
+            display: block;
+        }
+
+        .doctor-workbench .nav-left {
+            left: 0;
+            margin-left: 0;
+        }
+
+        .doctor-workbench .nav-right {
+            right: 0;
+            margin-right: 10px;
+        }
+
+        .doctor-workbench .nav-operation {
+            display: none;
+            width: 40px;
+            height: 120px;
+            line-height: 120px;
+            text-align: center;
+            position: absolute;
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        .doctor-workbench .nav-operation .icon {
+            color: rgba(71, 70, 70, 0.6);
+            font-size: 40px;
+        }
+
+        @media only screen and (min-width: 1755px) {
+
+            /*  大屏始终不显示 nav-operation  不需要操作 */
+            .nav-operation {
+                display: none !important;
+            }
+        }
+
+        .office-nav {
+            height: 40px;
+            display: flex;
+            /* padding: 0 20px; */
+            border-bottom: 1px solid #aaa;
+        }
+
+        .office-nav .nav-item {
+            flex: 1;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+        }
+
+        .doctor-workbench .preview-nav .nav-content {
+            height: 0.65rem;
+            display: flex;
+            padding: 0 30px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 0;
+
+        }
+
+        .doctor-workbench .preview-nav .nav-item {
+            width: 1.4rem;
+            height: 100%;
+            flex: 0 0 auto;
+            margin-right: 0.2rem;
+            border-radius: 0.1rem;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .doctor-workbench .preview-nav .nav-item:nth-of-type(1) {
+            background: rgba(16, 111, 255, 1);
+        }
+
+        .doctor-workbench .preview-nav .nav-item:nth-of-type(2) {
+            background: rgba(197, 108, 41, 1);
+        }
+
+        .doctor-workbench .preview-nav .nav-item:nth-of-type(3) {
+            background: rgba(108, 45, 213, 1);
+        }
+
+        .doctor-workbench .preview-nav .nav-item:nth-of-type(4) {
+            background: rgba(216, 51, 98, 1);
+        }
+
+        .doctor-workbench .preview-nav .nav-item:nth-of-type(5) {
+            margin: 0;
+            background: rgba(51, 102, 153, 1);
+        }
+
+        .doctor-workbench .preview-nav .nav-item>div {
+            padding: 0.1rem;
+        }
+
+        .office-nav .nav-item {
+            cursor: pointer;
+        }
+
+
+
+        .office-nav .nav-item:nth-of-type(1) {
+            color: rgba(16, 111, 255, 1);
+            border-bottom: 2px solid rgba(16, 111, 255, 1);
+        }
+
+        .office-nav .nav-item:nth-of-type(1):hover {
+            background: rgba(16, 111, 255, 1);
+            color: #fff;
+
+        }
+
+        .office-nav .nav-item:nth-of-type(2) {
+            color: rgba(197, 108, 41, 1);
+            border-bottom: 2px solid rgba(197, 108, 41, 1);
+        }
+
+        .office-nav .nav-item:nth-of-type(2):hover {
+            background: rgba(197, 108, 41, 1);
+            color: #fff;
+        }
+
+        .office-nav .nav-item:nth-of-type(3) {
+            color: rgba(108, 45, 213, 1);
+            border-bottom: 2px solid rgba(108, 45, 213, 1);
+        }
+
+        .office-nav .nav-item:nth-of-type(3):hover {
+            background: rgba(108, 45, 213, 1);
+            color: #fff;
+        }
+
+        .office-nav .nav-item:nth-of-type(4) {
+            color: rgba(216, 51, 98, 1);
+            border-bottom: 2px solid rgba(216, 51, 98, 1);
+        }
+
+        .office-nav .nav-item:nth-of-type(4):hover {
+            background: rgba(216, 51, 98, 1);
+            color: #fff;
+        }
+
+        .office-nav .nav-item:nth-of-type(5) {
+            color: rgba(51, 102, 153, 1);
+            border-bottom: 2px solid rgba(51, 102, 153, 1);
+        }
+
+        .office-nav .nav-item:nth-of-type(5):hover {
+            background: rgba(51, 102, 153, 1);
+            color: #fff;
+        }
+
+        .office-nav .nav-item:nth-of-type(6) {
+            color: rgba(16, 111, 255, 1);
+        }
+
+        .office-nav .layui-nav {
+            background: rgba(48, 47, 87, 1);
+        }
+
+        .office-nav .layui-nav .layui-nav-item {
+            line-height: 40px;
+        }
+
+        .preview-nav .icon-nav {
+            display: inline-block;
+            font-size: 0.3125rem;
+            width: 0.3125rem;
+            height: 0.3125rem;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 0.3125rem;
+        }
+
+        .doctor-workbench .preview-nav .nav-item>div p {
+            text-align: right;
+            padding-top: 6px;
+            font-size: 0.0833rem;
+        }
+
+        .doctor-workbench .workbench {
+            height: calc(100VH - 200px);
+            overflow: hidden;
+        }
+        .doctor-workbench .workbench iframe {
+            width: 100%;
+            height: 100%;
+        }
+       
+
+        .doctor-info .logo {
+            font-size: 20px;
+            padding: 20px;
+            height: 120px;
+            line-height: 40px;
+            cursor: pointer;
+        }
+
+        .doctor-info .logo p:nth-of-type(2) {
+            float: right;
+        }
+
+        .doctor-info .sidebar-info {
+            width: 200px;
+            margin: 0 auto;
+        }
+
+        .doctor-info .sidebar-info .user-info {
+            width: 140px;
+            margin: 0 auto;
+            box-sizing: border-box;
+            border-bottom: 1px solid #ccc;
+            text-align: center;
+        }
+
+        .doctor-info .sidebar-info .user-img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+        }
+
+        .doctor-info .sidebar-info .user-position {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .doctor-info .sidebar-info .user-position .position-item {
+            flex: 1;
+            height: 40px;
+            line-height: 40px;
+            cursor: pointer;
+        }
+
+        .doctor-info .sidebar-info .sidebar-workbench {
+            font-size: 20px;
+            padding: 30px 20px;
+        }
+
+        .doctor-info .sidebar-info .sidebar-workbench li {
+            padding: 0 16px;
+            line-height: 40px;
+            height: 40px;
+            color: #bbb;
+            cursor: pointer;
+            margin: 6px auto;
+            border-radius: 6px;
+        }
+
+        .doctor-info .sidebar-info .sidebar-workbench li:hover {
+            color: #fff;
+            background: rgba(16, 111, 255, 1);
+        }
+
+        .doctor-info .sidebar-info .sidebar-workbench .icon {
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body class="doctor-router">
+    <div class="layout layui-clear">
+        <div class="doctor-info " id="doctorInfo">
+            <!-- <button type="button" class="layui-btn" id="btn">button</button> -->
+            <h1 class="logo">
+                <p>湘雅医院糖尿病足</p>
+                <p>互联网平台</p>
+            </h1>
+            <div class="sidebar-info">
+                <div class="user-info">
+                    <img class="user-img" src="../../imgs/user.png" alt="">
+                    <div class="user-position">
+                        <div class="position-item">周秋红&nbsp;主任</div>
+                        <div class="position-item">湘雅医院</div>
+                        <div class="position-item">内分泌科</div>
+                    </div>
+                </div>
+                <div class="sidebar-workbench">
+                    <ul>
+                        <li class="workbench-style">
+                            <i class="icon iconfont icon-fullscreen"></i> <span>办公模式</span>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-appstore"></i> <span>我的工作台</span>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-edit-square"></i> <span>我的信息</span>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-logout"></i> <span>登出</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="doctor-workbench" id="doctorWorkbench">
+            <div class="docoter-content" id="doctorContent">
+                <div class="preview-nav nav " id="previewVav">
+                    
+                    <div class="nav-content" id="navContent">
+                        <div class="nav-item">
+                            <div>
+                                <span class="icon iconfont icon-quyuzhuanzhen icon-nav"></span>
+                                <p>
+                                    <b>我的会诊</b>
+                                </p>
+                            </div>
+
+                        </div>
+                        <div class="nav-item ">
+                            <div>
+                                <span class="icon iconfont icon-tupian icon-nav"></span>
+                                <p>
+                                    <b>伤口测量</b>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="nav-item">
+                            <div>
+                                <span class="icon iconfont icon-huanzheguanli icon-nav"></span>
+                                <p>
+                                    <b>我的患者</b>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="nav-item ">
+                            <div>
+                                <span class="icon iconfont icon-keyanxitong icon-nav"></span>
+                                <p>
+                                    <b>病例CPC</b>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="nav-item">
+                            <div>
+                                <span class="icon iconfont icon-huizhen icon-nav"></span>
+                                <p>
+                                    <b>通讯录</b>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="office-nav nav layui-hide" id="officeNav">
+                    <div class="nav-item">
+                        <span class="icon iconfont icon-quyuzhuanzhen icon-nav"></span>
+                        <b>我的会诊</b>
+                    </div>
+                    <div class="nav-item">
+                        <span class="icon iconfont icon-tupian icon-nav"></span>
+                        <b>伤口测量</b>
+                    </div>
+                    <div class="nav-item">
+                        <span class="icon iconfont icon-huanzheguanli icon-nav"></span>
+                        <b>我的患者</b>
+                    </div>
+                    <div class="nav-item">
+                        <span class="icon iconfont icon-keyanxitong icon-nav"></span>
+                        <b>病例CPC</b>
+                    </div>
+                    <div class="nav-item">
+                        <span class="icon iconfont icon-huizhen icon-nav"></span>
+                        <b>通讯录</b>
+                    </div>
+                    <ul class="layui-nav nav-item" lay-filter="userOperation">
+                        <li class="layui-nav-item" title="后台系统">
+                            <a href="javascript:;"><span class="icon iconfont icon-windows-fill"></span></a>
+                        </li>
+                        <li class="layui-nav-item" title="显示模式">
+                            <a href="javascript:;"> <span class="icon iconfont icon-fullscreen"></span></a>
+                            <dl class="layui-nav-child">
+                                <dd><a href="javascript:;">办公模式</a></dd>
+                                <dd><a href="javascript:;">浏览模式</a></dd>
+                            </dl>
+                        </li>
+                        <li class="layui-nav-item" title="个人信息">
+                            <a href="javascript:;"><img src="../../imgs/user.png" class="layui-nav-img">我</a>
+                            <dl class="layui-nav-child">
+                                <dd><a href="javascript:;">修改信息</a></dd>
+                                <dd><a href="javascript:;">退出</a></dd>
+                            </dl>
+                        </li>
+                    </ul>
+                </div>
+                <div class="workbench" id="workbench">
+                    <iframe src="./consultation/consultation.html" frameborder="0"></iframe>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="../../js/plugin/rem.min.js"></script>
+    <script src="../../js/plugin/jquery.min.js"></script>
+    <script src="../../js/plugin/jquery.cookie.js"></script>
+    <script src="../../js/plugin/toastr/toastr.min.js"></script>
+    <script src="../../js/plugin/layui/layui.js"></script>
+    <script src="../../js/plugin/echarts.min.js"></script>
+    <script src="../../js/common/common.js"></script>
+    <script src="../../js/doctor/nav.js"></script>
+    <script>
+        $(function () {
+
+            layui.use('element', function () {
+                var element = layui.element;
+                element.on('nav(userOperation)', function (data) {
+                    var string = data.html();
+                    switch (string) {
+                        case "后台系统":
+                            toAdmin()
+                            break;
+                        case "办公模式":
+                            viewWorking();
+                            break;
+                        case "浏览模式":
+                            viewBrowse()
+                            break;
+                        case "修改信息":
+                            toAdmin()
+                            break;
+                        case "退出":
+                            logout()
+                            break;
+                    }
+                });
+
+                function toAdmin() {
+                    window.location.replace("../admin/home.html")
+                }
+            });
+
+        })
+
+
+    </script>
+</body>
+
+</html>

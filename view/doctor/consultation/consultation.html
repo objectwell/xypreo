@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>湘雅医院糖尿病足互联网平台我的会诊</title>
+    <link rel="stylesheet" href="../../../js/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="../../../js/plugin/toastr/toastr.min.css">
+    <link rel="stylesheet" href="../../../font/iconfont.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <style>
+        .workbench {
+            overflow: hidden;
+            padding-bottom: 10px;
+            position: relative;
+        }
+
+        .workbench .step-item {
+            height: 100%;
+            padding: 10px 60px 10px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .workbench-content {
+            height: 100%;
+            position: absolute;
+        }
+        .patient-status.step-item {
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .patient-img.step-item {
+            padding: 10px 0px;
+        }
+
+        .patient-status .status-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 1px solid rgba(237, 241, 242, 1);
+        }
+
+        .patient-status .status-item h4 {
+            height: 30px;
+            font-size: 18px;
+        }
+
+        .patient-status .status-item.patient-condition {
+            flex: 2;
+            border: none;
+        }
+
+        .status-item .info {
+            flex: 1;
+            display: flex;
+            padding: 0px 20px;
+            color: #666666;
+            font-family: '微软雅黑';
+            font-weight: 400;
+            font-style: normal;
+            font-size: 16px;
+        }
+
+        .status-item .info .info-item {
+            flex: 1;
+            position: relative;
+        }
+
+        .status-item .info .info-item>div {
+            position: relative;
+            height: 26px;
+            line-height: 26px;
+            top: 50%;
+            margin-top: -13px;
+        }
+
+        .status-item.patient-condition .info {
+            flex-direction: column;
+        }
+
+        .workbench .operation {
+            position: absolute;
+            height: 200px;
+            width: 40px;
+            top: 50%;
+            margin-top: -100px;
+            right: 0;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .workbench .operation .operation-item {
+            height: 40px;
+        }
+
+        .workbench .operation .operation-item .icon {
+            height: 40px;
+            width: 40px;
+            text-align: center;
+            line-height: 40px;
+            font-size: 32px;
+            cursor: pointer;
+        }
+        .workbench .operation .operation-item.default .icon {
+            color: #eee;
+        }
+        .patient-img .img-box {
+            padding: 0px 10px;
+        }
+
+        .patient-img .img-item {
+            text-align: center;
+            height: 0;
+            padding-bottom: 16%;
+            overflow: hidden;
+        }
+        
+        .patient-img .img-item img {
+            width: 100%;
+            height: auto;
+        }
+
+        .consultation-opinion.step-item {
+
+
+            padding: 10px 60px 10px 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .consultation-opinion .opinion-module {
+            height: 110px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .consultation-opinion h4 {
+            margin: 10px 0;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .consultation-opinion .opinion-content {
+            flex: 1;
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .consultation-opinion .opinion-content form {
+            flex: 1;
+        }
+
+        .consultation-opinion .opinion-content form textarea {
+            height: 100%;
+            text-indent: 1em;
+        }
+
+        .consultation-opinion .opinion-button {
+            height: 38px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <body class="hg100 base-workbench">
+        <div class="layout hg100">
+            <div class="workbench hg100 " id="workbench">
+                <div class="workbench-content" id="workbenchContent">
+                        <div class="patient-status step-item">
+                                <div class="status-item apply-hospital">
+                                    <h4>会诊申请医院信息</h4>
+                                    <div class="info">
+                                        <div class="info-item">
+                                            <div>医院:长沙市中医院</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div>接诊医生:赵孟</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div>科室:内分泌科</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="status-item apply-info">
+                                    <h4>会诊申请基本信息</h4>
+                                    <div class="info">
+                                        <div class="info-item">
+                                            <div>会诊目的：进一步明确诊断</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div>会诊类型：普通会诊</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div>会诊团队：糖尿病足团队</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="status-item patient-info">
+                                    <h4>患者基本信息</h4>
+                                    <div class="info">
+                                        <div class="info-item">
+                                            <div>姓名：王文君</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div>性别：女</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div>年龄：32</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="status-item patient-condition">
+                                    <h4>患者基本信息</h4>
+                                    <div class="info">
+                                        <div class="info-item">
+                                            主诉：　女性患者，32岁。发现血糖升高病史年,下肢麻木月为主诉于我院急诊治疗。
+                                        </div>
+                                        <div class="info-item">
+                                            现病史：　患者于年前无明显诱因出现多饮(3000ml左右/日)、多尿(5-6次/日)、多食,发病时无明显消瘦，约半年后发现体重减轻约
+                                        </div>
+                                        <div class="info-item">
+                                            既往史：　既往高血压病史年,冠心病史年
+                                        </div>
+                                        <div class="info-item">
+                                            初步诊断：　1型糖尿病
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="patient-img step-item layui-fluid" id="layerPhotos">
+                                <div class="layui-row img-box layui-col-space10">
+                                    <div class="layui-col-xs4 img-item">
+                                        <div>
+                                                <img src="../../../imgs/u666.jpg" layer-src="../../../imgs/u666.jpg" alt="img">
+                                        </div>
+            
+                                    </div>
+                                    <div class="layui-col-xs4 img-item">
+                                        <img src="../../../imgs/u666.jpg" layer-src="../../../imgs/u666.jpg" alt="img">
+            
+                                    </div>
+                                    <div class="layui-col-xs4 img-item">
+                                        <img src="../../../imgs/u666.jpg" layer-src="../../../imgs/u666.jpg" alt="img">
+            
+                                    </div>
+                                    <div class="layui-col-xs4 img-item">
+                                        <img src="../../../imgs/u666.jpg" layer-src="../../../imgs/u666.jpg" alt="img">
+            
+                                    </div>
+                                    <div class="layui-col-xs4 img-item">
+                                        <img src="../../../imgs/u666.jpg" layer-src="../../../imgs/u666.jpg" alt="img">
+            
+                                    </div>
+                                    <div class="layui-col-xs4 img-item">
+                                        <img src="../../../imgs/u666.jpg" layer-src="../../../imgs/u666.jpg" alt="img">
+            
+                                    </div>
+                                    <div class="layui-col-xs4 img-item">
+                                        <img src="../../../imgs/u666.jpg" layer-src="../../../imgs/u666.jpg" alt="img">
+            
+                                    </div>
+                                    <div class="layui-col-xs4 img-item">
+                                        <img src="../../../imgs/u666.jpg" layer-src="../../../imgs/u666.jpg" alt="img">
+            
+                                    </div>
+                                    <div class="layui-col-xs4 img-item">
+                                        <img src="../../../imgs/u666.jpg" layer-src="../../../imgs/u666.jpg" alt="img">
+            
+                                    </div>
+            
+                                </div>
+            
+                            </div>
+                            <div class="consultation-opinion step-item">
+                                <div class="opinion-item opinion-module">
+                                    <h4>会诊意见模板</h4>
+                                    <form class="layui-form" action="">
+                                        <div class="layui-inline">
+                                            <select name="city" lay-verify="" lay-search>
+                                                <option value="010">会诊模板1</option>
+                                                <option value="021">会诊模板2</option>
+                                                <option value="0571" selected>会诊模板3</option>
+                                            </select>
+                                        </div>
+            
+                                    </form>
+                                </div>
+                                <div class="opinion-item opinion-content">
+                                    <h4>会诊意见</h4>
+                                    <form class="layui-form" action="">
+                                        <textarea placeholder="请输入内容" class="layui-textarea"></textarea>
+                                    </form>
+                                </div>
+                                <div class="opinion-item opinion-button">
+                                    <button type="button" class="layui-btn layui-btn-normal">确定</button>
+                                </div>
+                            </div>
+                </div>
+                
+                <div class="operation">
+                    <div class="operation-up operation-item default" id="stepUp">
+                        <span class="icon iconfont icon-xiangshang "></span>
+                    </div>
+                    <div class="operation-circle operation-item active">
+                        <span class="icon iconfont icon-yuandian"></span>
+                    </div>
+                    <div class="operation-circle operation-item ">
+                        <span class="icon iconfont icon-yuandianxiao"></span>
+                    </div>
+                    <div class="operation-circle operation-item">
+                        <span class="icon iconfont icon-yuandianxiao"></span>
+                    </div>
+                    <div class="operation-down operation-item" id="stepDown">
+                        <span class="icon iconfont icon-xiangxia"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="notice hg100 " id="notice">
+                <h3>我的会诊</h3>
+                <ul>
+                    <li class="notice-item">
+                        <div class="notice-img icon iconfont icon-lingdang bgRed"></div>
+                        <div class="notice-text">
+                            <p class="notice-illness">
+                                2型糖尿病
+                            </p>
+                            <p class="notice-hospital">
+                                <span>湘雅医院</span>
+                                <i>2018-10-07</i>
+                            </p>
+                        </div>
+                        <div class="notice-icon"></div>
+                    </li>
+                    <li class="notice-item">
+                        <div class="notice-img icon iconfont icon-lingdang bgGreen"></div>
+                        <div class="notice-text">
+                            <p class="notice-illness">
+                                2型糖尿病
+                            </p>
+                            <p class="notice-hospital">
+                                <span>湘雅医院</span>
+                                <i>2018-10-07</i>
+                            </p>
+                        </div>
+                        <div class="notice-icon"></div>
+                    </li>
+                    <li class="notice-item">
+                        <div class="notice-img icon iconfont icon-lingdang bgBlue"></div>
+                        <div class="notice-text">
+                            <p class="notice-illness">
+                                2型糖尿病
+                            </p>
+                            <p class="notice-hospital">
+                                <span>湘雅医院</span>
+                                <i>2018-10-07</i>
+                            </p>
+                        </div>
+                        <div class="notice-icon"></div>
+                    </li>
+                    <li class="notice-item">
+                        <div class="notice-img icon iconfont icon-lingdang bgBlue"></div>
+                        <div class="notice-text">
+                            <p class="notice-illness">
+                                2型糖尿病
+                            </p>
+                            <p class="notice-hospital">
+                                <span>湘雅医院</span>
+                                <i>2018-10-07</i>
+                            </p>
+                        </div>
+                        <div class="notice-icon"></div>
+                    </li>
+                    <li class="notice-item">
+                        <div class="notice-img icon iconfont icon-lingdang bgBlue"></div>
+                        <div class="notice-text">
+                            <p class="notice-illness">
+                                2型糖尿病
+                            </p>
+                            <p class="notice-hospital">
+                                <span>湘雅医院</span>
+                                <i>2018-10-07</i>
+                            </p>
+                        </div>
+                        <div class="notice-icon"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- <script src="../../../js/plugin/rem.min.js"></script> -->
+        <script src="../../../js/plugin/jquery.min.js"></script>
+        <script src="../../../js/plugin/jquery.cookie.js"></script>
+        <script src="../../../js/plugin/toastr/toastr.min.js"></script>
+        <script src="../../../js/plugin/layui/layui.js"></script>
+        <!-- <script src="../../../js/plugin/echarts.min.js"></script> -->
+        <script src="../../../js/plugin/jquery.nicescroll.min.js"></script>
+        <script src="../../../js/common/common.js"></script>
+        <script>
+            $(function () {
+                $("#notice").niceScroll({
+                    'cursorcolor': '#1E9FFF',
+                    'cursorborder': 'none',
+                    // 'smoothscroll': 'false',
+                    'autohidemode': true,
+                    "railalign": "right",
+                });
+                layui.use(["layer", "form"], function () {
+                    var layer = layui.layer;
+                    layer.photos({
+                        photos: '#layerPhotos'
+                        , anim: 0 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+                    });
+                    var $operationCircles = $(".operation-circle");
+                    $("#stepUp").on("click", function () {
+                        var $this = $(this);
+                        if ($(this).hasClass("default")) return
+                        for (let i = 0; i < $operationCircles.length; i++) {
+                            var $item = $($operationCircles[i]);
+                            if ($item.hasClass("active")) {
+                                $item.find(".icon").removeClass("icon-yuandian").addClass("icon-yuandianxiao");
+                                $operationCircles.removeClass("active");
+                                $item.prev().addClass("active");
+                                $item.prev().find(".icon").removeClass("icon-yuandianxiao").addClass("icon-yuandian");
+                                $("#stepDown").removeClass("default")
+                                if( i === 1 ) {
+                                    $this.addClass("default")
+                                    
+                                }
+                                var height = -($("#workbenchContent").height())* (i-1) ;
+                                $("#workbenchContent").animate({
+                                    top:height 
+                                })
+                                return false
+                            }
+                        }
+
+
+                    })
+
+                    $("#stepDown").on("click", function () {
+                        var $this = $(this);
+                        if ($(this).hasClass("default")) return
+                        for (let i = 0; i < $operationCircles.length; i++) {
+                            var $item = $($operationCircles[i]);
+                            if ($item.hasClass("active")) {
+                                $item.find(".icon").removeClass("icon-yuandian").addClass("icon-yuandianxiao");
+                                $operationCircles.removeClass("active");
+                                $item.next().addClass("active");
+                                $item.next().find(".icon").removeClass("icon-yuandianxiao").addClass("icon-yuandian");
+                                $("#stepUp").removeClass("default")
+                                if( i === 1 ) {
+                                    $this.addClass("default")
+                                }
+                                var height = -($("#workbenchContent").height())* (i+1) ;
+                                $("#workbenchContent").animate({
+                                    top:height 
+                                })
+                                return false
+                            }
+                        }
+
+
+                    })
+
+                })
+            })
+
+        </script>
+    </body>
+
+</html>

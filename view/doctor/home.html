@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>湘雅医院糖尿病足互联网平台home</title>
+    <link rel="stylesheet" href="../../js/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="../../js/plugin/toastr/toastr.min.css">
+    <link rel="stylesheet" href="../../font/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    
+</head>
+
+<body class="hg100 base-workbench">
+    <div class="layout hg100">
+        <div class="eachrt hg100 workbench" id="main"></div>
+        <div class="notice hg100 " id="notice">
+            <h3>通知</h3>
+            <ul >
+                <li class="notice-item">
+                    <div class="notice-img icon iconfont icon-lingdang bgRed"></div>
+                    <div class="notice-text">
+                        <p class="notice-illness">
+                            2型糖尿病
+                        </p>
+                        <p class="notice-hospital">
+                            <span>湘雅医院</span>
+                            <i>2018-10-07</i>
+                        </p>
+                    </div>
+                    <div class="notice-icon"></div>
+                </li>
+                <li class="notice-item">
+                    <div class="notice-img icon iconfont icon-lingdang bgGreen"></div>
+                    <div class="notice-text">
+                        <p class="notice-illness">
+                            2型糖尿病
+                        </p>
+                        <p class="notice-hospital">
+                            <span>湘雅医院</span>
+                            <i>2018-10-07</i>
+                        </p>
+                    </div>
+                    <div class="notice-icon"></div>
+                </li>
+                <li class="notice-item">
+                    <div class="notice-img icon iconfont icon-lingdang bgBlue"></div>
+                    <div class="notice-text">
+                        <p class="notice-illness">
+                            2型糖尿病
+                        </p>
+                        <p class="notice-hospital">
+                            <span>湘雅医院</span>
+                            <i>2018-10-07</i>
+                        </p>
+                    </div>
+                    <div class="notice-icon"></div>
+                </li>
+                <li class="notice-item">
+                    <div class="notice-img icon iconfont icon-lingdang bgBlue"></div>
+                    <div class="notice-text">
+                        <p class="notice-illness">
+                            2型糖尿病
+                        </p>
+                        <p class="notice-hospital">
+                            <span>湘雅医院</span>
+                            <i>2018-10-07</i>
+                        </p>
+                    </div>
+                    <div class="notice-icon"></div>
+                </li>
+                <li class="notice-item">
+                    <div class="notice-img icon iconfont icon-lingdang bgBlue"></div>
+                    <div class="notice-text">
+                        <p class="notice-illness">
+                            2型糖尿病
+                        </p>
+                        <p class="notice-hospital">
+                            <span>湘雅医院</span>
+                            <i>2018-10-07</i>
+                        </p>
+                    </div>
+                    <div class="notice-icon"></div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <script src="../../js/plugin/rem.min.js"></script>
+    <script src="../../js/plugin/jquery.min.js"></script>
+    <script src="../../js/plugin/jquery.cookie.js"></script>
+    <script src="../../js/plugin/toastr/toastr.min.js"></script>
+    <script src="../../js/plugin/layui/layui.js"></script>
+    <script src="../../js/plugin/echarts.min.js"></script>
+    <script src="../../js/plugin/jquery.nicescroll.min.js"></script>
+    <script>
+        $(function () {
+            var myChart = echarts.init(document.getElementById('main'));
+
+            $("#notice").niceScroll({
+                'cursorcolor': '#1E9FFF',
+                'cursorborder': 'none',
+                // 'smoothscroll': 'false',
+                'autohidemode': true,
+                "railalign": "right",
+            });
+            var option = {
+                backgroundColor: "#fff",
+                color: ["#01AAED", "#FF5722", "#5FB878"],
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['会诊', '转诊', '伤口测量'],
+                    bottom: "6%"
+                },
+                grid: {
+                    top: "6%",
+                    left: '4%',
+                    right: '10%',
+                    bottom: '16%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['9-1', '9-2', '9-3', '9-4', '9-5', '9-6', '9-7']
+                },
+
+                yAxis: {
+                    type: 'value',
+                    splitLine: {
+                        lineStyle: {
+                            type: "dashed"
+                        }
+                    },
+
+                },
+                series: [
+                    {
+                        name: '会诊',
+                        type: 'line',
+                        stack: '人次',
+                        data: [120, 132, 101, 134, 90, 230, 210]
+                    },
+                    {
+                        name: '转诊',
+                        type: 'line',
+                        stack: '人次',
+                        data: [220, 182, 191, 234, 290, 330, 310]
+                    },
+                    {
+                        name: '伤口测量',
+                        type: 'line',
+                        stack: '人次',
+                        data: [150, 232, 201, 154, 190, 330, 410]
+                    }
+
+                ]
+            };
+            myChart.setOption(option)
+
+        })
+
+    </script>
+</body>
+
+</html>

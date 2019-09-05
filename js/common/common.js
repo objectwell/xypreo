@@ -44,6 +44,14 @@ function ajaxRequest(url, method, param,token, callBack) {
     return currentAjax;
 }
 
+/*退出登录 logout()
+* 
+ */
+function logout () {
+    window.location.replace("/index.html")
+}
+
+
 
 
 
