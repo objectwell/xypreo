@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>湘雅医院糖尿病足</title>
+    <link rel="stylesheet" href="../../../js/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="../../../js/plugin/toastr/toastr.min.css">
+    <link rel="stylesheet" href="../../../font/iconfont.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <style>
+        .consultation-form {
+            padding: 10px 20px;
+        }
+
+        .form-title {
+            font-size: 16px;
+            text-indent: 2em;
+            padding: 10px 0;
+        }
+
+        .layui-form-item {
+            margin: 0;
+        }
+
+        .layui-form-label {
+            width: 120px;
+            text-align: right;
+        }
+
+        .layui-form-item .layui-input-inline {
+            width: 170px;
+
+        }
+
+        .layui-input-block {
+            margin-left: 120px;
+        }
+
+        .layui-form-item.block {
+            margin-bottom: 10px;
+        }
+
+        .layui-form-item.block input {
+            width: 800px;
+        }
+
+        .layui-upload {
+            padding: 0 26px 0 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="consultation-form " id="consultationForm">
+        <form class="layui-form">
+
+            <!-- <h4 class="form-title"> 会诊申请医院信息</h4>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">医院</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="number" lay-verify="required|number" autocomplete="off"
+                            class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">接诊医生</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="date" id="date" lay-verify="date" placeholder="yyyy-MM-dd"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">科室</label>
+                    <div class="layui-input-inline">
+                        <input type="tel" name="url" lay-verify="url" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div> -->
+            <h4 class="form-title"> 会诊申请基本信息</h4>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">会诊目的</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="goal" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">会诊类型</label>
+                    <div class="layui-input-inline">
+                        <select name="consultationTypeId" lay-verify="required" id="consultationTypeId"
+                            lay-filter="consultationTypeId">
+                            <option value="">请选择会诊类型</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">会诊专家</label>
+                    <div class="layui-input-inline">
+                        <select name="specialistId" lay-verify="required" id="specialistId">
+                            <option value="">请选择会诊专家</option>
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <h4 class="form-title"> 患者基本信息</h4>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="realname" lay-verify="required" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-inline">
+                        <input type="radio" name="sex" value="1" title="男" lay-verify="required">
+                        <input type="radio" name="sex" value="0" title="女" checked lay-verify="required">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">身份证号</label>
+                    <div class="layui-input-inline">
+                        <input type="tel" name="cardno" lalay-verify="required/identity" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <h4 class="form-title"> 患者基本信息</h4>
+            <div class="layui-form-item block">
+                <label class="layui-form-label">初步诊断</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="diagnosis" placeholder="请输入初步诊断" lalay-verify="required"
+                        class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item block">
+                <label class="layui-form-label">主诉</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="appeal" placeholder="请输入主诉" lalay-verify="required" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item block">
+                <label class="layui-form-label">现病史</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="nearIllness" placeholder="请输入现病史" lalay-verify="required"
+                        class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item block">
+                <label class="layui-form-label">既往史</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="historyIllness" placeholder="请输入既往史" lalay-verify="required"
+                        class="layui-input">
+                </div>
+            </div>
+            <h4 class="form-title"> 患者资料</h4>
+            <div class="layui-upload">
+                <button type="button" class="layui-btn layui-btn-normal" id="selecImg">选择多文件</button>
+                <div class="layui-upload-list">
+                    <table class="layui-table">
+                        <thead>
+                            <tr>
+                                <th>文件名</th>
+                                <th>大小</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="imgList"></tbody>
+                    </table>
+                </div>
+                <button type="button form-submit" class="layui-btn layui-hide" id="testListAction">开始上传</button>
+            </div>
+            <div class="layui-form-item " style="text-align: center; margin: 30px 0;">
+                <button class="layui-btn create layui-btn-normal" lay-submit lay-filter="create"
+                    id="create">立即提交</button>
+            </div>
+        </form>
+
+    </div>
+</body>
+<script src="../../../js/plugin/jquery.min.js"></script>
+<script src="../../../js/plugin/jquery.cookie.js"></script>
+<script src="../../../js/plugin/toastr/toastr.min.js"></script>
+<script src="../../../js/plugin/layui/layui.js"></script>
+<script src="../../../js/plugin/jquery.nicescroll.min.js"></script>
+<script src="../../../js/common/common.js"></script>
+<script src="../../../js/common/config.js"></script>
+<script>
+    $(function () {
+
+        layui.use(['layer', 'table', 'form', 'upload'], function () {
+            var layer = layui.layer,
+                table = layui.table,
+                form = layui.form,
+                upload = layui.upload;
+            var demoListView = $('#imgList');
+            var utoken = $.cookie("utoken");
+            var detecImageList = [];
+            var upImgLayerIndex;
+            if (!utoken) {
+                layer.msg('您尚未登陆或者,或者登陆已过期，请重登陆', {
+                    time: 20000, //20s后自动关闭
+                    btn: ['重新登陆'],
+                    btn1: function () {
+                        window.location.href = "../../../login_doctor.html"
+                    }
+                });
+
+            }
+            var access_token = JSON.parse(utoken).access_token;
+            // 获取会诊类型列表
+            ajaxRequest(AJAX_API.common.getconsultationtype, "get", {}, access_token, function (res) {
+                if (res.code == 200) {
+                    var data = res.data || [];
+                    var options = [];
+                    $.each(data, function (i, item) {
+                        options.push('<option value="' + item.consultationTypeId + '">' + item.consultationTypeName + '</option>')
+                    })
+                    $("#consultationTypeId").append(options.join(","));
+                    // form.render('select')
+                    ajaxRequest(AJAX_API.common.getspecialist, "get", {}, access_token, function (result) {
+                        if (result.code == 200) {
+                            var lists = result.data || [];
+                            var options = [];
+                            $.each(lists, function (j, list) {
+                                options.push('<option value="' + list.specialistId + '">' + list.name + '</option>')
+                            })
+                            $("#specialistId").append(options.join(","));
+                            form.render('select')
+                        }
+                    })
+                }
+            })
+
+            form.on('submit(create)', function (data) {
+                upImgLayerIndex = layerLoading(layer, parent)
+                var submitData = data.field;
+                submitData.detecImageList = detecImageList;
+                var createUrl = ajaxRoot + AJAX_API.consultation.create;
+                $.ajax({
+                    data: JSON.stringify(submitData),
+                    type: "POST",
+                    url: createUrl,
+                    cache: false,
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'bearer ' + access_token);
+                    },
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    timeout: 20000,
+                    success: function (res) {//data是返回的hash,key之类的值，key是定义的文件名
+                        closeLayer(upImgLayerIndex, parent)
+                        if(res.code ==200) {
+                            parent.layer.closeAll()
+                            parent.layer.msg("您已经成功创建了一个会诊信息")
+                        }
+                    },
+                    error: function () {
+                        console.error('调试URL请求:' + createUrl);
+                    }
+                })
+                return false;
+
+            });
+            var uploadListIns = upload.render({
+                elem: '#selecImg'
+                , url: ajaxRoot + AJAX_API.upImg.updata
+                , accept: 'file'
+                , multiple: true
+                , auto: true
+                , number: 9
+                , bindAction: '#testListAction'
+                , headers: {
+                    Authorization: 'bearer ' + access_token
+                }
+                , before: function (request) {
+                    upImgLayerIndex = layerLoading(layer, parent)
+                }
+                , choose: function (obj) {
+                    var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                    //读取本地文件
+                    obj.preview(function (index, file, result) {
+                        var tr = $(['<tr id="upload-' + index + '">'
+                            , '<td>' + file.name + '</td>'
+                            , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                            , '<td>等待上传</td>'
+                            , '<td>'
+                            , '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                            , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                            , '</td>'
+                            , '</tr>'].join(''));
+
+                        //单个重传
+                        tr.find('.demo-reload').on('click', function () {
+                            obj.upload(index, file);
+                        });
+
+                        //删除
+                        tr.find('.demo-delete').on('click', function () {
+                            upImgLayerIndex = layerLoading(layer, parent)
+                            var fileid = $(this).attr("fileid")
+                            if (fileid) {
+                                var url = AJAX_API.upImg.delete;
+                                var param = {
+                                    fileid: fileid
+                                }
+                                ajaxRequest(url, "POST", JSON.stringify(param), access_token, function (res) {
+                                    closeLayer(upImgLayerIndex, parent)
+                                    if (res.code == 200) {
+                                        //删除提交的数据
+                                        $.each(detecImageList, function (i, item) {
+                                            var item = item;
+                                            console.log(item)
+                                            if (item) {
+                                                var itemid = item.split("/").pop();
+                                                if (itemid == fileid) {
+                                                    detecImageList.splice(i, 1)
+                                                }
+                                            }
+
+                                        })
+                                        tr.remove();
+                                        uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                                    }
+                                })
+                                return false
+                            }
+
+
+                        });
+
+                        demoListView.append(tr);
+                    });
+
+                }
+                , done: function (res, index, upload) {
+                    closeLayer(upImgLayerIndex, parent)
+                    if (res.code == 200) { //上传成功
+                        var tr = demoListView.find('tr#upload-' + index)
+                            , tds = tr.children();
+                        tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+                        tds.eq(3).find('.demo-delete').attr("fileid", res.data[0].fileid)
+                        detecImageList.push(res.data[0].url)
+                        return delete this.files[index]; //删除文件队列已经上传成功的文件
+                    }
+                    this.error(index, upload);
+                }
+                , error: function (index, upload) {
+                    var tr = demoListView.find('tr#upload-' + index)
+                        , tds = tr.children();
+                    tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+                    tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+                }
+            });
+        })
+    })
+</script>
+
+</html>

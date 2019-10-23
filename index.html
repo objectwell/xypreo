@@ -186,7 +186,7 @@
                 <p>健康咨询、健康管理、患教中心</p>
                 <span class="login-btn">点击登录</span>
             </div>
-            <div class=" login-item ">
+            <div class=" login-item " linktype = "doctor">
                 <div class="icon-box">
                     <span class="icon iconfont icon-tingzhenqi"></span>
                     <i class="icon-text">我是医生</i>
@@ -208,10 +208,23 @@
     </div>
 
     <script src="./js/plugin/toastr/jquery.min.js"></script>
+    <script src="./js/plugin/jquery.cookie.js"></script>
     <script src="./js/plugin/layui/layui.js"></script>
     <script src="./js/plugin/toastr/toastr.min.js"></script>
     <script>
-
+        $(function(){
+            $(".login-item").on("click",function(){
+                var linktype = $(this).attr("linktype");
+                if(linktype == "doctor") {
+                    var token = $.cookie('utoken')
+                    if(token) {
+                        window.location.href = "./view/doctor/router.html"
+                    }else {
+                        window.location.href = "./login_doctor.html"
+                    }
+                }
+            })
+        })
     </script>
 </body>
 

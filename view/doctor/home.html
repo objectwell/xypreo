@@ -96,8 +96,13 @@
     <script src="../../js/plugin/echarts.min.js"></script>
     <script src="../../js/plugin/jquery.nicescroll.min.js"></script>
     <script>
+         var myChart;
+         var option;
+        function resetChart(){
+            myChart.setOption(option)
+        }
         $(function () {
-            var myChart = echarts.init(document.getElementById('main'));
+          myChart = echarts.init(document.getElementById('main'));
 
             $("#notice").niceScroll({
                 'cursorcolor': '#1E9FFF',
@@ -106,7 +111,7 @@
                 'autohidemode': true,
                 "railalign": "right",
             });
-            var option = {
+            option = {
                 backgroundColor: "#fff",
                 color: ["#01AAED", "#FF5722", "#5FB878"],
                 tooltip: {
@@ -118,8 +123,8 @@
                 },
                 grid: {
                     top: "6%",
-                    left: '4%',
-                    right: '10%',
+                    left: '6%',
+                    right: '6%',
                     bottom: '16%',
                     containLabel: true
                 },
@@ -143,25 +148,32 @@
                         name: '会诊',
                         type: 'line',
                         stack: '人次',
-                        data: [120, 132, 101, 134, 90, 230, 210]
+                        areaStyle: {},
+                        data: [120, 132, 101, 134, 90, 230, 210],
+                        smooth: true
                     },
                     {
                         name: '转诊',
                         type: 'line',
                         stack: '人次',
-                        data: [220, 182, 191, 234, 290, 330, 310]
+                        areaStyle: {},
+                        data: [220, 182, 191, 234, 290, 330, 310],
+                        smooth: true
                     },
                     {
                         name: '伤口测量',
                         type: 'line',
                         stack: '人次',
-                        data: [150, 232, 201, 154, 190, 330, 410]
+                        areaStyle: {},
+                        data: [150, 232, 201, 154, 190, 330, 410],
+                        smooth: true
                     }
 
                 ]
             };
             myChart.setOption(option)
 
+            
         })
 
     </script>

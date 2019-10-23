@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>湘雅医院糖尿病足</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+        }
+
+        .layout {
+            width: 100%;
+            height: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px 0;
+            box-sizing: border-box;
+        }
+
+        .preview-layer {
+            width: 100%;
+            height: 100%;
+        }
+
+
+        .preview-pc {
+            height: 100%;
+            width: 100%;
+        }
+
+        .preview-app {
+            width: 375px;
+            height: 670px;
+        }
+
+        .preview-title {
+            text-align: center;
+            padding: 10px 0;
+            font-size: 1.5em;
+        }
+
+        .article-title {
+            height: 30px;
+            line-height: 30px;
+            margin: 10px 0;
+            padding: 0;
+        }
+
+        .article-text {
+            margin: 0 20px;
+            height: 30px;
+            line-height: 30px;
+            width: 280px;
+        }
+
+        .article-info {
+            display: flex;
+            height: 60px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #1E9FFF;
+            padding: 10px;
+        }
+
+        .doctor-info {
+            height: 60px;
+            width: 160px;
+            display: flex;
+        }
+
+        .doctor-img {
+            width: 60px;
+            margin-right: 10px;
+        }
+
+        .doctor-img .iconfont {
+            display: inline-block;
+            font-size: 46px;
+            height: 60px;
+            width: 60px;
+            text-align: center;
+            line-height: 60px;
+        }
+
+        .doctor-text p {
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+        }
+
+        .article-time {
+            flex: 1;
+            font-size: 14px;
+            color: darkgray;
+            text-align: right;
+            margin-right: 10px;
+            line-height: 90px;
+        }
+
+        .article-type {
+            width: 200px;
+            height: 30px;
+            line-height: 30px;
+            margin-left: 20px;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+        }
+        .content {
+            padding: 6px 10px;
+            
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <div id="previewBox" class="preview-layer">
+            <h5 class="preview-title" id="previewTitle"></h5>
+            <div class="article-info">
+                <div class="doctor-info">
+                    <div class="doctor-img">
+                        <img src="" alt="" id="avatar" class="avatar">
+                    </div>
+                    <div class="doctor-text">
+                        <p id="author"></p>
+                        <p id="position"></p>
+                    </div>
+                </div>
+                <div class="article-time" id="articleTime"></div>
+            </div>
+            <div class="content">
+                <div id="previewContent">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+<script src="../../../js/plugin/jquery.min.js"></script>
+<script src="../../../js/plugin/jquery.cookie.js"></script>
+<script src="../../../js/common/config.js"></script>
+<script src="../../../js/common/common.js"></script>
+<script>
+    $(function () {
+        var articleId = getQueryString('articleId');
+        if (articleId) {
+            var url = ajaxRoot + AJAX_API.admin.article.detail + articleId;
+            $.ajax({
+                type: "get",
+                url: url,
+                dataType: 'json',
+                contentType: 'application/json',
+                timeout: 20000,
+                success: function (res) {
+                    if (res.code == 200) {
+                        var title = res.data.title,
+                            category = res.data.category,
+                            content = res.data.content,
+                            author = res.data.author,
+                            date = res.data.date,
+                            hospital = res.data.hospital,
+                            position = res.data.position,
+                            department = res.data.department,
+                            avatar = res.data.avatar || "../../../imgs/user.png";
+                        $("#previewTitle").text(title);
+                        $("#avatar").attr("src", avatar);
+                        $("#author").text(author);
+                        $("#position").text(department + " " + (position || ""))
+                        $("#articleTime").text("发布时间 : " + date.split("T")[0])
+                        $("#previewContent").html(content);
+                    }
+                }
+            })
+
+        }
+    })
+</script>
+
+</html>

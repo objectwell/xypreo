@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>内容新增</title>
+    <link rel="stylesheet" href="../../../font/iconfont.css">
+    <link href="../../../js/plugin/bootstrap/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../js/plugin/summernote/summernote.css">
+    <link rel="stylesheet" href="../../../js/plugin/layui/css/layui.css">
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .button-box {
+            padding: 20px 10px;
+            text-align: right;
+        }
+
+        .button-box .btn {
+            padding: 8px 16px;
+            color: #fff;
+            font-size: 16px;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        .button-box .btn.reset {
+            background: rgba(197, 108, 41, 1)
+        }
+
+        .button-box .btn.preview {
+            background: rgba(48, 47, 87, 1);
+        }
+
+        .button-box .btn.save {
+            background: #1E9FFF;
+        }
+
+        .preview-layer {
+            display: none;
+        }
+
+
+        .preview-pc {
+            height: 100%;
+            width: 100%;
+        }
+
+        .preview-app {
+            width: 375px;
+            height: 670px;
+        }
+
+        .preview-title {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .article-title {
+            height: 30px;
+            line-height: 30px;
+            margin: 10px 0;
+            padding: 0;
+        }
+
+        .article-text {
+            margin: 0 20px;
+            height: 30px;
+            line-height: 30px;
+            width: 280px;
+        }
+
+        .article-info {
+            display: flex;
+            height: 60px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #1E9FFF;
+            padding: 0 10px;
+        }
+
+        .doctor-info {
+            height: 60px;
+            width: 160px;
+            display: flex;
+        }
+
+        .doctor-img {
+            width: 60px;
+            margin-right: 10px;
+        }
+
+        .doctor-img .iconfont {
+            display: inline-block;
+            font-size: 46px;
+            height: 60px;
+            width: 60px;
+            text-align: center;
+            line-height: 60px;
+        }
+
+        .doctor-text p {
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+        }
+
+        .article-time {
+            flex: 1;
+            font-size: 14px;
+            color: darkgray;
+            text-align: right;
+            margin-right: 10px;
+            line-height: 90px;
+        }
+
+        .article-type {
+            width: 200px;
+            height: 30px;
+            line-height: 30px;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    
+    <h5 class="article-title">
+        <label>内容标题 : <i>*</i> <input type="text" class="article-text" id="articleTitle"></label>
+        <label>内容分类 : <i>* </i>
+            <select id="articleType" class="article-type">
+                <option value="">请选择内容类别</option>
+                <option value="science">学术交流</option>
+                <option value="literature">文献资料</option>
+                <option value="dynamic">医联体动态</option>
+                <option value="school">在线学院</option>
+                <option value="programa">科普栏目</option>
+            </select>
+        </label>
+    </h5>
+
+    <div id="summernote" class="summernote"></div>
+    <div class="button-box">
+        <span class="btn reset" id="resetBtn">重置</span>
+        <span class="btn preview" id="previewBtnPc" type="pc">电脑预览</span>
+        <span class="btn preview" id="previewBtnApp" type="app">手机预览</span>
+        <span class="btn save" id="saveBtn">发布</span>
+    </div>
+    <div id="previewBox" class="preview-layer">
+        <h5 class="preview-title" id="previewTitle"></h5>
+        <div class="article-info">
+            <div class="doctor-info">
+                <div class="doctor-img">
+                    <span class="iconfont icon-iconuser-copy"></span>
+                </div>
+                <div class="doctor-text">
+                    <p>周秋红</p>
+                    <p>内分泌科 主任</p>
+                </div>
+            </div>
+            <div class="article-time" id="articleTime"></div>
+        </div>
+        <div id="previewContent"></div>
+    </div>
+    <script src="../../../js/common/config.js"></script>
+    <script src="../../../js/common/common.js"></script>
+    <script src="../../../js/plugin/jquery.min.js"></script>
+    <script src="../../../js/plugin/jquery.cookie.js"></script>
+    <script src="../../../js/plugin/layui/layui.js"></script>
+    <script src="../../../js/plugin/bootstrap/bootstrap.js"></script>
+    <script src="../../../js/plugin/summernote/summernote.js"></script>
+    <script src="../../../js/plugin/summernote/lang/summernote-zh-CN.js"></script>
+    <script>
+        $(function () {
+            var articleId = getQueryString('articleId');
+            var utoken = JSON.parse($.cookie("utoken"));
+            var access_token = utoken.access_token;
+            layui.use(['layer', 'form'], function () {
+                var layer = layui.layer;
+                var form = layui.form;
+                var $summernote = $("#summernote");
+
+                $summernote.summernote({
+                    lang: 'zh-CN',
+                    placeholder: ' 请在这里编辑您需要发布的内容,发布内容前请填写标题.预览无误后再提交',
+                    tabsize: 2,
+                    height: 280,
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'underline', 'clear']],
+                        ['fontname', ['fontname']],
+                        ['color', ['color']],
+                        ['para', ['paragraph']],
+                        ['insert', ['link', 'picture', 'video']],
+                        ['Misc', ['undo', 'redo']]
+
+                    ],
+                    fontNames: ['宋体', '黑体', '微软雅黑'],
+
+                    callbacks: {
+                        onImageUpload: function (files) {
+                            var data = new FormData();
+                            data.append("uploadImg", files[0]);
+                            var url = AJAX_API.upImg.updata;
+                            ajaxRequestImg(url, data, null, function (res) {
+                                if (res.code == 200) {
+                                    var img = res.data[0];
+                                    var imgUrl = img.url;
+                                    var fileid = img.fileid;
+                                    $('.summernote').summernote('insertImage', imgUrl, function ($image) {
+                                        $image.attr('fileid', fileid)
+                                    });
+                                }
+
+                            })
+
+                        },
+                        onMediaDelete: function (target) {
+                            var fileid = $(target.context).attr("fileid")
+                            if (fileid) {
+                                var url = AJAX_API.upImg.delete;
+                                var param = {
+                                    fileid: fileid
+                                }
+                                ajaxRequest(url, "POST", JSON.stringify(param), access_token, function (res) {
+                                    if (res.code == 200) {
+                                        console.log(fileid)
+                                    }
+                                })
+                            }
+                        }
+
+                    }
+                });
+
+                if (articleId) {
+                    var url = AJAX_API.admin.article.detail + articleId;
+                    ajaxRequest(url, "get", {}, access_token, function (res) {
+                        if (res.code == 200) {
+                            var title = res.data.title,
+                                category = res.data.category,
+                                content = res.data.content;
+                            $("#articleTitle").val(title);
+                            $("#articleType option[value='"+ category +"']").prop("selected",true);
+                            $summernote.summernote('code',content);
+                            
+                        }
+                    })
+                }
+                $(".preview").on("click", function () {
+                    var code = $summernote.summernote("code");
+                    var filteredContent = $(code).text().replace(/\s+/g, '');
+                    if (!$summernote.summernote('isEmpty')) {
+                        var type = $(this).attr("type");
+                        $("#previewContent").html(code);
+
+                        if ($("#articleTitle").val()) {
+                            $("#previewTitle").html($("#articleTitle").val());
+                            $("#articleTime").text("发布时间 : " + new Date().Format("YYYY-MM-DD"))
+                            var area = [];
+                            if (type == "app") {
+                                area = ["375px", "480px"]
+                            } else if (type == "pc") {
+                                area = ["1000px", "480px"]
+                            }
+                            layer.open({
+                                type: 1,
+                                content: $("#previewBox"),
+                                title: "预览",
+                                area: area
+
+                            });
+                            // $summernote.summernote("reset")
+                        } else {
+                            $("#articleTitle").focus();
+                            layer.alert("当前发布内容的标题为空,请设置标题后预览")
+                        }
+
+                    } else {
+                        layer.alert("当前编辑器没有可预览的内容,请编辑您的内容")
+                    }
+
+                });
+
+                $("#saveBtn").on("click", function () {
+                    var url = AJAX_API.admin.article.create;
+                    if (!$summernote.summernote('isEmpty')) {
+                        var title = $("#articleTitle").val()
+                        if (title) {
+                            var param = {
+                                title: title,
+                                content: $summernote.summernote("code"),
+                                category: $("#articleType").val()
+                            }
+
+                            if (access_token) {
+
+                                ajaxRequest(url, "POST", JSON.stringify(param), access_token, function (res) {
+                                    if (res.code == 200) {
+                                        layer.msg("您已经成功发布了文章,请等待审核")
+                                    }
+                                })
+                            } else {
+                                layer.msg("当前未登陆，请登陆后再发表内容")
+                            }
+
+                        } else {
+                            layer.alert("当前发布内容的标题为空,请设置标题后预览")
+                        }
+                    } else {
+                        layer.alert("当前发布内容的标题为空,请设置标题后预览")
+                    }
+
+
+                })
+
+            })
+        })
+    </script>
+</body>
+
+</html>

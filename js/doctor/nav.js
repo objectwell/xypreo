@@ -30,6 +30,7 @@ $("#navRight").on("click", function () {
         height: height,
         padding: "40px 0 0 0"
     })
+    $("#workbenchiframe")[0].contentWindow.resetChart()
  }
 
 /**
@@ -37,7 +38,6 @@ $("#navRight").on("click", function () {
  */
  function viewBrowse () {
     var height = $("#doctorContent").height() - 200;
-    console.log(height)
     $("#doctorInfo").animate({
         width:220
     });
@@ -50,6 +50,9 @@ $("#navRight").on("click", function () {
         padding: "0"
     })
     $("#officeNav").addClass("layui-hide");
+    // document.getElementById('workbenchiframe').contentWindow.location.reload(true);
+    console.log($("#workbenchiframe")[0].contentWindow.resetChart)
+    $("#workbenchiframe")[0].contentWindow.resetChart()
  }
 
 /*  nav toogle margin

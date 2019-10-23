@@ -46,10 +46,10 @@ body.base-workbench {
 .base-workbench .notice {
     width: 300px;
     margin-right: 20px;
-    box-shadow: 0px 0px 4px #888888;
-    border-radius: 20px;
+    /* box-shadow: 0px 0px 4px #888888; */
+    border-radius: 3px;
     background: #fff;
-    border: 1px solid #888888;
+    border: 1px solid #fff;
     overflow: hidden;
     padding: 20px;
     position: relative;
@@ -60,10 +60,10 @@ body.base-workbench {
     flex: 1;
     width: 100%;
     background: #fff;
-    border-radius: 20px;
+    border-radius: 3px;
     margin-right: 30px;
-    box-shadow: 0px 0px 2px #888888;
-    border: 1px solid #888888;
+    /* box-shadow: 0px 0px 2px #888888; */
+    border: 1px solid #fff;
 
 }
 
@@ -123,6 +123,7 @@ body.base-workbench {
 
 .base-workbench .notice-text .notice-hospital i {
     width: 80px;
+    margin-right: -25px;
 }
 
 .base-workbench .notice-item .notice-icon {

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../../../js/plugin/layui/css/layui.css">
+    <title>内容列表</title>
+</head>
+
+<body>
+    <div class="layout">
+        <table class="layui-hide" id="articleTable" lay-filter="articleTable"></table>
+    </div>
+
+    <script src="../../../js/plugin/jquery.min.js"></script>
+    <script src="../../../js/common/config.js"></script>
+    <script src="../../../js/common/common.js"></script>
+    <script src="../../../js/plugin/layui/layui.js"></script>
+    <script src="../../../js/plugin/jquery.cookie.js"></script>
+    <script type="text/html" id="operation">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+        <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs" lay-event="examine">审核</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+      </script>
+
+    <script type="text/html" id="state">
+        <form class="layui-form">
+                <input type="checkbox" name="switch" lay-skin="switch" value ="{{ d.articleId }}" lay-text="通过|不通过" lay-filter="state" {{ d.state == "audit" ? 'checked' : '' }} >
+        </form>
+    </script>
+    <script>
+
+        $(function () {
+            layui.use(['layer', 'table', 'form'], function () {
+                var layer = layui.layer
+                    , table = layui.table
+                    , form = layui.form;
+
+                var utoken = JSON.parse($.cookie("utoken"));
+                var url = ajaxRoot + AJAX_API.admin.article.list;
+                table.render({
+                    elem: '#articleTable'
+                    , height: 'full-20'
+                    , url: url //数据接口
+                    , headers: { Authorization: "bearer " + utoken.access_token }
+                    , request: {
+                        pageName: 'pageNum'
+                        , limitName: 'nums'
+                    }
+                    , page: true //开启分页
+                    , toolbar: "default"
+                    , defaultToolbar: []
+                    , parseData: function (res) {
+                        if (res.code == 200) {
+                            var count = res.data?res.data.list.length:0,
+                                data = res.data?res.data.list:[];
+                            return {
+                                code: 0,
+                                msg: res.message,
+                                count: count,
+                                data: data
+                            }
+                        }
+
+
+                    }
+                    , cols: [[ //表头
+                        { type: 'checkbox', fixed: 'left' }
+                        , { field: 'author', title: '作者', align: "center" }
+                        , { field: 'title', title: '标题', align: "center" }
+                        , { field: 'category', title: '分类', align: "center" }
+                        , { field: 'state', title: '审核', align: "center", toolbar: '#state' }
+                        , { fixed: 'right', title:'操作',width: 260, align: 'center', toolbar: '#operation' }
+                    ]]
+                    ,done :function (res,curr,count) {
+                        
+                    }
+                });
+                // 审核
+                form.on('switch(state)', function (data) {
+                    
+                    var upState = {
+                        articleId:data.value,
+                        state:data.elem.checked ? 'audit' : 'unaudit'
+                    }
+                    var upStateUrl = AJAX_API.admin.article.audit;
+                    ajaxRequest(upStateUrl, "post", JSON.stringify(upState), utoken.access_token, function(res){
+                        layer.msg(res.message)
+                    })
+
+                });
+                //监听头工具栏事件
+                table.on('toolbar(articleTable)', function (obj) {
+                    var checkStatus = table.checkStatus(obj.config.id)
+                        , data = checkStatus.data; //获取选中的数据
+                    switch (obj.event) {
+                        case 'add':
+                            window.location.href="./create.html"
+                            break;
+                        case 'update':
+                            if (data.length === 0) {
+                                layer.msg('请选择一行');
+                            } else if (data.length > 1) {
+                                layer.msg('只能同时编辑一个');
+                            } else {
+                                layer.alert('编辑 [id]：' + checkStatus.data[0].id);
+                            }
+                            break;
+                        case 'delete':
+                            if (data.length === 0) {
+                                layer.msg('请选择一行');
+                            } else {
+                                layer.msg('删除');
+                            }
+                            break;
+                    };
+                });
+                //监听行工具事件
+                table.on('tool(articleTable)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                    var data = obj.data //获得当前行数据
+                        , layEvent = obj.event; //获得 lay-event 对应的值
+                    var articleId = obj.data.articleId;
+                    if (layEvent === 'detail') {
+                        window.location.href = "./previewH5.html?articleId=" + articleId;
+                    } else if (layEvent === 'del') {
+                        layer.confirm('真的删除行么', function (index) {
+                            var url = AJAX_API.admin.article.delete;
+                            ajaxRequest(url, "post", JSON.stringify({ articleId: articleId }), utoken.access_token, function (res) {
+                                if (res.code == 200) {
+                                    obj.del(); //删除对应行（tr）的DOM结构
+                                    layer.close(index);
+                                } else {
+                                    layer.msg(res.message)
+                                }
+                            })
+
+                            //向服务端发送删除指令
+                        });
+                    } else if (layEvent === 'edit') {
+                        window.location.href = "./create.html?articleId=" + articleId;
+                    } else if (layEvent === 'examine') {
+                        layer.msg('审核');
+                    }
+                });
+            });
+        })
+    </script>
+</body>
+
+</html>

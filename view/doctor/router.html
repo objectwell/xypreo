@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>湘雅医院糖尿病足互联网平台</title>
     <link rel="stylesheet" href="../../js/plugin/layui/css/layui.css">
@@ -40,7 +41,7 @@
         }
 
         .doctor-workbench .preview-nav {
-            height: 200px;
+            
             padding: 40px 10px;
             overflow: hidden;
             position: relative;
@@ -113,31 +114,32 @@
             width: 1.4rem;
             height: 100%;
             flex: 0 0 auto;
-            margin-right: 0.2rem;
-            border-radius: 0.1rem;
+            margin-right:30px;
+            border-radius: 3px;
             cursor: pointer;
             color: #fff;
         }
 
         .doctor-workbench .preview-nav .nav-item:nth-of-type(1) {
-            background: rgba(16, 111, 255, 1);
+            /* background: rgba(16, 111, 255, 1); */
+            background: url("../../imgs/hui.png") no-repeat;
         }
 
         .doctor-workbench .preview-nav .nav-item:nth-of-type(2) {
-            background: rgba(197, 108, 41, 1);
+            background: url("../../imgs/zhuan.png") no-repeat;
         }
 
         .doctor-workbench .preview-nav .nav-item:nth-of-type(3) {
-            background: rgba(108, 45, 213, 1);
+            background: url("../../imgs/ying.png") no-repeat;
         }
 
         .doctor-workbench .preview-nav .nav-item:nth-of-type(4) {
-            background: rgba(216, 51, 98, 1);
+            background: url("../../imgs/huan.png") no-repeat;
         }
 
         .doctor-workbench .preview-nav .nav-item:nth-of-type(5) {
             margin: 0;
-            background: rgba(51, 102, 153, 1);
+            background: url("../../imgs/ke.png") no-repeat;
         }
 
         .doctor-workbench .preview-nav .nav-item>div {
@@ -222,33 +224,37 @@
             text-align: center;
             line-height: 0.3125rem;
         }
-
-        .doctor-workbench .preview-nav .nav-item>div p {
+        .doctor-workbench .preview-nav .nav-item p {
             text-align: right;
-            padding-top: 6px;
-            font-size: 0.0833rem;
+            padding: 0.25rem 0.15rem;
+            font-size: 0.1rem;
         }
-
         .doctor-workbench .workbench {
             height: calc(100VH - 200px);
             overflow: hidden;
         }
+
         .doctor-workbench .workbench iframe {
             width: 100%;
             height: 100%;
         }
-       
+
 
         .doctor-info .logo {
             font-size: 20px;
-            padding: 20px;
+            padding: 20px 28px;
             height: 120px;
             line-height: 40px;
             cursor: pointer;
+            background: rgba(250, 250, 250, .1);
         }
-
+        .doctor-info .logo p {
+            width: 160px;
+            text-align: center;
+        }
+        
         .doctor-info .logo p:nth-of-type(2) {
-            float: right;
+            text-align: right;
         }
 
         .doctor-info .sidebar-info {
@@ -281,10 +287,11 @@
             height: 40px;
             line-height: 40px;
             cursor: pointer;
+            font-size: 18px;
         }
 
         .doctor-info .sidebar-info .sidebar-workbench {
-            font-size: 20px;
+            font-size: 16px;
             padding: 30px 20px;
         }
 
@@ -347,53 +354,38 @@
         <div class="doctor-workbench" id="doctorWorkbench">
             <div class="docoter-content" id="doctorContent">
                 <div class="preview-nav nav " id="previewVav">
-                    
+
                     <div class="nav-content" id="navContent">
-                        <div class="nav-item">
-                            <div>
-                                <span class="icon iconfont icon-quyuzhuanzhen icon-nav"></span>
-                                <p>
-                                    <b>我的会诊</b>
-                                </p>
-                            </div>
+                        <div class="nav-item" officetype="consultation">
+                            <p>
+                                <b>我的会诊</b>
+                            </p>
 
                         </div>
                         <div class="nav-item ">
-                            <div>
-                                <span class="icon iconfont icon-tupian icon-nav"></span>
-                                <p>
-                                    <b>伤口测量</b>
-                                </p>
-                            </div>
+                            <p>
+                                <b>伤口测量</b>
+                            </p>
                         </div>
                         <div class="nav-item">
-                            <div>
-                                <span class="icon iconfont icon-huanzheguanli icon-nav"></span>
-                                <p>
-                                    <b>我的患者</b>
-                                </p>
-                            </div>
+                            <p>
+                                <b>我的患者</b>
+                            </p>
                         </div>
                         <div class="nav-item ">
-                            <div>
-                                <span class="icon iconfont icon-keyanxitong icon-nav"></span>
-                                <p>
-                                    <b>病例CPC</b>
-                                </p>
-                            </div>
+                            <p>
+                                <b>病例CPC</b>
+                            </p>
                         </div>
                         <div class="nav-item">
-                            <div>
-                                <span class="icon iconfont icon-huizhen icon-nav"></span>
-                                <p>
-                                    <b>通讯录</b>
-                                </p>
-                            </div>
+                            <p>
+                                <b>通讯录</b>
+                            </p>
                         </div>
                     </div>
                 </div>
                 <div class="office-nav nav layui-hide" id="officeNav">
-                    <div class="nav-item">
+                    <div class="nav-item" officetype="consultation">
                         <span class="icon iconfont icon-quyuzhuanzhen icon-nav"></span>
                         <b>我的会诊</b>
                     </div>
@@ -413,9 +405,9 @@
                         <span class="icon iconfont icon-huizhen icon-nav"></span>
                         <b>通讯录</b>
                     </div>
-                    <ul class="layui-nav nav-item" lay-filter="userOperation">
-                        <li class="layui-nav-item" title="后台系统">
-                            <a href="javascript:;"><span class="icon iconfont icon-windows-fill"></span></a>
+                    <ul class="layui-nav " lay-filter="userOperation">
+                        <li class="layui-nav-item nav-item" title="后台系统" officetype="home">
+                            <a href="../admin/home.html"><span class="icon iconfont icon-windows-fill"></span></a>
                         </li>
                         <li class="layui-nav-item" title="显示模式">
                             <a href="javascript:;"> <span class="icon iconfont icon-fullscreen"></span></a>
@@ -434,7 +426,8 @@
                     </ul>
                 </div>
                 <div class="workbench" id="workbench">
-                    <iframe src="./consultation/consultation.html" frameborder="0"></iframe>
+                    <!-- <iframe src="./consultation/consultation.html" frameborder="0"></iframe> -->
+                    <iframe src="./home.html" frameborder="0" activeoffice="home" id="workbenchiframe"></iframe>
                 </div>
             </div>
 
@@ -449,10 +442,22 @@
     <script src="../../js/common/common.js"></script>
     <script src="../../js/doctor/nav.js"></script>
     <script>
+        function showPhotos(images) {
+            layer.photos({
+                area: ['580px','400px'],
+                shade: [0.65, '#000'],
+                anim: 0,
+                photos: {
+                    "title": "图片预览",
+                    "data": images
+                }
+            });
+        }
         $(function () {
 
-            layui.use('element', function () {
+            layui.use(['element', 'layer'], function () {
                 var element = layui.element;
+                var layer = layui.layer;
                 element.on('nav(userOperation)', function (data) {
                     var string = data.html();
                     switch (string) {
@@ -473,11 +478,26 @@
                             break;
                     }
                 });
-
+                var $workbench = $("#workbenchiframe");
+                $(".nav-item").on("click", function () {
+                    var officetype = $(this).attr("officetype");
+                    if (officetype == "consultation") {
+                        var oldworkbench = $workbench.attr("activeoffice");
+                        console.log(oldworkbench, officetype)
+                        if (oldworkbench != officetype) {
+                            $workbench.attr("src", "./consultation/consultation.html").attr("activeoffice", officetype)
+                        }
+                    } else {
+                        layer.msg("改功能暂未开发，敬请期待。。。")
+                    }
+                })
                 function toAdmin() {
                     window.location.replace("../admin/home.html")
                 }
+
+
             });
+
 
         })
 
