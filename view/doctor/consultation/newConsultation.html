@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>湘雅医院糖尿病足互联网平台我的会诊</title>
+    <link rel="stylesheet" href="../../../js/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="../../../js/plugin/toastr/toastr.min.css">
+    <link rel="stylesheet" href="../../../font/iconfont.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <style>
+        .base-workbench .layout {
+            padding: 0px 0 40px 40px;
+        }
+
+        .workbench {
+            overflow: auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        .workbench .info-tips {
+            height: 40px;
+            line-height: 40px;
+            font-size: 16px;
+            color: #c0c0c0;
+            box-sizing: border-box;
+            border-bottom: 1px dashed #c0c0c0;
+        }
+
+        .workbench .info-list {
+            padding: 10px 0;
+            line-height: 18px;
+        }
+
+        .workbench .condition-list {
+            padding: 6px 0;
+
+        }
+
+        .workbench .condition-list i {
+            text-align: right;
+        }
+
+        .workbench .info-p {
+            height: 180px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .workbench .info-p img {
+            width: auto;
+            height: 180px;
+        }
+
+        .workbench .layui-form {
+            margin: 6px 0;
+        }
+
+        .workbench .layui-form-label {
+            padding: 10px 0;
+            text-align: left;
+        }
+
+        .workbench .layui-textarea {
+            display: inline-block;
+            width: calc(100% - 80px);
+            min-height: 180px;
+        }
+
+        .workbench .opinion-button {
+            text-align: center;
+        }
+
+        .layui-icon-add-1 {
+            float: right;
+            color: #1E9FFF;
+            margin-right: 20px;
+        }
+
+        .layui-fluid {
+            padding-bottom: 6px;
+        }
+
+        .consultation-imgs {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <body class="hg100 base-workbench">
+        <div class="layout hg100">
+            <div class="workbench hg100 " id="workbench">
+                <div class="layui-fluid">
+                    <div class="layui-row layui-col-space5">
+                        <div class="layui-col-md12">
+                            <h4 class="info-tips">医院信息</h4>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="info-list">医院: <span id="tHospital"></span> </div>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="info-list">接诊医生: <span id="doctorName"></span> </div>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="info-list">科室: <span id="department"></span> </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-col-space5">
+                        <div class="layui-col-md12">
+                            <h4 class="info-tips">申请信息</h4>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="info-list">会诊目的: <span id="goal"></span> </div>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="info-list">会诊类型: <span id="consultationTypeName"></span> </div>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="info-list">会诊团队: <span id="teams"></span> </div>
+                        </div>
+                    </div>
+
+
+                    <div class="layui-row layui-col-space5">
+                        <div class="layui-col-md12">
+                            <h4 class="info-tips">患者信息</h4>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="info-list">患者姓名: <span id="realname"></span> </div>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="info-list">性别: <span id="sex"></span> </div>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="info-list">身份证号码: <span id="cardno"></span> </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="condition-list">
+                                <div class="condition-list layui-row layui-col-space4">
+                                    <i class="layui-col-md1">主诉:</i>
+                                    <span id="appeal" class="layui-col-md11"></span>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="condition-list layui-row layui-col-space4">
+                                <i class="layui-col-md1">现病史:</i>
+                                <span id="nearIllness" class="layui-col-md11"></span>
+
+                            </div>
+
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="condition-list layui-row layui-col-space4">
+                                <i class="layui-col-md1">既往史:</i>
+                                <span id="historyIllness" class="layui-col-md11"></span>
+
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="condition-list layui-row layui-col-space4">
+                                <i class="layui-col-md1">初步诊断:</i>
+                                <span id="diagnosis" class="layui-col-md11 layui-red"></span>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="layui-row">
+                        <div class="layui-col-md12">
+                            <h4 class="info-tips">影像资料</h4>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div id="consultationImgs" class="layui-row layui-col-space20 consultation-imgs">
+                                
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-row layui-col-space5">
+                        <div class="layui-col-md12">
+                            <h4 class="info-tips">会诊意见</h4>
+                        </div>
+                        <div class="layui-col-md12">
+                            <form class="layui-form" action="">
+                                <label class="layui-form-label">选择模版</label>
+                                <div class="layui-inline">
+                                    <select name="consultationTemplate" lay-verify="" lay-search>
+                                        <option value="010">会诊模板1</option>
+                                        <option value="021">会诊模板2</option>
+                                        <option value="0571" selected>会诊模板3</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="layui-col-md12">
+                            <form class="layui-form" action="">
+
+                                <label class="layui-form-label">会诊意见</label>
+
+                                <textarea name="desc" placeholder="请输入会诊意见" class="layui-textarea"></textarea>
+                            </form>
+                        </div>
+
+                    </div>
+                    <div class="opinion-item opinion-button">
+                        <button type="button" class="layui-btn layui-btn-normal" id="consultationSubmit">确定</button>
+                    </div>
+                </div>
+            </div>
+            <div class="notice hg100 " id="notice">
+                <h3>我的会诊 <i class="layui-icon layui-icon-add-1" title="点击新增会诊" id="createConsultation">新增</i> </h3>
+                <ul id="noticeUl">
+                    <li class="notice-item">
+                        <div class="notice-img icon iconfont icon-lingdang bgRed"></div>
+                        <div class="notice-text">
+                            <p class="notice-illness">
+                                2型糖尿病
+                            </p>
+                            <p class="notice-hospital">
+                                <span>湘雅医院</span>
+                                <i>2018-10-07</i>
+                            </p>
+                        </div>
+                        <div class="notice-icon"></div>
+                    </li>
+                    <li class="notice-item">
+                        <div class="notice-img icon iconfont icon-lingdang bgGreen"></div>
+                        <div class="notice-text">
+                            <p class="notice-illness">
+                                2型糖尿病
+                            </p>
+                            <p class="notice-hospital">
+                                <span>湘雅医院</span>
+                                <i>2018-10-07</i>
+                            </p>
+                        </div>
+                        <div class="notice-icon"></div>
+                    </li>
+                    <li class="notice-item">
+                        <div class="notice-img icon iconfont icon-lingdang bgBlue"></div>
+                        <div class="notice-text">
+                            <p class="notice-illness">
+                                2型糖尿病
+                            </p>
+                            <p class="notice-hospital">
+                                <span>湘雅医院</span>
+                                <i>2018-10-07</i>
+                            </p>
+                        </div>
+                        <div class="notice-icon"></div>
+                    </li>
+                    <li class="notice-item">
+                        <div class="notice-img icon iconfont icon-lingdang bgBlue"></div>
+                        <div class="notice-text">
+                            <p class="notice-illness">
+                                2型糖尿病
+                            </p>
+                            <p class="notice-hospital">
+                                <span>湘雅医院</span>
+                                <i>2018-10-07</i>
+                            </p>
+                        </div>
+                        <div class="notice-icon"></div>
+                    </li>
+                    <li class="notice-item">
+                        <div class="notice-img icon iconfont icon-lingdang bgBlue"></div>
+                        <div class="notice-text">
+                            <p class="notice-illness">
+                                2型糖尿病
+                            </p>
+                            <p class="notice-hospital">
+                                <span>湘雅医院</span>
+                                <i>2018-10-07</i>
+                            </p>
+                        </div>
+                        <div class="notice-icon"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- <script src="../../../js/plugin/rem.min.js"></script> -->
+        <script src="../../../js/plugin/jquery.min.js"></script>
+        <script src="../../../js/plugin/jquery.cookie.js"></script>
+        <script src="../../../js/plugin/toastr/toastr.min.js"></script>
+        <script src="../../../js/plugin/layui/layui.js"></script>
+        <!-- <script src="../../../js/plugin/echarts.min.js"></script> -->
+        <script src="../../../js/plugin/jquery.nicescroll.min.js"></script>
+        <script src="../../../js/common/config.js"></script>
+        <script src="../../../js/common/common.js"></script>
+        <script>
+            function workbenchContentTp() {
+
+            }
+            $(function () {
+                var utoken = $.cookie("utoken");
+                var access_token;
+                var images = [];
+                $("#noticeUl").niceScroll({
+                    'cursorcolor': '#1E9FFF',
+                    'cursorborder': 'none',
+                    // 'smoothscroll': 'false',
+                    'autohidemode': true,
+                    "railalign": "right",
+                });
+                $("#workbench").niceScroll({
+                    'cursorcolor': '#1E9FFF',
+                    'cursorborder': 'none',
+                    // 'smoothscroll': 'false',
+                    'autohidemode': true,
+                    "railalign": "right",
+                });
+                layui.use(["layer", "form"], function () {
+                    var layer = layui.layer;
+                    if (!utoken) {
+                        parent.layer.msg('您尚未登陆或者,或者登陆已过期，请重登陆', {
+                            time: 20000, //20s后自动关闭
+                            btn: ['重新登陆'],
+                            btn1: function () {
+                                parent.window.location.href = "../../../login_doctor.html"
+                            }
+                        });
+                    }
+                    access_token = JSON.parse(utoken).access_token;
+                    var $operationCircles = $(".operation-circle");
+                    ajaxRequest(AJAX_API.consultation.list, "get", {}, access_token, function (res) {
+                        var data = res.data.list;
+                        var html = [];
+                        $.each(data, function (i, list) {
+                            var list = list;
+                            var bingLiId = list.bingLiId || "",
+                                diagnosis = list.diagnosis || "",
+                                hospital = list.hospital || "",
+                                createDate = list.createDate?list.createDate.split("T")[0]:"";
+                            html.push('<li class="notice-item" bingLiId="' + bingLiId + '">\
+                                        <div class="notice-img icon iconfont icon-lingdang bgBlue"></div>\
+                                        <div class="notice-text">\
+                                            <p class="notice-illness">'+ diagnosis + '</p>\
+                                            <p class="notice-hospital">\
+                                                <span>'+ hospital + '</span>\
+                                                <i>'+ createDate + '</i>\
+                                            </p>\
+                                        </div>\
+                                        <div class="notice-icon"></div>\
+                                    </li>')
+                            if (i == 0) {
+                                renderConsultationInfo(bingLiId, access_token);
+                                $("#consultationSubmit").attr("bingLiId", bingLiId)
+                            }
+                        });
+                        $("#noticeUl").html(html.join(""));
+                        $("#noticeUl").on("click", "li", function () {
+                            var bingLiId = $(this).attr("bingLiId");
+                            renderConsultationInfo(bingLiId, access_token)
+                        })
+                    })
+                    $("#stepUp").on("click", function () {
+                        var $this = $(this);
+                        if ($(this).hasClass("default")) return
+                        for (let i = 0; i < $operationCircles.length; i++) {
+                            var $item = $($operationCircles[i]);
+                            if ($item.hasClass("active")) {
+                                $item.find(".icon").removeClass("icon-yuandian").addClass("icon-yuandianxiao");
+                                $operationCircles.removeClass("active");
+                                $item.prev().addClass("active");
+                                $item.prev().find(".icon").removeClass("icon-yuandianxiao").addClass("icon-yuandian");
+                                $("#stepDown").removeClass("default")
+                                if (i === 1) {
+                                    $this.addClass("default")
+
+                                }
+                                var height = -($("#workbenchContent").height()) * (i - 1);
+                                $("#workbenchContent").animate({
+                                    top: height
+                                })
+                                return false
+                            }
+                        }
+
+
+                    });
+
+
+                    $("#stepDown").on("click", function () {
+                        var $this = $(this);
+                        if ($(this).hasClass("default")) return
+                        for (let i = 0; i < $operationCircles.length; i++) {
+                            var $item = $($operationCircles[i]);
+                            if ($item.hasClass("active")) {
+                                $item.find(".icon").removeClass("icon-yuandian").addClass("icon-yuandianxiao");
+                                $operationCircles.removeClass("active");
+                                $item.next().addClass("active");
+                                $item.next().find(".icon").removeClass("icon-yuandianxiao").addClass("icon-yuandian");
+                                $("#stepUp").removeClass("default")
+                                if (i === 1) {
+                                    $this.addClass("default")
+                                }
+                                var height = -($("#workbenchContent").height()) * (i + 1);
+                                $("#workbenchContent").animate({
+                                    top: height
+                                })
+                                return false
+                            }
+                        }
+
+
+                    })
+                    // 新增会诊
+                    $("#createConsultation").on("click", function () {
+                        parent.layer.open({
+                            title: "新增会诊",
+                            content: "/view/doctor/consultation/create.html",
+                            type: 2,
+                            area: ['1000px', '560px']
+                        })
+                    });
+
+
+                    function renderConsultationInfo(id, access_token) {
+                        if (id) {
+                            ajaxRequest(AJAX_API.consultation.dinfo + id, "get", {}, access_token, function (res) {
+                                console.log(res)
+                                if (res.code == 200) {
+                                    var data = res.data;
+                                    $("#hospital").html(data.hospital || "");
+                                    $("#doctorName").html(data.doctorName || "");
+                                    $("#department").html(data.department || "");
+                                    $("#goal").html(data.goal || "");
+                                    $("#consultationTypeName").html(data.consultationTypeName || "");
+                                    $("#realname").html(data.realname || "");
+                                    $("#sex").html(data.sex == "0" ? "女" : "男");
+                                    $("#cardno").html(data.cardno || "");
+                                    $("#appeal").html(data.appeal || "");
+                                    $("#nearIllness").html(data.nearIllness || "");
+                                    $("#historyIllness").html(data.historyIllness || "");
+                                    $("#diagnosis").html(data.diagnosis || "");
+
+                                    if (data.teams && data.teams.length > 0) {
+                                        var ar = []
+                                        $.each(data.teams, function (i, team) {
+                                            ar.push(team.specialistName + "-" + team.department)
+                                        })
+                                        $("#teams").html(ar.join("&nbsp; , &nbsp;"))
+                                    }
+
+                                }
+                            })
+                            ajaxRequest(AJAX_API.consultation.images, "get", { bingLiId: id }, access_token, function (res) {
+                                if (res.code == 200) {
+                                    var arr = [];
+                                    $.each(res.data, function (j, img) {
+                                        images.push({
+                                            "alt": "会诊影像资料",
+                                            "pid": "huiz" + j, //图片id
+                                            "src": img, //原图地址
+                                            "thumb": img //缩略图地址
+                                        })
+                                        var str = '<div class="layui-col-md4">\
+                                                        <div class="info-p" >\
+                                                            <img src="'+ img + '" alt="">\
+                                                        </div>\
+                                                    </div > '
+                                        arr.push(str)
+                                    })
+
+                                    if (arr.length == 0) {
+                                        arr.push(
+                                            '<div class="layui-col-md12" style="text-align:center;color: #c0c0c0;">当前会诊没有影像资料</div > '
+                                        )
+                                        
+                                    }
+                                    $("#consultationImgs").html(arr.join(""))
+                                    $("#consultationImgs").on("click", ".info-p", function () {
+                                        parent.showPhotos(images)
+                                    })
+
+                                }
+                            })
+                        }
+                    }
+
+                })
+
+            })
+
+        </script>
+    </body>
+
+</html>

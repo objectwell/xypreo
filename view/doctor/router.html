@@ -37,6 +37,7 @@
 
         .docoter-content {
             width: 100%;
+            height: 100%;
             box-sizing: border-box;
         }
 
@@ -230,7 +231,7 @@
             font-size: 0.1rem;
         }
         .doctor-workbench .workbench {
-            height: calc(100VH - 200px);
+            height: calc(100VH - 174px);
             overflow: hidden;
         }
 
@@ -246,7 +247,7 @@
             height: 120px;
             line-height: 40px;
             cursor: pointer;
-            background: rgba(250, 250, 250, .1);
+            /* background: rgba(250, 250, 250, .1); */
         }
         .doctor-info .logo p {
             width: 160px;
@@ -356,13 +357,13 @@
                 <div class="preview-nav nav " id="previewVav">
 
                     <div class="nav-content" id="navContent">
-                        <div class="nav-item" officetype="consultation">
+                        <div class="nav-item" officetype="./consultation/newConsultation.html">
                             <p>
                                 <b>我的会诊</b>
                             </p>
 
                         </div>
-                        <div class="nav-item ">
+                        <div class="nav-item " officetype="./consultation/newConsultation.html">
                             <p>
                                 <b>伤口测量</b>
                             </p>
@@ -377,7 +378,7 @@
                                 <b>病例CPC</b>
                             </p>
                         </div>
-                        <div class="nav-item">
+                        <div class="nav-item" officetype="../addresslist/addreslist.html">
                             <p>
                                 <b>通讯录</b>
                             </p>
@@ -385,11 +386,11 @@
                     </div>
                 </div>
                 <div class="office-nav nav layui-hide" id="officeNav">
-                    <div class="nav-item" officetype="consultation">
+                    <div class="nav-item" officetype="./consultation/newConsultation.html">
                         <span class="icon iconfont icon-quyuzhuanzhen icon-nav"></span>
                         <b>我的会诊</b>
                     </div>
-                    <div class="nav-item">
+                    <div class="nav-item" officetype="./consultation/newConsultation.html">
                         <span class="icon iconfont icon-tupian icon-nav"></span>
                         <b>伤口测量</b>
                     </div>
@@ -401,7 +402,7 @@
                         <span class="icon iconfont icon-keyanxitong icon-nav"></span>
                         <b>病例CPC</b>
                     </div>
-                    <div class="nav-item">
+                    <div class="nav-item" officetype="../addresslist/addreslist.html">
                         <span class="icon iconfont icon-huizhen icon-nav"></span>
                         <b>通讯录</b>
                     </div>
@@ -481,11 +482,12 @@
                 var $workbench = $("#workbenchiframe");
                 $(".nav-item").on("click", function () {
                     var officetype = $(this).attr("officetype");
-                    if (officetype == "consultation") {
-                        var oldworkbench = $workbench.attr("activeoffice");
-                        console.log(oldworkbench, officetype)
+                    if (officetype) {
+
+                        var oldworkbench = $workbench.attr("src");
+                        
                         if (oldworkbench != officetype) {
-                            $workbench.attr("src", "./consultation/consultation.html").attr("activeoffice", officetype)
+                            $workbench.attr("src", officetype)
                         }
                     } else {
                         layer.msg("改功能暂未开发，敬请期待。。。")

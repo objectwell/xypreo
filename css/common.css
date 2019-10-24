@@ -55,7 +55,9 @@ body.base-workbench {
     position: relative;
     cursor: pointer;
 }
-
+.base-workbench .notice ul {
+    height: calc(100% - 30px);
+}
 .base-workbench .workbench {
     flex: 1;
     width: 100%;

@@ -1,5 +1,6 @@
 var ajaxRoot = "http://192.168.1.102:8080/";    
 // var ajaxRoot = "http://122.207.81.240:1602/"; 
+var ajaxRoot = " http://k8tnpv.natappfree.cc/";  
 var AJAX_API = {
     //通用
     common:{
@@ -65,5 +66,6 @@ var AJAX_API = {
         create:"web/bingli/create",    // 创建
         list:"web/bingli/list",        // 列表
         dinfo:"web/bingli/find-one?bingLiId=",     // 会诊详情信息
+        images:"web/bingli/detec-image"            // 获取会诊图片
     }
 }

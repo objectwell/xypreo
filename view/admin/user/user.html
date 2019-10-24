@@ -35,26 +35,57 @@
         <table class="layui-hide" id="organizationTable" lay-filter="organizationTable"></table>
         <form class="layui-form createForm" id="organizationForm" lay-filter="organizationForm">
             <div class="layui-form-item">
-                <label class="layui-form-label">机构名称</label>
+                <label class="layui-form-label">用户名</label>
                 <div class="layui-input-block">
-                    <input type="text" name="organizationName" required lay-verify="required" placeholder="请输入机构名称"
+                    <input type="text" name="username" required lay-verify="required" placeholder="请输入用户名称"
                         class="layui-input">
                 </div>
             </div>
+            
             <div class="layui-form-item">
-                <label class="layui-form-label">机构编码</label>
+                <label class="layui-form-label">用户手机</label>
                 <div class="layui-input-block">
-                    <input type="text" name="organizationCode" placeholder="请输入机构名称" class="layui-input">
+                    <input type="text" name="mobile" placeholder="请输入用户手机号" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户姓名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="realname" placeholder="请输入用户姓名" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户身份证</label>
+                <div class="layui-input-block">
+                    <input type="text" name="cardno" placeholder="请输入用户身份证号码" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户性别</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="sex" value="0" title="男">
+                    <input type="radio" name="sex" value="1" title="女" checked>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户职称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="position" placeholder="请输入用户职称" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">所属机构</label>
                 <div class="layui-input-block">
-                    <select name="pid" lay-search id="organizationOptions">
+                    <select name="organizationId" lay-search id="organizationOptions">
                     </select>
                 </div>
             </div>
-
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户简介</label>
+                <div class="layui-input-block">
+                    <textarea name="introduction" placeholder="请输入用户简介" class="layui-textarea"></textarea>
+                </div>
+            </div>
             <div class="layui-form-item ">
                 <div class="layui-input-block subimt-add-btn">
                     <button class="layui-btn" lay-submit lay-filter="subimtAdd">立即提交</button>
@@ -77,32 +108,41 @@
             function updateOrganization(layer, $, utoken, form, tableIns, option) {
                 if (option) {
                     $("#organizationOptions option[value='" + option.organizationId + "']").prop("selected", "selected");
-                    $("input[name='organizationName']").val(option.organizationName)
-                    $("input[name='organizationCode']").val(option.organizationCode)
+                    $("input[name='username']").val(option.username);
+                    $("input[name='realname']").val(option.realname)
+                    $("input[name='mobile']").val(option.mobile);
+                    $("input[name='cardno']").val(option.cardno);
+                    $("input[name='position']").val(option.position);
+                    $("textarea[name='avatar']").val(option.avatar);
+                    
 
                     form.render()
-                }else {
-                    form.val("organizationForm",{
-                        organizationName:"",
-                        organizationCode:"",
-                        pid:""
+                } else {
+                    form.val("organizationForm", {
+                        "username": "",
+                        "realname": "",
+                        "mobile": "",
+                        "cardno": "",
+                        "position":"" ,
+                        "avatar": "",
+                        
                     })
                 }
                 var createLayerIndex = layer.open({
                     type: 1,
                     content: $('#organizationForm'),
-                    area: ['600px', '400px']
+                    area: ['600px', '650px']
                 })
                 form.on('submit(subimtAdd)', function (data) {
                     var submitdata = data.field;
                     if (option) {
-                        submitdata.organizationId = option.organizationId
+                        submitdata.userId = option.userId
                     }
-                    var url = option ? AJAX_API.admin.organization.update : AJAX_API.admin.organization.create;
+                    var url = option ? AJAX_API.admin.user.update : AJAX_API.admin.user.create;
                     ajaxRequest(url, "post", JSON.stringify(submitdata), utoken.access_token, function (res) {
                         if (res.code == 200) {
                             tableIns.reload()
-                            layer.msg(option ? "修改成功" : "新增成功",{icon:1})
+                            layer.msg(option ? "修改成功" : "新增成功", { icon: 1 })
                             layer.close(createLayerIndex)
                             form.render()
                         }
@@ -121,10 +161,10 @@
                 var utoken = JSON.parse($.cookie("utoken"));
 
                 if (!utoken) {
-                    layer.msg("您还没有登陆，请重新登陆",{icon:2})
+                    layer.msg("您还没有登陆，请重新登陆", { icon: 2 })
                     window.location.href = "../../../login_doctor.html"
                 }
-                var url = ajaxRoot + AJAX_API.admin.organization.list + "?page=true";
+                var url = ajaxRoot + AJAX_API.admin.user.list + "?page=true";
                 var urllist = AJAX_API.admin.organization.list;
                 ajaxRequest(urllist, "get", {}, utoken.access_token, function (res) {
                     if (res.code == 200) {
@@ -166,8 +206,14 @@
                     }
                     , cols: [[ //表头
                         { type: 'checkbox', fixed: 'left' }
-                        , { field: 'organizationName', title: '机构名称', align: "center" }
-                        , { field: 'parent', title: '上级名称', align: "center" }
+                        , { field: 'username', title: '用户吗', align: "center" }
+                        , { field: 'realname', title: '姓名', align: "center" }
+                        , { field: 'cardno', title: '身份证', align: "center" }
+                        , { field: 'mobile', title: '手机号码', align: "center" }
+                        , { field: 'hospital', title: '所属医院', align: "center" }
+                        , { field: 'hospital', title: '科室', align: "center" }
+                        , { field: 'position', title: '职位', align: "center" }
+                        , { field: 'createDate', title: '创建日期', align: "center" }
                         , { fixed: 'right', title: '操作', width: 260, align: 'center', toolbar: '#operation' }
                     ]]
                     , done: function (res, curr, count) {
@@ -185,9 +231,9 @@
                             break;
                         case 'update':
                             if (data.length === 0) {
-                                layer.msg('请选择一行',{icon:5});
+                                layer.msg('请选择一行', { icon: 5 });
                             } else if (data.length > 1) {
-                                layer.msg('只能同时编辑一个机构',{icon:5});
+                                layer.msg('只能同时编辑一个用户', { icon: 5 });
                             } else {
                                 console.log(checkStatus.data[0])
                                 updateOrganization(layer, $, utoken, form, tableIns, checkStatus.data[0])
@@ -196,7 +242,7 @@
                             break;
                         case 'delete':
                             if (data.length === 0) {
-                                layer.msg('请至少选择一个机构', {icon: 5});
+                                layer.msg('请至少选择一个用户', { icon: 5 });
                             } else {
                                 // deleteOrganization({organizationId:organizationId}, layer, utoken,tableIns)
                                 console.log(data)
@@ -204,14 +250,14 @@
                                 $.each(data, function (i, item) {
                                     deleteData.push(item.organizationId)
                                 })
-                                ajaxRequest(AJAX_API.admin.organization.deleteBatch, "post", JSON.stringify({organizationIds:deleteData}), utoken.access_token, function (res) {
+                                ajaxRequest(AJAX_API.admin.user.deleteBatch, "post", JSON.stringify({ organizationIds: deleteData }), utoken.access_token, function (res) {
                                     if (res.code == 200) {
                                         tableIns.reload()
-                                        layer.msg("删除成功",{icon:1})
+                                        layer.msg("删除成功", { icon: 1 })
 
                                     }
                                 })
-                               
+
 
                             }
                             break;
@@ -221,11 +267,11 @@
                 table.on('tool(organizationTable)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
                     var data = obj.data //获得当前行数据
                         , layEvent = obj.event; //获得 lay-event 对应的值
-                    var organizationId = obj.data.organizationId;
+                    var userId = obj.data.userId;
                     if (layEvent === 'del') {
-                        layer.confirm('真的删除所选择的机构吗？', {icon: 5, title:'提示'},function (index) {
-                            var url = AJAX_API.admin.organization.delete;
-                            deleteOrganization({ organizationId: organizationId }, layer, utoken, tableIns)
+                        layer.confirm('真的删除所选择的用户吗？', { icon: 5, title: '提示' }, function (index) {
+                            var url = AJAX_API.admin.user.delete;
+                            deleteOrganization({ userId: userId }, layer, utoken, tableIns)
                         });
                     } else if (layEvent === 'edit') {
                         updateOrganization(layer, $, utoken, form, tableIns, data)
@@ -234,16 +280,16 @@
 
                 function deleteOrganization(organizationId, layer, utoken, tableIns) {
                     if (organizationId) {
-                        var url = AJAX_API.admin.organization.delete;
+                        var url = AJAX_API.admin.user.delete;
                         ajaxRequest(url, "post", JSON.stringify(organizationId), utoken.access_token, function (res) {
                             if (res.code == 200) {
                                 tableIns.reload()
-                                layer.msg("删除成功",{icon:1})
+                                layer.msg("删除成功", { icon: 1 })
 
                             }
                         })
                     } else {
-                        layer.msg("没有可以删除的机构",{icon:5})
+                        layer.msg("没有可以删除的用户", { icon: 5 })
                     }
                 }
 
