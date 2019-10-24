@@ -21,6 +21,12 @@
             padding: 10px 0;
         }
 
+        .form-title span {
+            color: #c0c0c0;
+            font-size: 14px;
+            margin: 0 10px;
+        }
+
         .layui-form-item {
             margin: 0;
         }
@@ -111,9 +117,27 @@
             <h4 class="form-title"> 患者基本信息</h4>
             <div class="layui-form-item">
                 <div class="layui-inline">
+                    <label class="layui-form-label">诊疗卡号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="bingliId" lay-verify="required" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
                     <label class="layui-form-label">姓名</label>
                     <div class="layui-input-inline">
                         <input type="text" name="realname" lay-verify="required" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">身份证号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="cardno" lalay-verify="required/identity" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">年龄</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="age" lay-verify="required/number" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -121,12 +145,6 @@
                     <div class="layui-input-inline">
                         <input type="radio" name="sex" value="1" title="男" lay-verify="required">
                         <input type="radio" name="sex" value="0" title="女" checked lay-verify="required">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">身份证号</label>
-                    <div class="layui-input-inline">
-                        <input type="tel" name="cardno" lalay-verify="required/identity" class="layui-input">
                     </div>
                 </div>
             </div>
@@ -158,9 +176,9 @@
                         class="layui-input">
                 </div>
             </div>
-            <h4 class="form-title"> 患者资料</h4>
+            <h4 class="form-title"> 病历信息<span>(最多上传3张图片)</span> </h4>
             <div class="layui-upload">
-                <button type="button" class="layui-btn layui-btn-normal" id="selecImg">选择多文件</button>
+                <button type="button" class="layui-btn layui-btn-normal" id="medicalImgs">选择病历图片</button>
                 <div class="layui-upload-list">
                     <table class="layui-table">
                         <thead>
@@ -171,11 +189,45 @@
                                 <th>操作</th>
                             </tr>
                         </thead>
-                        <tbody id="imgList"></tbody>
+                        <tbody id="blList"></tbody>
                     </table>
                 </div>
-                <button type="button form-submit" class="layui-btn layui-hide" id="testListAction">开始上传</button>
             </div>
+            <h4 class="form-title"> 检查检测信息<span>(最多上传3张图片)</span></h4>
+            <div class="layui-upload">
+                <button type="button" class="layui-btn layui-btn-normal" id="checkImg">选择检查检测图片</button>
+                <div class="layui-upload-list">
+                    <table class="layui-table">
+                        <thead>
+                            <tr>
+                                <th>文件名</th>
+                                <th>大小</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="checkList"></tbody>
+                    </table>
+                </div>
+            </div>
+            <h4 class="form-title"> 伤口图片信息<span>(最多上传9张图片)</span></h4>
+            <div class="layui-upload">
+                <button type="button" class="layui-btn layui-btn-normal" id="woundImg">选择伤口图片</button>
+                <div class="layui-upload-list">
+                    <table class="layui-table">
+                        <thead>
+                            <tr>
+                                <th>文件名</th>
+                                <th>大小</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="woundList"></tbody>
+                    </table>
+                </div>
+            </div>
+
             <div class="layui-form-item " style="text-align: center; margin: 30px 0;">
                 <button class="layui-btn create layui-btn-normal" lay-submit lay-filter="create"
                     id="create">立即提交</button>
@@ -199,9 +251,14 @@
                 table = layui.table,
                 form = layui.form,
                 upload = layui.upload;
-            var demoListView = $('#imgList');
+            var blListView = $('#blList');
+            var checkListView = $('#checkList');
+            var woundListView = $('#woundList');
             var utoken = $.cookie("utoken");
             var detecImageList = [];
+            var bingliImgs = [];
+            var checkImgs = [];
+            var woundImgs = [];
             var upImgLayerIndex;
             if (!utoken) {
                 layer.msg('您尚未登陆或者,或者登陆已过期，请重登陆', {
@@ -256,7 +313,7 @@
                     timeout: 20000,
                     success: function (res) {//data是返回的hash,key之类的值，key是定义的文件名
                         closeLayer(upImgLayerIndex, parent)
-                        if(res.code ==200) {
+                        if (res.code == 200) {
                             parent.layer.closeAll()
                             parent.layer.msg("您已经成功创建了一个会诊信息")
                         }
@@ -268,14 +325,19 @@
                 return false;
 
             });
-            var uploadListIns = upload.render({
-                elem: '#selecImg'
+            // var uploadArr = ['#medicalImgs', '#checkImg', '#woundImg']
+            // var uploadArr = [
+            //     {
+            //         elem: '#medicalImgs',
+            //     }
+            // ]
+            var uploadBlIns = upload.render({
+                elem: '#medicalImgs'
                 , url: ajaxRoot + AJAX_API.upImg.updata
                 , accept: 'file'
                 , multiple: true
                 , auto: true
-                , number: 9
-                , bindAction: '#testListAction'
+                , number: 3
                 , headers: {
                     Authorization: 'bearer ' + access_token
                 }
@@ -314,19 +376,19 @@
                                     closeLayer(upImgLayerIndex, parent)
                                     if (res.code == 200) {
                                         //删除提交的数据
-                                        $.each(detecImageList, function (i, item) {
+                                        $.each(bingliImgs, function (i, item) {
                                             var item = item;
                                             console.log(item)
                                             if (item) {
                                                 var itemid = item.split("/").pop();
                                                 if (itemid == fileid) {
-                                                    detecImageList.splice(i, 1)
+                                                    bingliImgs.splice(i, 1)
                                                 }
                                             }
 
                                         })
                                         tr.remove();
-                                        uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                                        uploadBlIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
                                     }
                                 })
                                 return false
@@ -335,24 +397,203 @@
 
                         });
 
-                        demoListView.append(tr);
+                        blListView.append(tr);
                     });
 
                 }
                 , done: function (res, index, upload) {
                     closeLayer(upImgLayerIndex, parent)
                     if (res.code == 200) { //上传成功
-                        var tr = demoListView.find('tr#upload-' + index)
+                        var tr = blListView.find('tr#upload-' + index)
                             , tds = tr.children();
                         tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
                         tds.eq(3).find('.demo-delete').attr("fileid", res.data[0].fileid)
-                        detecImageList.push(res.data[0].url)
+                        bingliImgs.push(res.data[0].url)
                         return delete this.files[index]; //删除文件队列已经上传成功的文件
                     }
                     this.error(index, upload);
                 }
                 , error: function (index, upload) {
-                    var tr = demoListView.find('tr#upload-' + index)
+                    var tr = blListView.find('tr#upload-' + index)
+                        , tds = tr.children();
+                    tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+                    tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+                }
+            });
+
+            var uploadCheckIns = upload.render({
+                elem: '#checkImg'
+                , url: ajaxRoot + AJAX_API.upImg.updata
+                , accept: 'file'
+                , multiple: true
+                , auto: true
+                , number: 3
+                , headers: {
+                    Authorization: 'bearer ' + access_token
+                }
+                , before: function (request) {
+                    upImgLayerIndex = layerLoading(layer, parent)
+                }
+                , choose: function (obj) {
+                    var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                    //读取本地文件
+                    obj.preview(function (index, file, result) {
+                        var tr = $(['<tr id="upload-' + index + '">'
+                            , '<td>' + file.name + '</td>'
+                            , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                            , '<td>等待上传</td>'
+                            , '<td>'
+                            , '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                            , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                            , '</td>'
+                            , '</tr>'].join(''));
+
+                        //单个重传
+                        tr.find('.demo-reload').on('click', function () {
+                            obj.upload(index, file);
+                        });
+
+                        //删除
+                        tr.find('.demo-delete').on('click', function () {
+                            upImgLayerIndex = layerLoading(layer, parent)
+                            var fileid = $(this).attr("fileid")
+                            if (fileid) {
+                                var url = AJAX_API.upImg.delete;
+                                var param = {
+                                    fileid: fileid
+                                }
+                                ajaxRequest(url, "POST", JSON.stringify(param), access_token, function (res) {
+                                    closeLayer(upImgLayerIndex, parent)
+                                    if (res.code == 200) {
+                                        //删除提交的数据
+                                        $.each(checkImgs, function (i, item) {
+                                            var item = item;
+                                            console.log(item)
+                                            if (item) {
+                                                var itemid = item.split("/").pop();
+                                                if (itemid == fileid) {
+                                                    checkImgs.splice(i, 1)
+                                                }
+                                            }
+
+                                        })
+                                        tr.remove();
+                                        uploadBlIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                                    }
+                                })
+                                return false
+                            }
+
+
+                        });
+
+                        checkListView.append(tr);
+                    });
+
+                }
+                , done: function (res, index, upload) {
+                    closeLayer(upImgLayerIndex, parent)
+                    if (res.code == 200) { //上传成功
+                        var tr = checkListView.find('tr#upload-' + index)
+                            , tds = tr.children();
+                        tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+                        tds.eq(3).find('.demo-delete').attr("fileid", res.data[0].fileid)
+                        checkImgs.push(res.data[0].url)
+                        return delete this.files[index]; //删除文件队列已经上传成功的文件
+                    }
+                    this.error(index, upload);
+                }
+                , error: function (index, upload) {
+                    var tr = checkListView.find('tr#upload-' + index)
+                        , tds = tr.children();
+                    tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+                    tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+                }
+            }); 
+            var uploadWoundIns = upload.render({
+                elem: '#woundImg'
+                , url: ajaxRoot + AJAX_API.upImg.updata
+                , accept: 'file'
+                , multiple: true
+                , auto: true
+                , number: 3
+                , headers: {
+                    Authorization: 'bearer ' + access_token
+                }
+                , before: function (request) {
+                    upImgLayerIndex = layerLoading(layer, parent)
+                }
+                , choose: function (obj) {
+                    var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                    //读取本地文件
+                    obj.preview(function (index, file, result) {
+                        var tr = $(['<tr id="upload-' + index + '">'
+                            , '<td>' + file.name + '</td>'
+                            , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                            , '<td>等待上传</td>'
+                            , '<td>'
+                            , '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                            , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                            , '</td>'
+                            , '</tr>'].join(''));
+
+                        //单个重传
+                        tr.find('.demo-reload').on('click', function () {
+                            obj.upload(index, file);
+                        });
+
+                        //删除
+                        tr.find('.demo-delete').on('click', function () {
+                            upImgLayerIndex = layerLoading(layer, parent)
+                            var fileid = $(this).attr("fileid")
+                            if (fileid) {
+                                var url = AJAX_API.upImg.delete;
+                                var param = {
+                                    fileid: fileid
+                                }
+                                ajaxRequest(url, "POST", JSON.stringify(param), access_token, function (res) {
+                                    closeLayer(upImgLayerIndex, parent)
+                                    if (res.code == 200) {
+                                        //删除提交的数据
+                                        $.each(woundImgs, function (i, item) {
+                                            var item = item;
+                                            console.log(item)
+                                            if (item) {
+                                                var itemid = item.split("/").pop();
+                                                if (itemid == fileid) {
+                                                    woundImgs.splice(i, 1)
+                                                }
+                                            }
+
+                                        })
+                                        tr.remove();
+                                        uploadBlIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                                    }
+                                })
+                                return false
+                            }
+
+
+                        });
+
+                        woundListView.append(tr);
+                    });
+
+                }
+                , done: function (res, index, upload) {
+                    closeLayer(upImgLayerIndex, parent)
+                    if (res.code == 200) { //上传成功
+                        var tr = woundListView.find('tr#upload-' + index)
+                            , tds = tr.children();
+                        tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+                        tds.eq(3).find('.demo-delete').attr("fileid", res.data[0].fileid)
+                        woundImgs.push(res.data[0].url)
+                        return delete this.files[index]; //删除文件队列已经上传成功的文件
+                    }
+                    this.error(index, upload);
+                }
+                , error: function (index, upload) {
+                    var tr = woundListView.find('tr#upload-' + index)
                         , tds = tr.children();
                     tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
                     tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
