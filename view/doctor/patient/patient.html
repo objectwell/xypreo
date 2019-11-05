@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>湘雅医院糖尿病足互联网平台我的会诊</title>
+    <link rel="stylesheet" href="../../../js/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="../../../js/plugin/toastr/toastr.min.css">
+    <link rel="stylesheet" href="../../../font/iconfont.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <style>
+        .layui-table-tool-temp {
+            padding-right: 20px;
+            text-align: right;
+        }
+
+        .layui-form.createForm {
+            display: none;
+            padding: 20px;
+        }
+
+        .organization-tree {
+            padding: 20px;
+        }
+
+        .subimt-add-btn {
+            padding: 30px 0;
+            margin: 0;
+            text-align: center;
+        }
+
+        .complain_search {
+            padding: 10px 0px;
+            margin: 20px 0 20px 40px;
+            height: 60px;
+        }
+
+        .search-btn {
+            margin-left: 40px;
+        }
+
+        .layout .patient-table {
+            background: #fff;
+        }
+
+        .layui-table-tips-c:before {
+            position: relative;
+            right: 2px;
+            top: -3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <body class="hg100 base-workbench">
+        <div class="complain_search">
+            <div class="layui-row">
+                <form class="layui-form layui-col-md12 " id="complain_search">
+                    姓名:
+                    <div class="layui-input-inline">
+                        <input type="text" name="serviceCode" id="serviceCode" placeholder="请输入姓名" autocomplete="off"
+                            class="layui-input">
+                    </div>
+                    身份证号:
+                    <div class="layui-input-inline">
+                        <input type="text" name="compOrder" id="compOrder" placeholder="请输入身份证号码" autocomplete="off"
+                            class="layui-input">
+                    </div>
+                    类型:
+                    <div class="layui-input-inline">
+                        <select name="complainState" id="complainState">
+                            <option value="">---请选择类型---</option>
+                            <option value="0">会诊/转诊</option>
+                            <option value="1">2d测量</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline search-btn">
+                        <button id="search" class="layui-btn layui-btn-normal " lay-submit lay-filter="patientSearch">
+                            <i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+            <table class="layui-hide" id="complainTable" lay-filter="complainList"></table>
+        </div>
+
+        <div class="layout">
+
+            <table class="layui-hide patient-table" id="organizationTable" lay-filter="organizationTable"></table>
+
+        </div>
+
+        <!-- <script src="../../../js/plugin/rem.min.js"></script> -->
+        <script src="../../../js/plugin/jquery.min.js"></script>
+        <script src="../../../js/plugin/jquery.cookie.js"></script>
+        <script src="../../../js/plugin/toastr/toastr.min.js"></script>
+        <script src="../../../js/plugin/layui/layui.js"></script>
+        <script src="../../../js/plugin/echarts.min.js"></script>
+        <script src="../../../js/plugin/prefixfree.js"></script>
+        <script src="../../../js/plugin/jquery.nicescroll.min.js"></script>
+        <script src="../../../js/common/config.js"></script>
+        <script src="../../../js/common/common.js"></script>
+        <script type="text/html" id="operation">
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">查看</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        </script>
+        <script>
+            $(function () {
+                function updateOrganization(layer, $, utoken, form, tableIns, option) {
+                    if (option) {
+                        $("#organizationOptions option[value='" + option.organizationId + "']").prop("selected", "selected");
+                        $("input[name='organizationName']").val(option.organizationName)
+                        $("input[name='organizationCode']").val(option.organizationCode)
+
+                        form.render()
+                    } else {
+                        form.val("organizationForm", {
+                            organizationName: "",
+                            organizationCode: "",
+                            pid: ""
+                        })
+                    }
+                    var createLayerIndex = layer.open({
+                        type: 1,
+                        content: $('#organizationForm'),
+                        area: ['600px', '400px']
+                    })
+                    form.on('submit(subimtAdd)', function (data) {
+                        var submitdata = data.field;
+                        if (option) {
+                            submitdata.organizationId = option.organizationId
+                        }
+                        var url = option ? AJAX_API.admin.organization.update : AJAX_API.admin.organization.create;
+                        ajaxRequest(url, "post", JSON.stringify(submitdata), utoken.access_token, function (res) {
+                            if (res.code == 200) {
+                                tableIns.reload()
+                                layer.msg(option ? "修改成功" : "新增成功", { icon: 1 })
+                                layer.close(createLayerIndex)
+                                form.render()
+                            }
+                        })
+                        return false
+                    })
+
+                }
+                layui.use(['layer', 'table', 'form', 'tree'], function () {
+                    var layer = layui.layer
+                        , table = layui.table
+                        , form = layui.form
+                        , tree = layui.tree
+                        , util = layui.util;
+
+                    var utoken = JSON.parse($.cookie("utoken"));
+
+                    if (!utoken) {
+                        layer.msg("您还没有登陆，请重新登陆", { icon: 2 })
+                        window.location.href = "../../../login_doctor.html"
+                    }
+                    var url = ajaxRoot + AJAX_API.measure.list + "?page=true";
+                    var urllist = AJAX_API.admin.organization.list;
+                    ajaxRequest(urllist, "get", {}, utoken.access_token, function (res) {
+                        if (res.code == 200) {
+                            var data = res.data;
+                            var html = ['<option value="">请选择机构</option>'];
+                            $.each(data, function (i, item) {
+                                html.push('<option value="' + item.organizationId + '">' + item.organizationName + '</option>')
+                            })
+                            $("#organizationOptions").html(html.join(""))
+                            form.render('select');
+
+                        }
+                    })
+                    var tableIns = table.render({
+                        elem: '#organizationTable'
+                        , height: 'full-120'
+                        , url: url //数据接口
+                        , headers: { Authorization: "bearer " + utoken.access_token }
+                        , request: {
+                            pageName: 'pageNum'
+                            , limitName: 'nums'
+                        }
+                        , page: true //开启分页
+                        , toolbar: "false"
+                        , defaultToolbar: []
+                        , parseData: function (res) {
+                            if (res.code == 200) {
+                                var count = res.data ? res.data.list.length : 0,
+                                    data = res.data ? res.data.list : [];
+                                return {
+                                    code: 0,
+                                    msg: res.message,
+                                    count: count,
+                                    data: data
+                                }
+                            }
+
+
+                        }
+                        , cols: [[ //表头
+                            { field: 'realname', title: '姓名', align: "center", flexd: "left" }
+                            , { field: 'length', title: '长度(cm)', align: "center" }
+                            , { field: 'width', title: '宽度(cm)', align: "center" }
+                            , { field: 'deep', title: '深度(cm)', align: "center" }
+                            , { field: 'area', title: '面积(m²)', align: "center" }
+                            , { field: 'date', title: '创建日期', align: "center" }
+                            , {
+                                field: 'plain', title: '类型', align: "center", templet: function (d) {
+                                    if (!d.plain) {
+                                        return '<span style="color: #5CD03F;">会诊/转诊</span>';
+                                    } else {
+                                        return ('<span style="color: #18A4D0;">2d测量</span>');
+                                    }
+                                }
+                            }
+                            , { fixed: 'right', title: '操作', width: 260, align: 'center', toolbar: '#operation' }
+                        ]]
+                        , done: function (res, curr, count) {
+
+                        }
+                    });
+
+                    table.on('tool(organizationTable)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                        var data = obj.data //获得当前行数据
+                            , layEvent = obj.event; //获得 lay-event 对应的值
+                        var organizationId = obj.data.organizationId;
+                        if (layEvent === 'del') {
+                            layer.confirm('真的删除所选择的机构吗？', { icon: 5, title: '提示' }, function (index) {
+                                var url = AJAX_API.admin.organization.delete;
+                                deleteOrganization({ organizationId: organizationId }, layer, utoken, tableIns)
+                            });
+                        } else if (layEvent === 'edit') {
+                            updateOrganization(layer, $, utoken, form, tableIns, data)
+                        }
+                    });
+                    form.on('submit(provinceSearch)', function (data) {
+                        var formData = data.field;
+                        console.debug(formData);
+                        var serviceCode = formData.serviceCode,
+                            compOrder = formData.compOrder,
+                            compType = formData.compType,
+                            complainState = formData.complainState;
+
+                        table.reload('provinceReload', {
+                            page: {
+                                curr: 1
+                            },
+                            where: {
+                                serviceCode: serviceCode,
+                                compOrder: compOrder,
+                                compType: compType,
+                                complainState: complainState
+                            },
+                            method: 'post',
+                            contentType: "application/json;charset=utf-8",
+                            url: '/medicaladmin/complain/queryComplainByCondition',
+                        });
+                        return false;
+                    });
+
+                    function deleteOrganization(organizationId, layer, utoken, tableIns) {
+                        if (organizationId) {
+                            var url = AJAX_API.admin.organization.delete;
+                            ajaxRequest(url, "post", JSON.stringify(organizationId), utoken.access_token, function (res) {
+                                if (res.code == 200) {
+                                    tableIns.reload()
+                                    layer.msg("删除成功", { icon: 1 })
+
+                                }
+                            })
+                        } else {
+                            layer.msg("没有可以删除的机构", { icon: 5 })
+                        }
+                    }
+
+                })
+            })
+        </script>
+    </body>
+
+</html>

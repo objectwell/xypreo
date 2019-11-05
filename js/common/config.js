@@ -1,6 +1,6 @@
 var ajaxRoot = "http://192.168.1.102:8080/";    
 // var ajaxRoot = "http://122.207.81.240:1602/"; 
-var ajaxRoot = " http://k8tnpv.natappfree.cc/";  
+var ajaxRoot = " http://yldhez.natapp1.cc/";  
 var AJAX_API = {
     //通用
     common:{
@@ -67,5 +67,17 @@ var AJAX_API = {
         list:"web/bingli/list",        // 列表
         dinfo:"web/bingli/find-one?bingLiId=",     // 会诊详情信息
         images:"web/bingli/detec-image"            // 获取会诊图片
+    },
+     // 2d伤口测量
+     measure: {
+        create:"android/bingli/create",    // 创建
+        list:"web/bingli/table",        // 列表
+        dinfo:"android/bingli/find-one?bingLiId=",     // 会诊详情信息
+        images:"android/bingli/detec-image",            // 获取会诊图片
+        query:"android/bingli/query?bingLiId=",          //查询患者资料、伤口资料
+        situations:"android/bingli/query-situations",    //查询全身情况补充字典
+        detect:"android/bingli/detect?bingLiId=",         // 分析结果
+        brokenline:"android/bingli/brokenline?bingLiId=",  // 折线图
+        update:"android/bingli/update",                    // 保存   
     }
 }

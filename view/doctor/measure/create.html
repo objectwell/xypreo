@@ -62,70 +62,12 @@
 <body>
     <div class="consultation-form " id="consultationForm">
         <form class="layui-form">
-
-            <!-- <h4 class="form-title"> 会诊申请医院信息</h4>
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">医院</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="number" lay-verify="required|number" autocomplete="off"
-                            class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">接诊医生</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="date" id="date" lay-verify="date" placeholder="yyyy-MM-dd"
-                            autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">科室</label>
-                    <div class="layui-input-inline">
-                        <input type="tel" name="url" lay-verify="url" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-            </div> -->
-            <h4 class="form-title"> 会诊申请基本信息</h4>
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">会诊目的</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="goal" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">会诊类型</label>
-                    <div class="layui-input-inline">
-                        <select name="consultationTypeId" lay-verify="required" id="consultationTypeId"
-                            lay-filter="consultationTypeId">
-                            <option value="">请选择会诊类型</option>
-
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">会诊专家</label>
-                    <div class="layui-input-inline">
-                        <select name="specialistId" lay-verify="required" id="specialistId">
-                            <option value="">请选择会诊专家</option>
-
-                        </select>
-                    </div>
-                </div>
-            </div>
             <h4 class="form-title"> 患者基本信息</h4>
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">诊疗卡号</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="bingliId" lay-verify="required" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">姓名</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="realname" lay-verify="required" class="layui-input">
+                        <input type="text" name="bingLiCard" lay-verify="required" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -134,6 +76,13 @@
                         <input type="text" name="cardno" lalay-verify="required/identity" class="layui-input">
                     </div>
                 </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="realname" lay-verify="required" class="layui-input">
+                    </div>
+                </div>
+
                 <div class="layui-inline">
                     <label class="layui-form-label">年龄</label>
                     <div class="layui-input-inline">
@@ -148,37 +97,10 @@
                     </div>
                 </div>
             </div>
-            <h4 class="form-title"> 患者基本信息</h4>
-            <div class="layui-form-item block">
-                <label class="layui-form-label">初步诊断</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="diagnosis" placeholder="请输入初步诊断" lalay-verify="required"
-                        class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item block">
-                <label class="layui-form-label">主诉</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="appeal" placeholder="请输入主诉" lalay-verify="required" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item block">
-                <label class="layui-form-label">现病史</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="nearIllness" placeholder="请输入现病史" lalay-verify="required"
-                        class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item block">
-                <label class="layui-form-label">既往史</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="historyIllness" placeholder="请输入既往史" lalay-verify="required"
-                        class="layui-input">
-                </div>
-            </div>
+            
             <h4 class="form-title"> 伤口图片采集<span>(最多上传3张图片)</span> </h4>
             <div class="layui-upload">
-                <button type="button" class="layui-btn layui-btn-normal" id="medicalImgs">选择伤口图片</button>
+                <button type="button" class="layui-btn layui-btn-normal" id="woundImageList">选择伤口图片</button>
                 <div class="layui-upload-list">
                     <table class="layui-table">
                         <thead>
@@ -189,13 +111,13 @@
                                 <th>操作</th>
                             </tr>
                         </thead>
-                        <tbody id="blList"></tbody>
+                        <tbody id="woundImage"></tbody>
                     </table>
                 </div>
             </div>
             <h4 class="form-title"> 病历采集<span>(最多上传3张图片)</span></h4>
             <div class="layui-upload">
-                <button type="button" class="layui-btn layui-btn-normal" id="checkImg">选择病历图片</button>
+                <button type="button" class="layui-btn layui-btn-normal" id="infoImageList">选择病历图片</button>
                 <div class="layui-upload-list">
                     <table class="layui-table">
                         <thead>
@@ -206,13 +128,13 @@
                                 <th>操作</th>
                             </tr>
                         </thead>
-                        <tbody id="checkList"></tbody>
+                        <tbody id="infoImage"></tbody>
                     </table>
                 </div>
             </div>
             <h4 class="form-title"> 检验检查报告采集<span>(最多上传9张图片)</span></h4>
             <div class="layui-upload">
-                <button type="button" class="layui-btn layui-btn-normal" id="woundImg">选择检验检查报告图片</button>
+                <button type="button" class="layui-btn layui-btn-normal" id="detecImageList">选择检验检查报告图片</button>
                 <div class="layui-upload-list">
                     <table class="layui-table">
                         <thead>
@@ -223,7 +145,7 @@
                                 <th>操作</th>
                             </tr>
                         </thead>
-                        <tbody id="woundList"></tbody>
+                        <tbody id="detecImage"></tbody>
                     </table>
                 </div>
             </div>
@@ -251,14 +173,13 @@
                 table = layui.table,
                 form = layui.form,
                 upload = layui.upload;
-            var blListView = $('#blList');
-            var checkListView = $('#checkList');
-            var woundListView = $('#woundList');
+            var woundImageView = $('#woundImage');
+            var infoImageView = $('#infoImage');
+            var detecImageView = $('#detecImage');
             var utoken = $.cookie("utoken");
             var detecImageList = [];
-            var bingliImgs = [];
-            var checkImgs = [];
-            var woundImgs = [];
+            var woundImageList = [];
+            var infoImageList = [];
             var upImgLayerIndex;
             if (!utoken) {
                 layer.msg('您尚未登陆或者,或者登陆已过期，请重登陆', {
@@ -299,7 +220,10 @@
                 upImgLayerIndex = layerLoading(layer, parent)
                 var submitData = data.field;
                 submitData.detecImageList = detecImageList;
-                var createUrl = ajaxRoot + AJAX_API.consultation.create;
+                submitData.infoImageList = infoImageList;
+                submitData.woundImageList = woundImageList;
+               
+                var createUrl = ajaxRoot + AJAX_API.measure.create;
                 $.ajax({
                     data: JSON.stringify(submitData),
                     type: "POST",
@@ -315,7 +239,7 @@
                         closeLayer(upImgLayerIndex, parent)
                         if (res.code == 200) {
                             parent.layer.closeAll()
-                            parent.layer.msg("您已经成功创建了一个会诊信息")
+                            parent.layer.msg("创建成功",{icon:1})
                         }
                     },
                     error: function () {
@@ -331,8 +255,9 @@
             //         elem: '#medicalImgs',
             //     }
             // ]
+            // 伤口图片
             var uploadBlIns = upload.render({
-                elem: '#medicalImgs'
+                elem: '#woundImageList'
                 , url: ajaxRoot + AJAX_API.upImg.updata
                 , accept: 'file'
                 , multiple: true
@@ -376,13 +301,13 @@
                                     closeLayer(upImgLayerIndex, parent)
                                     if (res.code == 200) {
                                         //删除提交的数据
-                                        $.each(bingliImgs, function (i, item) {
+                                        $.each(woundImageList, function (i, item) {
                                             var item = item;
                                             console.log(item)
                                             if (item) {
                                                 var itemid = item.split("/").pop();
                                                 if (itemid == fileid) {
-                                                    bingliImgs.splice(i, 1)
+                                                    woundImageList.splice(i, 1)
                                                 }
                                             }
 
@@ -397,32 +322,32 @@
 
                         });
 
-                        blListView.append(tr);
+                        woundImageView.append(tr);
                     });
 
                 }
                 , done: function (res, index, upload) {
                     closeLayer(upImgLayerIndex, parent)
                     if (res.code == 200) { //上传成功
-                        var tr = blListView.find('tr#upload-' + index)
+                        var tr = woundImageView.find('tr#upload-' + index)
                             , tds = tr.children();
                         tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
                         tds.eq(3).find('.demo-delete').attr("fileid", res.data[0].fileid)
-                        bingliImgs.push(res.data[0].url)
+                        woundImageList.push(res.data[0].url)
                         return delete this.files[index]; //删除文件队列已经上传成功的文件
                     }
                     this.error(index, upload);
                 }
                 , error: function (index, upload) {
-                    var tr = blListView.find('tr#upload-' + index)
+                    var tr = woundImageView.find('tr#upload-' + index)
                         , tds = tr.children();
                     tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
                     tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
                 }
             });
-
+            // 病历图片
             var uploadCheckIns = upload.render({
-                elem: '#checkImg'
+                elem: '#infoImageList'
                 , url: ajaxRoot + AJAX_API.upImg.updata
                 , accept: 'file'
                 , multiple: true
@@ -466,13 +391,13 @@
                                     closeLayer(upImgLayerIndex, parent)
                                     if (res.code == 200) {
                                         //删除提交的数据
-                                        $.each(checkImgs, function (i, item) {
+                                        $.each(infoImageList, function (i, item) {
                                             var item = item;
                                             console.log(item)
                                             if (item) {
                                                 var itemid = item.split("/").pop();
                                                 if (itemid == fileid) {
-                                                    checkImgs.splice(i, 1)
+                                                    infoImageList.splice(i, 1)
                                                 }
                                             }
 
@@ -487,36 +412,37 @@
 
                         });
 
-                        checkListView.append(tr);
+                        infoImageView.append(tr);
                     });
 
                 }
                 , done: function (res, index, upload) {
                     closeLayer(upImgLayerIndex, parent)
                     if (res.code == 200) { //上传成功
-                        var tr = checkListView.find('tr#upload-' + index)
+                        var tr = infoImageView.find('tr#upload-' + index)
                             , tds = tr.children();
                         tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
                         tds.eq(3).find('.demo-delete').attr("fileid", res.data[0].fileid)
-                        checkImgs.push(res.data[0].url)
+                        infoImageList.push(res.data[0].url)
                         return delete this.files[index]; //删除文件队列已经上传成功的文件
                     }
                     this.error(index, upload);
                 }
                 , error: function (index, upload) {
-                    var tr = checkListView.find('tr#upload-' + index)
+                    var tr = infoImageView.find('tr#upload-' + index)
                         , tds = tr.children();
                     tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
                     tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
                 }
-            }); 
+            });
+            //  检验检测
             var uploadWoundIns = upload.render({
-                elem: '#woundImg'
+                elem: '#detecImageList'
                 , url: ajaxRoot + AJAX_API.upImg.updata
                 , accept: 'file'
                 , multiple: true
                 , auto: true
-                , number: 3
+                , number: 9
                 , headers: {
                     Authorization: 'bearer ' + access_token
                 }
@@ -555,13 +481,13 @@
                                     closeLayer(upImgLayerIndex, parent)
                                     if (res.code == 200) {
                                         //删除提交的数据
-                                        $.each(woundImgs, function (i, item) {
+                                        $.each(detecImageList, function (i, item) {
                                             var item = item;
                                             console.log(item)
                                             if (item) {
                                                 var itemid = item.split("/").pop();
                                                 if (itemid == fileid) {
-                                                    woundImgs.splice(i, 1)
+                                                    detecImageList.splice(i, 1)
                                                 }
                                             }
 
@@ -576,24 +502,24 @@
 
                         });
 
-                        woundListView.append(tr);
+                        detecImageView.append(tr);
                     });
 
                 }
                 , done: function (res, index, upload) {
                     closeLayer(upImgLayerIndex, parent)
                     if (res.code == 200) { //上传成功
-                        var tr = woundListView.find('tr#upload-' + index)
+                        var tr = detecImageView.find('tr#upload-' + index)
                             , tds = tr.children();
                         tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
                         tds.eq(3).find('.demo-delete').attr("fileid", res.data[0].fileid)
-                        woundImgs.push(res.data[0].url)
+                        detecImageList.push(res.data[0].url)
                         return delete this.files[index]; //删除文件队列已经上传成功的文件
                     }
                     this.error(index, upload);
                 }
                 , error: function (index, upload) {
-                    var tr = woundListView.find('tr#upload-' + index)
+                    var tr = detecImageView.find('tr#upload-' + index)
                         , tds = tr.children();
                     tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
                     tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传

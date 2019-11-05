@@ -1,0 +1,64 @@
+[
+    {
+        "name": "北zzzzzz京",
+        "value": 1,
+        "children": [
+            {
+                "name": "朝xxxxxx阳",
+                "value": 11,
+                "children": [
+                    {
+                        "name": "酒仙桥",
+                        "value": 111,
+                        "renderCheckbox": true
+                    },
+                    {
+                        "name": "望京东",
+                        "value": 112,
+                        "renderCheckbox": true
+                    }
+                ]
+            },
+            {
+                "name": "海ccccccc淀",
+                "value": 12,
+                "children": [
+                    {
+                        "name": "酒仙桥2",
+                        "value": 121,
+                        "renderCheckbox": true
+                    },
+                    {
+                        "name": "望京东2",
+                        "value": 122,
+                        "renderCheckbox": true
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "深vvvvv圳",
+        "value": 2,
+        "children": [
+            {
+                "name": "龙bbbbbb岗",
+                "value": 21,
+                "children": [
+                    {
+                        "name": "龙岗2",
+                        "value": 211,
+                        "renderCheckbox": true
+                    },
+                    {
+                        "name": "望京龙岗2东2",
+                        "value": 212,
+                        "renderCheckbox": true
+                    }
+                ]
+            },
+
+        ]
+    }
+    ,
+]

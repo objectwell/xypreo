@@ -7,8 +7,15 @@
     <title>Document</title>
 </head>
 <body>
-        <div class="aaa" style="width:20%;height:0;padding-bottom: 20%;background-color: #ccc;margin: 0 auto;">
-                <img src="./imgs/u666.jpg"style="width:100%;">
-            </div>
+        <input type="checkbox" name="ss"  value="11"> 11
+        <input type="checkbox" name="ss"  value="22">22
+        <span id="ll">dd</spa22>
+        <script>
+            document.getElementById("ll").onclick = function(){
+                for(var i =0; i<document.getElementsByName("ss").length;i++) {
+                    console.log(document.getElementsByName("ss").value)
+                }
+            }
+        </script>
 </body>
 </html>

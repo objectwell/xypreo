@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../../js/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="../../../js/plugin/toastr/toastr.min.css">
+    <link rel="stylesheet" href="../../../font/iconfont.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <link rel="stylesheet" href="../../../js/plugin/SyntaxHighlighter-3.0.83/shCore.css">
+    <link rel="stylesheet" href="../../../js/plugin/SyntaxHighlighter-3.0.83/shThemeEclipse.css">
+    <link rel="stylesheet" href="../../../js/plugin/formSelects/formSelects-v4.css">
+    <style>
+        .consultation-form {
+            padding: 20px 10px;
+        }
+
+        .layui-form-label {
+            width: 120px;
+        }
+
+        .layui-input-block {
+            margin-left: 140px;
+            padding-right: 20px;
+        }
+        .layui-form-item .layui-input-inline {
+            margin-left: 20px;
+        }
+        .laydate-time-list {
+            padding-bottom: 0;
+            overflow: hidden
+        }
+
+        .laydate-time-list>li {
+            width: 50% !important;
+        }
+
+        .laydate-time-list>li:last-child {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="consultationForm" class="consultation-form">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">拟会诊类型</label>
+                <div class="layui-input-block">
+                    <select name="interest" lay-filter="required">
+                        <option value="0">普通会诊</option>
+                        <option value="1">紧急会诊</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">拟会诊时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="consulationDate" lay-filter="required" placeholder="请选日期">
+                </div>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="consulationTime" lay-filter="required" placeholder="请选时间">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">拟会诊专家</label>
+                <div class="layui-input-block">
+                    <select name="expert" lay-filter="required" xm-select="expert" xm-select-search=""
+                        xm-select-search-type="dl">
+                        <option value="0">明确诊断</option>
+                        <option value="1">进一步治疗</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">拟会诊科室</label>
+                <div class="layui-input-block" id="department"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">拟会诊需求</label>
+                <div class="layui-input-block">
+                    <select name="demand" lay-filter="required">
+                        <option value="0">明确诊断</option>
+                        <option value="1">进一步治疗</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即发起</button>
+                    <button type="close" class="layui-btn layui-btn-primary">取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="../../../js/plugin/jquery.min.js"></script>
+    <script src="../../../js/plugin/jquery.cookie.js"></script>
+    <script src="../../../js/plugin/SyntaxHighlighter-3.0.83/shCore.js"></script>
+    <script src="../../../js/plugin/SyntaxHighlighter-3.0.83/shBrushJScript.js"></script>
+    <script src="../../../js/plugin/layui/layui.js"></script>
+    <script src="../../../js/common/config.js"></script>
+    <script src="../../../js/common/common.js"></script>
+    <script src="../../../js/plugin/formSelects/formSelects-v4.js"></script>
+    <script>
+        layui.use(['layer', 'form', 'laydate'], function () {
+            SyntaxHighlighter.defaults["quick-code"] = false;
+            SyntaxHighlighter.defaults["gutter"] = false;
+            SyntaxHighlighter.all();
+            var bingliId = getQueryString("bingliId")
+            console.log(bingliId)
+            var formSelects = layui.formSelects;
+            //生成目录结构
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var Sdate = laydate.render({
+                elem: '#consulationDate'
+                , value: new Date()
+                , isInitValue: true
+                , min: -0 //7天前
+                , max: 7 //7天后
+            });
+            var Stime = laydate.render({
+                elem: '#consulationTime' //指定元素
+                , type: 'time'
+                , range: true
+                , format: 'HH:mm'
+                , min: "08:30:00" 
+                , max: "17:30:00" 
+            });
+            var data = [
+                {
+                    name: '北zzzzzz京',
+                    value: 1,
+                    children: [
+                        {
+                            name: '朝xxxxxx阳',
+                            type: "sss",
+                            value: 11,
+                            children: [
+                                {
+                                    name: '酒仙桥',
+                                    value: 111,
+                                    renderCheckbox: true
+                                },
+                                {
+                                    name: '望京东',
+                                    value: 112,
+                                    renderCheckbox: true
+                                }
+                            ]
+                        },
+                        {
+                            name: '海ccccccc淀',
+                            value: 12,
+                            children: [
+                                {
+                                    name: '酒仙桥2',
+                                    value: 121,
+                                    renderCheckbox: true
+                                },
+                                {
+                                    name: '望京东2',
+                                    value: 122,
+                                    renderCheckbox: true
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: '深vvvvv圳',
+                    value: 2,
+                    children: [
+                        {
+                            name: '龙bbbbbb岗',
+                            value: 21,
+                            children: [
+                                {
+                                    name: '龙岗2',
+                                    value: 211,
+                                    renderCheckbox: true
+                                },
+                                {
+                                    name: '望京龙岗2东2',
+                                    value: 212,
+                                    renderCheckbox: true
+                                }
+                            ]
+                        },
+
+                    ]
+                }
+                ,
+            ]
+
+
+
+
+            formSelects.data('expert', 'local', {
+                arr: data,
+
+            });
+
+            formSelects.on('expert', function (id, vals, val, isAdd, isDisabled) {
+
+                // alert("当前选择了: " + JSON.stringify(vals));
+            }, true);
+        })
+
+    </script>
+</body>
+
+</html>
