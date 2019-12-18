@@ -7,10 +7,67 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>湘雅医院糖尿病足</title>
     <link rel="stylesheet" href="../../../js/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="../../../css/step.css">
     <link rel="stylesheet" href="../../../js/plugin/toastr/toastr.min.css">
     <link rel="stylesheet" href="../../../font/iconfont.css">
     <link rel="stylesheet" href="../../../css/common.css">
+    <link rel="stylesheet" href="../../../js/plugin/SyntaxHighlighter-3.0.83/shCore.css">
+    <link rel="stylesheet" href="../../../js/plugin/SyntaxHighlighter-3.0.83/shThemeEclipse.css">
+    <link rel="stylesheet" href="../../../js/plugin/formSelects/formSelects-v4.css">
     <style>
+        .workbench .info-tips {
+            height: 40px;
+            line-height: 40px;
+            font-size: 16px;
+            color: #c0c0c0;
+            box-sizing: border-box;
+            border-bottom: 1px dashed #c0c0c0;
+        }
+
+        .workbench .info-list {
+            padding: 10px 0;
+            line-height: 18px;
+        }
+
+        .workbench .condition-list {
+            padding: 6px 0;
+
+        }
+
+        .workbench .condition-list i {
+            text-align: right;
+        }
+
+        .workbench .info-p {
+            height: 180px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .workbench .info-p img {
+            width: auto;
+            height: 180px;
+        }
+
+        .workbench .layui-form {
+            margin: 6px 0;
+        }
+
+        .workbench .layui-form-label {
+            padding: 10px 0;
+            text-align: left;
+        }
+
+        .workbench .layui-textarea {
+            display: inline-block;
+            width: calc(100% - 80px);
+            min-height: 180px;
+        }
+
+        .workbench .opinion-button {
+            text-align: center;
+        }
+
         .consultation-form {
             padding: 10px 20px;
         }
@@ -56,123 +113,425 @@
         .layui-upload {
             padding: 0 26px 0 60px;
         }
+
+        progress[value] {
+            width: 12.5em;
+            height: 0.25em;
+            border: none;
+            border-radius: 0.125em;
+            background: #c1c5ce;
+        }
+
+        progress[value]::-webkit-progress-bar {
+            border: none;
+            border-radius: 0.125em;
+            background: #e6eeff;
+        }
+
+        progress[value]::-webkit-progress-value {
+            border: none;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #8aaaff, #fa8cff);
+        }
+
+        progress[value]::-moz-progress-bar {
+            border: none;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #8aaaff, #fa8cff);
+        }
+
+        progress[value]::-ms-fill {
+            border: none;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #8aaaff, #fa8cff);
+        }
+
+        output:not(:empty) {
+            padding-bottom: 1em;
+        }
+
+        output:not(:empty):after {
+            content: '%';
+        }
+
+        .wound-text {
+            text-align: center;
+            padding: 6px 0;
+        }
+
+        .wound-text em {
+            color: #c0c0c0;
+        }
+
+        .wound-chart {
+            width: 100%;
+            height: 300px;
+        }
+
+        .layui-form-checkbox i {
+            height: 100%;
+        }
+
+        .body-list {
+            text-align: center;
+        }
+
+        .laydate-time-list {
+            padding-bottom: 0;
+            overflow: hidden
+        }
+
+        .laydate-time-list>li {
+            width: 50% !important;
+        }
+
+        .laydate-time-list>li:last-child {
+            display: none;
+        }
+
+        .consultation-apply {
+            width: 600px;
+            margin: 30px auto;
+        }
+
+        .consultation-apply .layui-form-item {
+            margin: 10px 0;
+        }
+
+        .department {
+            padding: 9px 0;
+        }
+
+        .department li {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .department li span {
+            flex: 1;
+        }
+
+        .add-measure-btn {
+            margin-left: 60px;
+        }
+
+        .remove-list {
+            float: right;
+        }
     </style>
 </head>
 
 <body>
     <div class="consultation-form " id="consultationForm">
-        <form class="layui-form">
-            <h4 class="form-title"> 患者基本信息</h4>
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">诊疗卡号</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="bingLiCard" lay-verify="required" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">身份证号</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="cardno" lalay-verify="required/identity" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">姓名</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="realname" lay-verify="required" class="layui-input">
-                    </div>
-                </div>
+        <div class="layui-carousel" id="stepForm" lay-filter="stepForm" style="margin: 0 auto;">
+            <div carousel-item class="carousel-item">
+                <div>
+                    <form class="layui-form">
+                        <h4 class="form-title"> 患者基本信息</h4>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">诊疗卡号</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="bingLiCard" lay-verify="required" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">身份证号</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="cardno" lalay-verify="required/identity"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">姓名</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="realname" lay-verify="required" class="layui-input">
+                                </div>
+                            </div>
 
-                <div class="layui-inline">
-                    <label class="layui-form-label">年龄</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="age" lay-verify="required/number" class="layui-input">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">年龄</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="age" lay-verify="required/number" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">性别</label>
+                                <div class="layui-input-inline">
+                                    <input type="radio" name="sex" value="1" title="男" lay-verify="required">
+                                    <input type="radio" name="sex" value="0" title="女" checked lay-verify="required">
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 class="form-title"> 伤口图片采集<span>(一个伤口部位最多上传3张图片，如有多个伤口部位，请点击下面增加伤口部位)</span> </h4>
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn layui-btn-normal" id="woundImageList">选择伤口图片</button>
+                            <div class="layui-upload-list">
+                                <table class="layui-table">
+                                    <thead>
+                                        <tr>
+                                            <th>伤口文件名</th>
+                                            <th>大小</th>
+                                            <th>状态</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="woundImage"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <button type="button" class="layui-btn layui-btn-sm add-measure-btn" title="点击新增伤口"
+                            id="addMeasure">
+                            <i class="layui-icon">&#xe654;</i>新增伤口
+                        </button>
+                        <h4 class="form-title"> 病历采集<span>(最多上传3张图片)</span></h4>
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn layui-btn-normal" id="infoImageList">选择病历图片</button>
+                            <div class="layui-upload-list">
+                                <table class="layui-table">
+                                    <thead>
+                                        <tr>
+                                            <th>病历文件名</th>
+                                            <th>大小</th>
+                                            <th>状态</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="infoImage"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <h4 class="form-title"> 检验检查报告采集<span>(最多上传9张图片)</span></h4>
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn layui-btn-normal"
+                                id="detecImageList">选择检验检查报告图片</button>
+                            <div class="layui-upload-list">
+                                <table class="layui-table">
+                                    <thead>
+                                        <tr>
+                                            <th>检验检查报告文件名</th>
+                                            <th>大小</th>
+                                            <th>状态</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="detecImage"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item " style="text-align: center; margin: 30px 0;">
+                            <button class="layui-btn create layui-btn-normal" lay-submit lay-filter="create"
+                                id="create">立即提交</button>
+                        </div>
+                    </form>
+                </div>
+                <div class=" workbench">
+                    <div class="layui-row layui-col-space5">
+                        <div class="measure-tab">
+                            <div class="layui-tab layui-tab-brief" lay-filter="measureTabBrief">
+                                <ul class="layui-tab-title" id="measureTabTitle">
+                                    <li class="layui-this">伤口一</li>
+                                    <li>伤口二</li>
+                                    <li>伤口三</li>
+                                    <li>伤口四</li>
+                                    <li>伤口五</li>
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <h4 class="info-tips">伤口深度指数</h4>
+                        </div>
+
+                        <div class="layui-col-md12 info-list" id="loader-mater">
+
+                            <div class="layui-progress layui-progress-big" lay-showPercent="true" lay-filter="index">
+                                <div class="layui-progress-bar layui-bg-blue" lay-percent="0%" id="progressIndex"></div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <h4 class="info-tips">伤口测量结果</h4>
+                        </div>
+
+                        <div class="layui-col-md12 info-list">
+                            <div class="layui-row layui-col-space5">
+                                <div class="layui-col-md3 info-list">
+                                    <p class="wound-text"><em>伤口长度(最长):</em> <span id="length"></span>CM</p>
+
+                                </div>
+                                <div class="layui-col-md3 info-list">
+                                    <p class="wound-text"><em>伤口宽度(最宽):</em> <span id="width"></span>CM</p>
+                                </div>
+                                <div class="layui-col-md3 info-list">
+                                    <p class="wound-text"><em>伤口深度(最深):</em> <span id="deep"></span>CM</p>
+                                </div>
+                                <div class="layui-col-md3 info-list">
+                                    <p class="wound-text"><em>伤口面积(最大):</em> <span id="area"></span>M²</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="layui-col-md12  echarts-list">
+                            <div class="layui-row layui-col-space5">
+                                <div class="layui-col-md6 info-list">
+                                    <div class="wound-pie wound-chart" id="woundPie"></div>
+                                </div>
+                                <div class="layui-col-md6 info-list">
+                                    <div class="wound-line wound-chart" id="woundLine"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="layui-col-md12">
+                            <h4 class="info-tips">全身情况补充</h4>
+                        </div>
+                        <div class="layui-col-md12  echarts-list">
+                            <div class=" layui-form" id="analyseForm">
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block ml0">
+                                        <div class="layui-row layui-col-space5" id="bodyList">
+                                        </div>
+                                        <div class="layui-row layui-col-space5 p10">
+                                            <div id="replenishBox" class="replenish-box">
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md12">
+                                    <h4 class="info-tips">伤口分级评估结果</h4>
+                                    <div class="layui-row layui-col-space5">
+                                        <div class="layui-col-md4 info-list">
+                                            <select name="resultLv">
+                                                <option value="">请选择伤口等级</option>
+                                                <option value="足部溃疡病史(1级)">足部溃疡病史(1级)</option>
+                                                <option value="表浅溃疡(2级)">表浅溃疡(2级)</option>
+                                                <option value="溃疡深达肌腱(3级)">溃疡深达肌腱(3级)</option>
+                                                <option value="溃疡累及骨和关节(4级)">溃疡累及骨和关节(4级)</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-col-md4 info-list">
+                                            <select name="resultLvNub">
+                                                <option value="">请选择伤口等级期数</option>
+                                                <option value="无感染无缺血(A期)">无感染无缺血(A期)</option>
+                                                <option value="合并感染(B期)">合并感染(B期)</option>
+                                                <option value="合并缺血(C期)">合并缺血(C期)</option>
+                                                <option value="合并感染和缺血(D期)">合并感染和缺血(D期)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <h4 class="info-tips">建议处理方案</h4>
+                                        <div class="layui-row layui-col-space5">
+                                            <div class="layui-col-md12 info-list">
+                                                <div class="layui-input-block ml0">
+                                                    <textarea name="plain" placeholder="请输入内容"
+                                                        class="layui-textarea w100"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md12">
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block m0 text-center">
+                                            <button class="layui-btn layui-btn-normal m10" lay-submit
+                                                lay-filter="diagnose" id="save" type="save">保存到我的患者</button>
+                                            <button class="layui-btn layui-btn-normal m10" lay-submit
+                                                lay-filter="diagnose" id="create" type="consulation">发起会诊/转诊</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">性别</label>
-                    <div class="layui-input-inline">
-                        <input type="radio" name="sex" value="1" title="男" lay-verify="required">
-                        <input type="radio" name="sex" value="0" title="女" checked lay-verify="required">
-                    </div>
-                </div>
-            </div>
-            
-            <h4 class="form-title"> 伤口图片采集<span>(最多上传3张图片)</span> </h4>
-            <div class="layui-upload">
-                <button type="button" class="layui-btn layui-btn-normal" id="woundImageList">选择伤口图片</button>
-                <div class="layui-upload-list">
-                    <table class="layui-table">
-                        <thead>
-                            <tr>
-                                <th>伤口文件名</th>
-                                <th>大小</th>
-                                <th>状态</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="woundImage"></tbody>
-                    </table>
-                </div>
-            </div>
-            <h4 class="form-title"> 病历采集<span>(最多上传3张图片)</span></h4>
-            <div class="layui-upload">
-                <button type="button" class="layui-btn layui-btn-normal" id="infoImageList">选择病历图片</button>
-                <div class="layui-upload-list">
-                    <table class="layui-table">
-                        <thead>
-                            <tr>
-                                <th>病历文件名</th>
-                                <th>大小</th>
-                                <th>状态</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="infoImage"></tbody>
-                    </table>
-                </div>
-            </div>
-            <h4 class="form-title"> 检验检查报告采集<span>(最多上传9张图片)</span></h4>
-            <div class="layui-upload">
-                <button type="button" class="layui-btn layui-btn-normal" id="detecImageList">选择检验检查报告图片</button>
-                <div class="layui-upload-list">
-                    <table class="layui-table">
-                        <thead>
-                            <tr>
-                                <th>检验检查报告文件名</th>
-                                <th>大小</th>
-                                <th>状态</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="detecImage"></tbody>
-                    </table>
-                </div>
-            </div>
+                <div>
+                    <form class="layui-form consultation-apply">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">拟会诊类型</label>
+                            <div class="layui-input-block">
+                                <select name="interest" lay-filter="required" id="interest">
 
-            <div class="layui-form-item " style="text-align: center; margin: 30px 0;">
-                <button class="layui-btn create layui-btn-normal" lay-submit lay-filter="create"
-                    id="create">立即提交</button>
-            </div>
-        </form>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">拟会诊时间</label>
+                            <div class="layui-input-inline">
+                                <input type="datetime" class="layui-input" id="consulationDate" lay-filter="required"
+                                    placeholder="请选日期">
+                            </div>
+                            <div class="layui-input-inline">
+                                <input type="datetime" class="layui-input" id="consulationTime" lay-filter="required"
+                                    placeholder="请选时间">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">拟会诊专家</label>
+                            <div class="layui-input-block">
+                                <select name="expert" lay-filter="required" xm-select="expert" xm-select-search=""
+                                    xm-select-search-type="dl" lay-filter="required">
 
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">拟会诊科室</label>
+                            <ul class="layui-input-block department" id="department"></ul>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">拟会诊需求</label>
+                            <div class="layui-input-block">
+                                <select name="demand" lay-filter="required" id="demand">
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block ml0 text-center">
+                                <button class="layui-btn" lay-submit lay-filter="applyConsultation">立即发起</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+
 </body>
 <script src="../../../js/plugin/jquery.min.js"></script>
 <script src="../../../js/plugin/jquery.cookie.js"></script>
 <script src="../../../js/plugin/toastr/toastr.min.js"></script>
 <script src="../../../js/plugin/layui/layui.js"></script>
+<script src="../../../js/plugin/layui/lay/modules/step.js"></script>
+<script src="../../../js/plugin/echarts.min.js"></script>
+<script src="../../../js/plugin/prefixfree.js"></script>
 <script src="../../../js/plugin/jquery.nicescroll.min.js"></script>
 <script src="../../../js/common/common.js"></script>
 <script src="../../../js/common/config.js"></script>
+<script src="../../../js/common/charts.js"></script>
+<script src="../../../js/plugin/SyntaxHighlighter-3.0.83/shCore.js"></script>
+<script src="../../../js/plugin/SyntaxHighlighter-3.0.83/shBrushJScript.js"></script>
+<script src="../../../js/plugin/formSelects/formSelects-v4.js"></script>
 <script>
     $(function () {
 
-        layui.use(['layer', 'table', 'form', 'upload'], function () {
+        layui.config({
+            base: '../../../js/plugin/layui/lay/modules/',
+        }).use(['layer', 'table', 'form', 'upload', 'step', 'element', 'laydate'], function () {
             var layer = layui.layer,
                 table = layui.table,
                 form = layui.form,
-                upload = layui.upload;
+                upload = layui.upload,
+                step = layui.step,
+                laydate = layui.laydate,
+                element = layui.element;
+            var formSelects = layui.formSelects;
             var woundImageView = $('#woundImage');
             var infoImageView = $('#infoImage');
             var detecImageView = $('#detecImage');
@@ -181,9 +540,13 @@
             var woundImageList = [];
             var infoImageList = [];
             var upImgLayerIndex;
+            var consultationDate = "";
+            var consulationTime = "";
+            var consultationTeam = [];
+            var analysisChartsData = {};
             if (!utoken) {
                 layer.msg('您尚未登陆或者,或者登陆已过期，请重登陆', {
-                    time: 20000, //20s后自动关闭
+                    time: 3000, 
                     btn: ['重新登陆'],
                     btn1: function () {
                         window.location.href = "../../../login_doctor.html"
@@ -191,7 +554,30 @@
                 });
 
             }
+
             var access_token = JSON.parse(utoken).access_token;
+
+            // 选中全身补充情况后 渲染input
+            form.on('checkbox(laysituation)', function (data) {
+
+                var value = data.value;
+                var title = data.elem.title;
+                if (data.elem.checked) {
+                    var html = $('<div class="layui-form-item m-t-b8 checked' + value + ' " checkedId = "' + value + '">\
+                    <label class="layui-form-label w68">'+ title + '</label>\
+                    <div class="layui-input-block ml68">\
+                        <input type="text" name="'+ value + '" required lay-verify="required"\
+                            placeholder="请输入'+ title + '" autocomplete="off"\
+                            class="layui-input">\
+                    </div>\
+                </div>')
+                    $("#replenishBox").append(html)
+                    form.render()
+                } else {
+                    $("#replenishBox").find('.checked' + value + '').remove();
+                    form.render()
+                }
+            })
             // 获取会诊类型列表
             ajaxRequest(AJAX_API.common.getconsultationtype, "get", {}, access_token, function (res) {
                 if (res.code == 200) {
@@ -215,14 +601,13 @@
                     })
                 }
             })
-
+            // 提交 测量数据
             form.on('submit(create)', function (data) {
-                upImgLayerIndex = layerLoading(layer, parent)
+                // upImgLayerIndex = layerLoading(layer, parent)
                 var submitData = data.field;
                 submitData.detecImageList = detecImageList;
                 submitData.infoImageList = infoImageList;
-                submitData.woundImageList = woundImageList;
-               
+                submitData.woundImageList = getPostimgs (woundImageList);
                 var createUrl = ajaxRoot + AJAX_API.measure.create;
                 $.ajax({
                     data: JSON.stringify(submitData),
@@ -235,11 +620,59 @@
                     dataType: 'json',
                     contentType: 'application/json',
                     timeout: 20000,
-                    success: function (res) {//data是返回的hash,key之类的值，key是定义的文件名
-                        closeLayer(upImgLayerIndex, parent)
+                    success: function (res) {
                         if (res.code == 200) {
-                            parent.layer.closeAll()
-                            parent.layer.msg("创建成功",{icon:1})
+                            // 需要返回id
+                            var id = res.data.bingLiId;
+                            step.next('#stepForm');
+                            // 渲染echarts
+                            var woundPie = echarts.init(document.getElementById('woundPie'));
+                            var woundLine = echarts.init(document.getElementById('woundLine'));
+                            // 饼图
+                            ajaxRequest(AJAX_API.measure.detect + id, "get", {}, access_token, function (res) {
+                                if (res.code == 200) {
+                                    $("#save").attr("bingliId", id);
+                                    $("#create").attr("bingliId", id);
+                                    var data = res.data;
+                                    $("#progressIndex").attr("lay-percent", data.index + "%")
+                                    element.init();
+                                    element.progress('index', data.index + "%")
+                                    $("#length").html(data.length)
+                                    $("#width").html(data.width)
+                                    $("#deep").html(data.deep)
+                                    $("#area").html(data.area)
+                                    var EchartsPieData = [{ name: "red", value: data.red }, { name: "yellow", value: data.yellow }, { name: "black", value: data.black }, { name: "white", value: data.white }, { name: "pink", value: data.pink }]
+                                    renderEchartsPie(EchartsPieData, woundPie)
+
+                                    for (k in data) {
+                                        analysisChartsData[k] = data[k]
+                                    }
+                                }
+                            });
+                            // 折线图
+                            ajaxRequest(AJAX_API.measure.brokenline + id, "get", {}, access_token, function (res) {
+                                if (res.code == 200) {
+                                    var data = res.data;
+                                    var woundLineData = {
+                                        series: [],
+                                        xAxis: []
+                                    }
+                                    for (j in data) {
+                                        var o = {
+                                            name: j,
+                                            data: []
+                                        }
+                                        $.each(data[j][1], function (i, item) {
+                                            o.data.push(item);
+                                            woundLineData.xAxis = data[j][0]
+                                        })
+                                        woundLineData.series.push(o)
+                                    }
+                                    renderEchartsLine(woundLineData, woundLine)
+                                }
+                            });
+                            // 补充
+                            renderSituations(form)
                         }
                     },
                     error: function () {
@@ -249,12 +682,299 @@
                 return false;
 
             });
-            // var uploadArr = ['#medicalImgs', '#checkImg', '#woundImg']
-            // var uploadArr = [
-            //     {
-            //         elem: '#medicalImgs',
-            //     }
-            // ]
+            // 保存我的患者
+            form.on('submit(diagnose)', function (data) {
+                var loadIndex = layerLoading(layer, parent)
+                var type = $(data.elem).attr("type")
+
+                var formData = data.field;
+
+                var saveMeasureData = {
+                    bingLiId: $("#save").attr("bingliId"),
+                    result: data.field.resultLv + " " + data.field.resultLvNub,
+                    plain: formData.plain,
+                    bingLiSituations: []
+                }
+                var arr = [];
+                var regStr = "situation"
+                for (key in formData) {
+                    var k = key;
+                    if (k.indexOf(regStr) != -1) {
+                        saveMeasureData.bingLiSituations.push({
+                            situationId: formData[k],
+                            description: formData[formData[k]],
+                            situationDesc: k.split("[")[1].split("]")[0]
+                        })
+                    }
+                }
+                analysisChartsData.bingLiId = $("#save").attr("bingliId");
+                // 保存 测量数据
+                ajaxRequest(AJAX_API.measure.saveAnalysis, "post", JSON.stringify(analysisChartsData), access_token, function (res) {
+                    if (res.code == 200) {
+                        //  保存测量诊断意见
+                        ajaxRequest(AJAX_API.measure.saveMeasure, "post", JSON.stringify(saveMeasureData), access_token, function (res) {
+                            if (res.code == 200) {
+
+                            }
+
+                        })
+                    }
+
+                })
+
+                // 发起会诊转诊
+                if (type == "consulation") {
+                    SyntaxHighlighter.defaults["quick-code"] = false;
+                    SyntaxHighlighter.defaults["gutter"] = false;
+                    SyntaxHighlighter.all();
+                    var bingliId = $("#save").attr("bingliId");
+                    var sdate = new Date();
+                    consulationDate = sdate.Format("YYYY-MM-DD");
+                    var Sdate = laydate.render({
+                        elem: '#consulationDate'
+                        , value: sdate
+                        , isInitValue: true
+                        , min: -0 //7天前
+                        , max: 7 //7天后
+                        , trigger: "click"
+                        , done: function (value, date) {
+                            consulationDate = value;
+                        }
+                    });
+                    var Stime = laydate.render({
+                        elem: '#consulationTime' //指定元素
+                        , type: 'time'
+                        , range: true
+                        , format: 'HH:mm'
+                        , min: "08:30:00"
+                        , max: "17:30:00"
+                        , trigger: "click"
+                        , done: function (value, date) {
+                            consulationTime = value;
+                        }
+                    });
+                    // 获取专家
+                    ajaxRequest(AJAX_API.consultation.specialistTree, "get", {}, access_token, function (res) {
+                        if (res.code == 200) {
+                            var data = res.data;
+                            formSelects.data('expert', 'local', {
+                                arr: data,
+
+                            });
+
+                            formSelects.on('expert', function (id, vals, val, isAdd, isDisabled) {
+                                consultationTeam = []
+                                var html = [];
+                                $.each(vals, function (i, val) {
+                                    html.push('<li doctorId=' + val.id + '> <span>' + val.name + '</span> <span>' + val.hospital.name + '</span> <span>' + val.department.name + '</span> </li>')
+                                    consultationTeam.push(val.id)
+                                })
+                                $("#department").html(html.join(""))
+
+                            }, true);
+                        }
+
+                    })
+                    // 获取会诊类型
+                    ajaxRequest(AJAX_API.consultation.type, "get", {}, access_token, function (res) {
+                        if (res.code == 200) {
+                            var data = res.data;
+                            var html = []
+                            $.each(data, function (i, item) {
+                                html.push('<option value="' + item.consultationTypeId + '">' + item.consultationTypeName + '</option>')
+                            })
+                            $("#interest").html(html.join(""))
+
+                            form.render('select')
+                        }
+                    })
+                    // 获取会诊需求
+                    ajaxRequest(AJAX_API.consultation.require, "get", {}, access_token, function (_res) {
+                        if (_res.code == 200) {
+                            var data = _res.data;
+                            var html = []
+                            $.each(data, function (i, item) {
+                                html.push('<option value="' + item.consultationRequireId + '">' + item.consultationRequireName + '</option>')
+                            })
+                            $("#demand").html(html.join(""))
+
+                            form.render('select')
+                        }
+                    })
+
+                    closeLayer(loadIndex, parent)
+                    step.next('#stepForm');
+                } else {
+                    closeLayer(loadIndex, parent)
+                    parent.layer.msg("伤口测量数据已经保存", { icon: 1 })
+                    window.close();
+
+                }
+
+                return false;
+
+
+            });
+            // 发起会诊转诊
+            form.on('submit(applyConsultation)', function (data) {
+                if (!consulationTime) {
+                    layer.msg("请选择会诊时间", { icon: 5 })
+                    return false;
+                }
+                if (consultationTeam.length < 1) {
+                    layer.msg("请选择会诊专家", { icon: 5 })
+                    return false;
+                }
+                var applyData = {
+                    bingLiId: $("#save").attr("bingliId"),
+                    startDate: consulationDate + " " + consulationTime.split("-")[0],
+                    endDate: consulationDate + " " + consulationTime.split("-")[1],
+                    consultationTypeId: data.field.interest,
+                    doctorIds: consultationTeam,
+                    consultationRequireId: data.field.demand
+                }
+
+                ajaxRequest(AJAX_API.consultation.applyConsultation, "post", JSON.stringify(applyData), access_token, function (res) {
+                    if (res.code == 200) {
+                        layer.msg("申请会诊转诊成功，请等待审核通过", { icon: 1 })
+                    }
+
+                })
+                return false;
+            });
+            $("#addMeasure").on("click", function () {
+                var $this = $(this);
+                var length = woundImageList.length;
+                if (length == 0) {
+                    length = 1
+                }
+                var $uploadDom = $(['<div class="layui-upload">'
+                    , '<button type="button" class="layui-btn layui-btn-normal" id="woundImageList-' + length + '">选择伤口图片</button>'
+                    , '<button type="button" class="layui-btn layui-btn-danger remove-list" id="removeWoundImageList-' + length + '">删除</button>'
+                    , '<div class="layui-upload-list">'
+                    , '<table class="layui-table">'
+                    , '<thead>'
+                    , '<tr>'
+                    , '<th>伤口文件名</th>'
+                    , '<th>大小</th>'
+                    , '<th>状态</th>'
+                    , '<th>操作</th>'
+                    , '</tr>'
+                    , '</thead>'
+                    , '<tbody id="woundImage-' + length + '"></tbody>'
+                    , '</table>'
+                    , '</div>'
+                    , '</div>'].join(''));
+
+                $this.before($uploadDom)
+                $uploadDom.attr("listIndex", length);
+                woundImageList[length] = [];
+                var indexList = $uploadDom.attr("listIndex");
+                $uploadDom.find("#removeWoundImageList-" + indexList).on("click", function () {
+                    $uploadDom.remove()
+                    woundImageList[indexList] = [];
+                })
+                var options = {
+                    url: ajaxRoot + AJAX_API.upImg.updata,
+                    elem: "#woundImageList-" + indexList,
+                    number: 3,
+                    access_token: access_token,
+                    tbody: $uploadDom.find($("#woundImage-" + indexList)),
+                    list: woundImageList[indexList]
+                }
+                var uploadBlInsList = upload.render({
+                    elem: options.elem
+                    , url: options.url
+                    , accept: 'file'
+                    , multiple: true
+                    , auto: true
+                    , number: options.number
+                    , headers: {
+                        Authorization: 'bearer ' + options.access_token
+                    }
+                    , before: function (request) {
+                        upImgLayerIndex = layerLoading(layer, parent)
+                    }
+                    , choose: function (obj) {
+                        var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                        //读取本地文件
+                        obj.preview(function (index, file, result) {
+                            var tr = $(['<tr id="upload-' + index + '">'
+                                , '<td>' + file.name + '</td>'
+                                , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                                , '<td>等待上传</td>'
+                                , '<td>'
+                                , '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                                , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                                , '</td>'
+                                , '</tr>'].join(''));
+
+                            //单个重传
+                            tr.find('.demo-reload').on('click', function () {
+                                obj.upload(index, file);
+                            });
+
+                            //删除
+                            tr.find('.demo-delete').on('click', function () {
+                                upImgLayerIndex = layerLoading(layer, parent)
+                                var fileid = $(this).attr("fileid")
+                                if (fileid) {
+                                    var url = AJAX_API.upImg.delete;
+                                    var param = {
+                                        fileid: fileid
+                                    }
+                                    ajaxRequest(url, "POST", JSON.stringify(param), access_token, function (res) {
+                                        closeLayer(upImgLayerIndex, parent)
+                                        if (res.code == 200) {
+                                            //删除提交的数据
+                                            $.each(options.list, function (i, item) {
+                                                var item = item;
+                                                console.log(item)
+                                                if (item) {
+                                                    var itemid = item.split("/").pop();
+                                                    if (itemid == fileid) {
+                                                        options.list.splice(i, 1)
+                                                    }
+                                                }
+
+                                            })
+                                            tr.remove();
+                                            uploadBlIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                                        }
+                                    })
+                                    return false
+                                }
+
+
+                            });
+
+                            options.tbody.append(tr);
+                        });
+
+                    }
+                    , done: function (res, index, upload) {
+                        closeLayer(upImgLayerIndex, parent)
+                        if (res.code == 200) { //上传成功
+                            var tr = options.tbody.find('tr#upload-' + index)
+                                , tds = tr.children();
+                            tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+                            tds.eq(3).find('.demo-delete').attr("fileid", res.data[0].fileid)
+                            options.list.push(res.data[0].url)
+                            console.log(woundImageList)
+                            return delete this.files[index]; //删除文件队列已经上传成功的文件
+                        }
+                        this.error(index, upload);
+                    }
+                    , error: function (index, upload) {
+                        var tr = options.tbody.find('tr#upload-' + index)
+                            , tds = tr.children();
+                        tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+                        tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+                    }
+                })
+
+            })
+
             // 伤口图片
             var uploadBlIns = upload.render({
                 elem: '#woundImageList'
@@ -301,13 +1021,13 @@
                                     closeLayer(upImgLayerIndex, parent)
                                     if (res.code == 200) {
                                         //删除提交的数据
-                                        $.each(woundImageList, function (i, item) {
+                                        $.each(woundImageList[0], function (i, item) {
                                             var item = item;
                                             console.log(item)
                                             if (item) {
                                                 var itemid = item.split("/").pop();
                                                 if (itemid == fileid) {
-                                                    woundImageList.splice(i, 1)
+                                                    woundImageList[0].splice(i, 1)
                                                 }
                                             }
 
@@ -327,13 +1047,16 @@
 
                 }
                 , done: function (res, index, upload) {
+                    if (!woundImageList[0]) {
+                        woundImageList[0] = []
+                    }
                     closeLayer(upImgLayerIndex, parent)
                     if (res.code == 200) { //上传成功
                         var tr = woundImageView.find('tr#upload-' + index)
                             , tds = tr.children();
                         tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
                         tds.eq(3).find('.demo-delete').attr("fileid", res.data[0].fileid)
-                        woundImageList.push(res.data[0].url)
+                        woundImageList[0].push(res.data[0].url)
                         return delete this.files[index]; //删除文件队列已经上传成功的文件
                     }
                     this.error(index, upload);
@@ -525,6 +1248,54 @@
                     tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
                 }
             });
+            step.render({
+                elem: '#stepForm',
+                filter: 'stepForm',
+                width: '100%', //设置容器宽度
+                stepWidth: '750px',
+                stepItems: [{
+                    title: '填写测量信息'
+                }, {
+                    title: '测量分析结果'
+                }, {
+                    title: '会诊转诊申请'
+                }]
+            });
+            // 查询全身情况补充字典 
+            function renderSituations(form) {
+                ajaxRequest(AJAX_API.measure.situations, "get", {}, access_token, function (res) {
+
+                    if (res.code == 200) {
+                        var data = res.data;
+                        var html = [];
+                        $.each(data, function (i, item) {
+                            var id = item.situationId;
+                            var str = item.situationDesc;
+                            html.push('<div class="layui-col-md3 body-list"><input type="checkbox" name="situation[' + str + ']" title="' + str + '" lay-filter="laysituation" value="' + id + '"></div>')
+                        });
+
+                        $("#bodyList").html(html.join(""))
+
+                        form.render()
+                    }
+                })
+            }
+
+            function getPostimgs (arr) {
+               var newArr = $.map(arr,function(n,i){
+                   var b = 0;
+                   if(n.length > 0) {
+                       b++;
+                       return {
+                           title:"伤口"+b,
+                           pics:n.join(",")
+                       }
+                   }
+               }) 
+
+               return newArr
+            }
+
         })
     })
 </script>

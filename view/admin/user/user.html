@@ -131,7 +131,7 @@
                 var createLayerIndex = layer.open({
                     type: 1,
                     content: $('#organizationForm'),
-                    area: ['600px', '650px']
+                    area: ['600px', '480px']
                 })
                 form.on('submit(subimtAdd)', function (data) {
                     var submitdata = data.field;
@@ -192,7 +192,7 @@
                     , defaultToolbar: []
                     , parseData: function (res) {
                         if (res.code == 200) {
-                            var count = res.data ? res.data.list.length : 0,
+                            var count = res.data ? res.data.total: 0,
                                 data = res.data ? res.data.list : [];
                             return {
                                 code: 0,

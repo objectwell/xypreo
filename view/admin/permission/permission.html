@@ -130,7 +130,7 @@
                     , defaultToolbar: []
                     , parseData: function (res) {
                         if (res.code == 200) {
-                            var count = res.data ? res.data.list.length : 0,
+                            var count = res.data ? res.data.total : 0,
                                 data = res.data ? res.data.list : [];
                             return {
                                 code: 0,

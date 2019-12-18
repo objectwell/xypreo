@@ -1,21 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./js/plugin/jquery.min.js"></script>
+  <script>
+    // (function(w, d, s, g, o) {
+    //   var x = document.createElement(s)
+    //   ,s = document.getElementsByTagName(s)[0];
+    //   w[g] = o;
+    //   x.async = true;
+    //   x.charset = 'utf-8';
+    //   x.src = 'https://cdn.xiankefu.com/dist/xiankefu.js';
+    //   s.parentNode.insertBefore(x, s);
+    // })(window, document, 'script', 'XIANKEFU_GLOBAL', {
+    //   bid: 'a4a3f3a97e387ac720efe5f77d19e35f'    
+    // });
+    $.ajax({
+      type: 'POST',
+      url: 'http://yldhez.natapp1.cc/android/bingli/info-start',
+      beforeSend: function (request) {
+        request.setRequestHeader("Authorization", 'bearer ' + "40397e5a-a430-4f62-a08c-08279f010f5b");
+
+      },
+      data: {},
+      dataType: 'json',
+      contentType: 'application/json',
+      timeout: 20000,
+      success: function (data) {
+        //回调函数
+       
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        
+      }
+    });
+  </script>
 </head>
+
 <body>
-        <input type="checkbox" name="ss"  value="11"> 11
-        <input type="checkbox" name="ss"  value="22">22
-        <span id="ll">dd</spa22>
-        <script>
-            document.getElementById("ll").onclick = function(){
-                for(var i =0; i<document.getElementsByName("ss").length;i++) {
-                    console.log(document.getElementsByName("ss").value)
-                }
-            }
-        </script>
+
 </body>
+
 </html>

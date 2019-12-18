@@ -83,7 +83,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		searchName: 'keyword',
 		searchVal: null,
 		keyName: 'name',
-		keyVal: 'value',
+		keyVal: 'id',
 		keySel: 'selected',
 		keyDis: 'disabled',
 		keyChildren: 'children',

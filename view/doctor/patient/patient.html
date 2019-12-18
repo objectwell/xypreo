@@ -41,6 +41,21 @@
             margin-left: 40px;
         }
 
+        .base-workbench .layout {
+            background: #fff;
+            padding: 20px 0;
+        }
+
+        body.base-workbench {
+            background: rgba(237, 241, 242, 1);
+            padding: 0 40px;
+
+        }
+
+        .layui-table-tool {
+            display: none;
+        }
+
         .layout .patient-table {
             background: #fff;
         }
@@ -50,49 +65,96 @@
             right: 2px;
             top: -3px;
         }
+
+        .layui-table td,
+        .layui-table th,
+        .layui-table-col-set,
+        .layui-table-fixed-r,
+        .layui-table-grid-down,
+        .layui-table-header,
+        .layui-table-page,
+        .layui-table-tips-main,
+        .layui-table-tool,
+        .layui-table-total,
+        .layui-table-view,
+        .layui-table[lay-skin=line],
+        .layui-table[lay-skin=row] {
+            background: #fff;
+        }
+
+        #complain_search {
+            padding: 0 20px;
+        }
+
+        .table-box {
+            padding: 0 20px;
+        }
+
+        .layui-form-item.text-right .layui-btn {
+            background: #e6e6e6;
+            color: #009688;
+        }
+
+        .add-patient {
+            padding: 20px 80px 0 20px;
+        }
+
+        .add-patient .layui-form-label {
+            width: 130px;
+        }
+
+        .add-patient .layui-input-block {
+            margin-left: 130px;
+        }
     </style>
 </head>
 
 <body>
 
     <body class="hg100 base-workbench">
-        <div class="complain_search">
-            <div class="layui-row">
-                <form class="layui-form layui-col-md12 " id="complain_search">
-                    姓名:
-                    <div class="layui-input-inline">
-                        <input type="text" name="serviceCode" id="serviceCode" placeholder="请输入姓名" autocomplete="off"
-                            class="layui-input">
-                    </div>
-                    身份证号:
-                    <div class="layui-input-inline">
-                        <input type="text" name="compOrder" id="compOrder" placeholder="请输入身份证号码" autocomplete="off"
-                            class="layui-input">
-                    </div>
-                    类型:
-                    <div class="layui-input-inline">
-                        <select name="complainState" id="complainState">
-                            <option value="">---请选择类型---</option>
-                            <option value="0">会诊/转诊</option>
-                            <option value="1">2d测量</option>
-                        </select>
-                    </div>
-                    <div class="layui-input-inline search-btn">
-                        <button id="search" class="layui-btn layui-btn-normal " lay-submit lay-filter="patientSearch">
-                            <i class="layui-icon">&#xe615;</i>搜索
-                        </button>
-                    </div>
-
-                </form>
-            </div>
-            <table class="layui-hide" id="complainTable" lay-filter="complainList"></table>
-        </div>
-
         <div class="layout">
-
-            <table class="layui-hide patient-table" id="organizationTable" lay-filter="organizationTable"></table>
+            <div class="layui-row">
+                <div class="layui-form layui-col-xs12 " id="complain_search" >
+                    <div class="layui-row layui-col-space20">
+                        <div class="layui-col-xs6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">
+                                    关键词:
+                                </label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="keyword" placeholder="请输入关键词搜索(如:姓名/身份证号)"
+                                        autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="layui-col-xs4">
+                            <div class="layui-form-item">
+                                <button id="search" class="layui-btn layui-btn-normal " lay-submit
+                                    lay-filter="search">
+                                    <i class="layui-icon">&#xe615;</i>搜索
+                                </button>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs2">
+                            <div class="layui-form-item text-right">
+                                <button id="add" class="layui-btn" lay-submit lay-filter="patientAdd">
+                                    <i class="layui-icon">&#xe654;</i>新增
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=" layui-col-xs12 ">
+                    <div class="table-box">
+                        <table class="layui-hide patient-table" id="organizationTable" lay-filter="organizationTable">
+                        </table>
+                    </div>
+                </div>
+            </div>
 
         </div>
+
 
         <!-- <script src="../../../js/plugin/rem.min.js"></script> -->
         <script src="../../../js/plugin/jquery.min.js"></script>
@@ -106,47 +168,12 @@
         <script src="../../../js/common/common.js"></script>
         <script type="text/html" id="operation">
             <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">查看</a>
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a> -->
         </script>
         <script>
+            var tableIns;
             $(function () {
-                function updateOrganization(layer, $, utoken, form, tableIns, option) {
-                    if (option) {
-                        $("#organizationOptions option[value='" + option.organizationId + "']").prop("selected", "selected");
-                        $("input[name='organizationName']").val(option.organizationName)
-                        $("input[name='organizationCode']").val(option.organizationCode)
 
-                        form.render()
-                    } else {
-                        form.val("organizationForm", {
-                            organizationName: "",
-                            organizationCode: "",
-                            pid: ""
-                        })
-                    }
-                    var createLayerIndex = layer.open({
-                        type: 1,
-                        content: $('#organizationForm'),
-                        area: ['600px', '400px']
-                    })
-                    form.on('submit(subimtAdd)', function (data) {
-                        var submitdata = data.field;
-                        if (option) {
-                            submitdata.organizationId = option.organizationId
-                        }
-                        var url = option ? AJAX_API.admin.organization.update : AJAX_API.admin.organization.create;
-                        ajaxRequest(url, "post", JSON.stringify(submitdata), utoken.access_token, function (res) {
-                            if (res.code == 200) {
-                                tableIns.reload()
-                                layer.msg(option ? "修改成功" : "新增成功", { icon: 1 })
-                                layer.close(createLayerIndex)
-                                form.render()
-                            }
-                        })
-                        return false
-                    })
-
-                }
                 layui.use(['layer', 'table', 'form', 'tree'], function () {
                     var layer = layui.layer
                         , table = layui.table
@@ -160,7 +187,7 @@
                         layer.msg("您还没有登陆，请重新登陆", { icon: 2 })
                         window.location.href = "../../../login_doctor.html"
                     }
-                    var url = ajaxRoot + AJAX_API.measure.list + "?page=true";
+                    var patientURL = ajaxRoot + AJAX_API.patient.patient ;
                     var urllist = AJAX_API.admin.organization.list;
                     ajaxRequest(urllist, "get", {}, utoken.access_token, function (res) {
                         if (res.code == 200) {
@@ -174,10 +201,10 @@
 
                         }
                     })
-                    var tableIns = table.render({
+                    tableIns = table.render({
                         elem: '#organizationTable'
-                        , height: 'full-120'
-                        , url: url //数据接口
+                        , height: 'full-72'
+                        , url: patientURL //数据接口
                         , headers: { Authorization: "bearer " + utoken.access_token }
                         , request: {
                             pageName: 'pageNum'
@@ -202,20 +229,13 @@
                         }
                         , cols: [[ //表头
                             { field: 'realname', title: '姓名', align: "center", flexd: "left" }
-                            , { field: 'length', title: '长度(cm)', align: "center" }
-                            , { field: 'width', title: '宽度(cm)', align: "center" }
-                            , { field: 'deep', title: '深度(cm)', align: "center" }
-                            , { field: 'area', title: '面积(m²)', align: "center" }
-                            , { field: 'date', title: '创建日期', align: "center" }
-                            , {
-                                field: 'plain', title: '类型', align: "center", templet: function (d) {
-                                    if (!d.plain) {
-                                        return '<span style="color: #5CD03F;">会诊/转诊</span>';
-                                    } else {
-                                        return ('<span style="color: #18A4D0;">2d测量</span>');
-                                    }
-                                }
-                            }
+                            , { field: 'cardno', title: '身份证', align: "center",width:220 }
+                            , { field: 'sex', title: '性别', align: "center" ,templet:function(d){
+                                var sex = d.sex;
+                                return sex==1?"男":"女"
+                            }}
+                            , { field: 'age', title: '年龄', align: "center" }
+                            , { field: 'telephone', title: '电话', align: "center" }
                             , { fixed: 'right', title: '操作', width: 260, align: 'center', toolbar: '#operation' }
                         ]]
                         , done: function (res, curr, count) {
@@ -233,33 +253,35 @@
                                 deleteOrganization({ organizationId: organizationId }, layer, utoken, tableIns)
                             });
                         } else if (layEvent === 'edit') {
-                            updateOrganization(layer, $, utoken, form, tableIns, data)
+                            top.layer.open({
+                                type: 2,
+                                title: "患者详情",
+                                content: "./patient/record.html?organizationId=" + organizationId,
+                                area: ['1000px', '620px']
+                            })
                         }
                     });
-                    form.on('submit(provinceSearch)', function (data) {
+                    form.on('submit(search)', function (data) {
                         var formData = data.field;
-                        console.debug(formData);
-                        var serviceCode = formData.serviceCode,
-                            compOrder = formData.compOrder,
-                            compType = formData.compType,
-                            complainState = formData.complainState;
-
-                        table.reload('provinceReload', {
+                        tableIns.reload({
+                            headers: { Authorization: "bearer " + utoken.access_token },
                             page: {
                                 curr: 1
                             },
-                            where: {
-                                serviceCode: serviceCode,
-                                compOrder: compOrder,
-                                compType: compType,
-                                complainState: complainState
-                            },
-                            method: 'post',
-                            contentType: "application/json;charset=utf-8",
-                            url: '/medicaladmin/complain/queryComplainByCondition',
+                            where: formData,
+                            method: 'get',
+                            url: patientURL,
                         });
                         return false;
                     });
+                    form.on('submit(patientAdd)', function (data) {
+                        top.layer.open({
+                            type: 2,
+                            content: "./patient/addpatient.html",
+                            area: ['800px', '360px'],
+                            title: "新增患者"
+                        })
+                    })
 
                     function deleteOrganization(organizationId, layer, utoken, tableIns) {
                         if (organizationId) {

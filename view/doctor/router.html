@@ -6,12 +6,15 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>湘雅医院糖尿病足互联网平台</title>
+    <title>湘雅医院皮肤科互联网医院</title>
     <link rel="stylesheet" href="../../js/plugin/layui/css/layui.css">
     <link rel="stylesheet" href="../../js/plugin/toastr/toastr.min.css">
     <link rel="stylesheet" href="../../font/iconfont.css">
     <link rel="stylesheet" href="../../css/common.css">
     <style>
+        .doctor-router {
+            overflow: hidden;
+        }
         .layout {
             width: 100%;
             height: 100%;
@@ -42,7 +45,7 @@
         }
 
         .doctor-workbench .preview-nav {
-            
+
             padding: 40px 10px;
             overflow: hidden;
             position: relative;
@@ -115,7 +118,7 @@
             width: 1.4rem;
             height: 100%;
             flex: 0 0 auto;
-            margin-right:30px;
+            margin-right: 30px;
             border-radius: 3px;
             cursor: pointer;
             color: #fff;
@@ -225,11 +228,13 @@
             text-align: center;
             line-height: 0.3125rem;
         }
+
         .doctor-workbench .preview-nav .nav-item p {
             text-align: right;
             padding: 0.25rem 0.15rem;
             font-size: 0.1rem;
         }
+
         .doctor-workbench .workbench {
             height: calc(100VH - 174px);
             overflow: hidden;
@@ -249,11 +254,12 @@
             cursor: pointer;
             /* background: rgba(250, 250, 250, .1); */
         }
+
         .doctor-info .logo p {
             width: 160px;
             text-align: center;
         }
-        
+
         .doctor-info .logo p:nth-of-type(2) {
             text-align: right;
         }
@@ -285,10 +291,9 @@
 
         .doctor-info .sidebar-info .user-position .position-item {
             flex: 1;
-            height: 40px;
-            line-height: 40px;
-            cursor: pointer;
-            font-size: 18px;
+            height: 32px;
+            line-height: 32px;
+            font-size: 16px;
         }
 
         .doctor-info .sidebar-info .sidebar-workbench {
@@ -322,16 +327,16 @@
         <div class="doctor-info " id="doctorInfo">
             <!-- <button type="button" class="layui-btn" id="btn">button</button> -->
             <h1 class="logo">
-                <p>湘雅医院糖尿病足</p>
-                <p>互联网平台</p>
+                <p>智足管家</p>
+                
             </h1>
             <div class="sidebar-info">
                 <div class="user-info">
-                    <img class="user-img" src="../../imgs/user.png" alt="">
+                    <img class="user-img" src="../../imgs/log.png" alt="" class="avatar">
                     <div class="user-position">
-                        <div class="position-item">周秋红&nbsp;主任</div>
-                        <div class="position-item">湘雅医院</div>
-                        <div class="position-item">内分泌科</div>
+                        <div class="position-item" id="username"></div>
+                        <div class="position-item" id="hospital"></div>
+                        <div class="position-item" id="department"></div>
                     </div>
                 </div>
                 <div class="sidebar-workbench">
@@ -342,7 +347,7 @@
                         <li>
                             <i class="icon iconfont icon-appstore"></i> <span>我的工作台</span>
                         </li>
-                        <li>
+                        <li class="personal-center">
                             <i class="icon iconfont icon-edit-square"></i> <span>我的信息</span>
                         </li>
                         <li>
@@ -365,7 +370,7 @@
                         </div>
                         <div class="nav-item " officetype="./measure/2dmeasure.html">
                             <p>
-                                <b>伤口测量</b>
+                                <b>2D测量</b>
                             </p>
                         </div>
                         <div class="nav-item" officetype="./patient/patient.html">
@@ -392,7 +397,7 @@
                     </div>
                     <div class="nav-item" officetype="./measure/2dmeasure.html">
                         <span class="icon iconfont icon-tupian icon-nav"></span>
-                        <b>伤口测量</b>
+                        <b>2D测量</b>
                     </div>
                     <div class="nav-item" officetype="./patient/patient.html">
                         <span class="icon iconfont icon-huanzheguanli icon-nav"></span>
@@ -440,12 +445,14 @@
     <script src="../../js/plugin/toastr/toastr.min.js"></script>
     <script src="../../js/plugin/layui/layui.js"></script>
     <script src="../../js/plugin/echarts.min.js"></script>
+    <script src="../../js/common/config.js"></script>
     <script src="../../js/common/common.js"></script>
     <script src="../../js/doctor/nav.js"></script>
+    <script src="../../js/common/im.js"></script>
     <script>
         function showPhotos(images) {
             layer.photos({
-                area: ['580px','400px'],
+                area: ['580px', '400px'],
                 shade: [0.65, '#000'],
                 anim: 0,
                 photos: {
@@ -455,10 +462,11 @@
             });
         }
         $(function () {
-
-            layui.use(['element', 'layer'], function () {
+            layui.use(['element', 'layer', 'laydate', 'form'], function () {
                 var element = layui.element;
                 var layer = layui.layer;
+                var laydate = layui.laydate;
+                var form = layui.form;
                 element.on('nav(userOperation)', function (data) {
                     var string = data.html();
                     switch (string) {
@@ -472,7 +480,7 @@
                             viewBrowse()
                             break;
                         case "修改信息":
-                            toAdmin()
+                            touserinfo()
                             break;
                         case "退出":
                             logout()
@@ -483,9 +491,7 @@
                 $(".nav-item").on("click", function () {
                     var officetype = $(this).attr("officetype");
                     if (officetype) {
-
                         var oldworkbench = $workbench.attr("src");
-                        
                         if (oldworkbench != officetype) {
                             $workbench.attr("src", officetype)
                         }
@@ -493,10 +499,33 @@
                         layer.msg("改功能暂未开发，敬请期待。。。")
                     }
                 })
-                function toAdmin() {
-                    window.location.replace("../admin/home.html")
+               
+                var utoken = $.cookie("utoken");
+                // 获取用户信息
+                if (!utoken) {
+                    parent.layer.msg('您尚未登陆或者,或者登陆已过期，请重登陆', {
+                        time: 20000, //20s后自动关闭
+                        btn: ['重新登陆'],
+                        btn1: function () {
+                            parent.window.location.href = "../../../login.html"
+                        }
+                    });
                 }
+                access_token = JSON.parse(utoken).access_token;
+                var roleInfoUlr = AJAX_API.user.userInfo
+                ajaxRequest(roleInfoUlr, "get", {}, access_token, function (res) {
+                    if (res.code == 200) {
+                        var data = res.data;
+                        $("#username").html(data.role)
+                        $("#department").html(data.department)
+                        $("#hospital").html(data.hospital)
+                        if (data.avatar) {
+                            $(".avatar").html(data.avatar)
+                        }
 
+
+                    }
+                })
 
             });
 

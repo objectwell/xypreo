@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../../../js/plugin/toastr/toastr.min.css">
     <link rel="stylesheet" href="../../../font/iconfont.css">
     <link rel="stylesheet" href="../../../css/common.css">
-    
+
     <style>
         .base-workbench .layout {
             padding: 0px 0 40px 40px;
@@ -162,272 +162,418 @@
         }
 
         .body-list {
-            text-align: center;
+            text-align: left;
+            padding: 6px 0;
+            text-indent: 1em;
+        }
+
+        .body-list-name {
+            display: inline-block;
+            width: 80px;
+
+        }
+
+        .result {
+            padding: 00px 30px;
         }
 
         .consultation-form {
             display: none;
         }
+
+
+
+        .wound-info {
+            text-align: left;
+            padding: 6px 0;
+        }
+
+        .wound-info em {
+            color: #c0c0c0;
+            display: inline-block;
+            width: 60px;
+            text-align: right;
+        }
+
+        .base-workbench .notice-text .notice-illness {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .base-workbench .notice-text .notice-time {
+            font-size: 14px;
+            color: #7a8f9a;
+        }
+
+        .base-workbench .notice-item .notice-opt {
+            width: 60px;
+            line-height: 59px;
+            text-align: center;
+            color: #33CC75;
+        }
+
+        .measure-search {
+            position: relative;
+            margin: 0 auto;
+            width: 200px;
+            height: 26px;
+            overflow: hidden;
+            outline: 0;
+            border: 1px solid #e8ecee;
+            border-radius: 4px;
+        }
+
+        .measure-search input {
+            padding-left: 10px;
+            width: 170px;
+            height: 26px;
+            outline: 0;
+            border: 0;
+            font-size: 12px;
+        }
+
+        .measure-search:focus-within {
+            border-color: #4aca6b;
+        }
+
+        .search-icon {
+            cursor: pointer;
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 27px;
+            height: 26px;
+            display: block;
+            line-height: 25px;
+        }
+
+        .measure-pages {
+            position: relative;
+            bottom: 6px;
+            text-align: center;
+        }
+
+        .consultation-apply {
+            padding: 40px;
+            display: none;
+        }
     </style>
 </head>
 
-<body>
 
-    <body class="hg100 base-workbench">
-        <div class="layout hg100">
-            <div class="workbench hg100 " id="workbench">
-                <div class="layui-fluid">
-                    <div class="layui-row layui-col-space5">
-                        <div class="layui-col-md12">
-                            <h4 class="info-tips">伤口深度指数</h4>
-                        </div>
+<body class="hg100 base-workbench">
+    <form class="layui-form consultation-apply" id="consultationApply">
+        <div class="layui-form-item">
+            <label class="layui-form-label">拟会诊类型</label>
+            <div class="layui-input-block">
+                <select name="interest" lay-filter="required" id="interest">
 
-                        <div class="layui-col-md12 info-list" id="loader-mater">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">拟会诊时间</label>
+            <div class="layui-input-inline">
+                <input type="datetime" class="layui-input" id="consulationDate" lay-filter="required"
+                    placeholder="请选日期">
+            </div>
+            <div class="layui-input-inline">
+                <input type="datetime" class="layui-input" id="consulationTime" lay-filter="required"
+                    placeholder="请选时间">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">拟会诊专家</label>
+            <div class="layui-input-block">
+                <select name="expert" lay-filter="required" xm-select="expert" xm-select-search=""
+                    xm-select-search-type="dl" lay-filter="required">
 
-                            <div class="layui-progress layui-progress-big" lay-showPercent="true" lay-filter="index">
-                                <div class="layui-progress-bar layui-bg-blue" lay-percent="0%" id="progressIndex"></div>
-                            </div>
-                        </div>
-                        <div class="layui-col-md12">
-                            <h4 class="info-tips">伤口测量结果</h4>
-                        </div>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">拟会诊科室</label>
+            <ul class="layui-input-block department" id="department"></ul>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">拟会诊需求</label>
+            <div class="layui-input-block">
+                <select name="demand" lay-filter="required" id="demand">
 
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block ml0 text-center">
+                <button class="layui-btn" lay-submit lay-filter="applyConsultation">立即发起</button>
+            </div>
+        </div>
+    </form>
+    <div class="layout hg100">
+        <div class="workbench hg100 " id="workbench">
+            <div class="layui-fluid">
+                <div class="layui-row layui-col-space5">
+                    <div class="layui-col-md12">
+                        <h4 class="info-tips">患者信息</h4>
                         <div class="layui-col-md12 info-list">
                             <div class="layui-row layui-col-space5">
-                                <div class="layui-col-md3 info-list">
-                                    <p class="wound-text"><em>伤口长度(最长):</em> <span id="length"></span>CM</p>
+                                <div class="layui-col-md4 info-list">
+                                    <p class="wound-info"><em>诊疗卡号:</em> <span id="bingLiCard"></span></p>
 
                                 </div>
-                                <div class="layui-col-md3 info-list">
-                                    <p class="wound-text"><em>伤口宽度(最宽):</em> <span id="width"></span>CM</p>
+                                <div class="layui-col-md4 info-list">
+                                    <p class="wound-info"><em>身份证号:</em> <span id="cardno"></span></p>
                                 </div>
-                                <div class="layui-col-md3 info-list">
-                                    <p class="wound-text"><em>伤口深度(最深):</em> <span id="deep"></span>CM</p>
+                                <div class="layui-col-md4 info-list">
+                                    <p class="wound-info"><em>姓名:</em> <span id="realname"></span></p>
                                 </div>
-                                <div class="layui-col-md3 info-list">
-                                    <p class="wound-text"><em>伤口面积(最大):</em> <span id="area"></span>M²</p>
+                                <div class="layui-col-md4 info-list">
+                                    <p class="wound-info"><em>年龄:</em> <span id="age"></span></p>
+                                </div>
+                                <div class="layui-col-md4 info-list">
+                                    <p class="wound-info"><em>性别:</em> <span id="sex"></span></p>
                                 </div>
                             </div>
 
                         </div>
-                        <div class="layui-col-md12  echarts-list">
-                            <div class="layui-row layui-col-space5">
-                                <div class="layui-col-md6 info-list">
-                                    <div class="wound-pie wound-chart" id="woundPie"></div>
-                                </div>
-                                <div class="layui-col-md6 info-list">
-                                    <div class="wound-line wound-chart" id="woundLine"></div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <h4 class="info-tips">伤口深度指数</h4>
+                    </div>
+
+                    <div class="layui-col-md12 info-list" id="loader-mater">
+
+                        <div class="layui-progress layui-progress-big" lay-showPercent="true" lay-filter="index">
+                            <div class="layui-progress-bar layui-bg-blue" lay-percent="0%" id="progressIndex"></div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <h4 class="info-tips">伤口测量结果</h4>
+                    </div>
+
+                    <div class="layui-col-md12 info-list">
+                        <div class="layui-row layui-col-space5">
+                            <div class="layui-col-md3 info-list">
+                                <p class="wound-text"><em>伤口长度(最长):</em> <span id="length"></span>CM</p>
+
+                            </div>
+                            <div class="layui-col-md3 info-list">
+                                <p class="wound-text"><em>伤口宽度(最宽):</em> <span id="width"></span>CM</p>
+                            </div>
+                            <div class="layui-col-md3 info-list">
+                                <p class="wound-text"><em>伤口深度(最深):</em> <span id="deep"></span>CM</p>
+                            </div>
+                            <div class="layui-col-md3 info-list">
+                                <p class="wound-text"><em>伤口面积(最大):</em> <span id="area"></span>M²</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-col-md12  echarts-list">
+                        <div class="layui-row layui-col-space5">
+                            <div class="layui-col-md6 info-list">
+                                <div class="wound-pie wound-chart" id="woundPie"></div>
+                            </div>
+                            <div class="layui-col-md6 info-list">
+                                <div class="wound-line wound-chart" id="woundLine"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-col-md12">
+                        <h4 class="info-tips">全身情况补充</h4>
+                    </div>
+                    <div class="layui-col-md12  echarts-list">
+                        <div class=" layui-form" id="analyseForm">
+                            <div class="layui-form-item">
+                                <div class="layui-input-block ml0">
+                                    <ul class="layui-row layui-col-space5" id="bodyList">
+                                    </ul>
+
                                 </div>
                             </div>
-
-                        </div>
-                        <div class="layui-col-md12">
-                            <h4 class="info-tips">全身情况补充</h4>
-                        </div>
-                        <div class="layui-col-md12  echarts-list">
-                            <div class=" layui-form" id="analyseForm">
-                                <div class="layui-form-item">
-                                    <div class="layui-input-block ml0">
-                                        <div class="layui-row layui-col-space5" id="bodyList">
-                                        </div>
-                                        <div class="layui-row layui-col-space5 p10">
-                                            <div id="replenishBox" class="replenish-box">
-
-                                            </div>
-
+                            <div class="layui-col-md12">
+                                <h4 class="info-tips">伤口分级评估结果</h4>
+                                <div class="layui-row layui-col-space5">
+                                    <div class="layui-col-md12 info-list">
+                                        <div id="result" class="result">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="layui-col-md12">
-                                    <h4 class="info-tips">伤口分级评估结果</h4>
+                                    <h4 class="info-tips">建议处理方案</h4>
                                     <div class="layui-row layui-col-space5">
                                         <div class="layui-col-md12 info-list">
-                                            <div id="result">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="layui-col-md12">
-                                        <h4 class="info-tips">建议处理方案</h4>
-                                        <div class="layui-row layui-col-space5">
-                                            <div class="layui-col-md12 info-list">
-                                                <div class="layui-input-block ml0">
-                                                    <textarea name="plain" placeholder="请输入内容"
-                                                        class="layui-textarea w100"></textarea>
-                                                </div>
+                                            <div class="layui-input-block ml0">
+                                                <textarea name="plain" placeholder="请输入内容" class="layui-textarea w100"
+                                                    id="plain"></textarea>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="layui-col-md12">
-                                    <div class="layui-form-item">
-                                        <div class="layui-input-block m0 text-center">
-                                            <button class="layui-btn layui-btn-normal m10" lay-submit
-                                                lay-filter="diagnose" id="save" type="save">保存到我的患者</button>
-                                            <button class="layui-btn layui-btn-normal m10" lay-submit
-                                                lay-filter="diagnose" id="create" type="consulation">发起会诊/转诊</button>
-                                        </div>
-                                    </div>
-                                </div>
-
                             </div>
+                            <div class="layui-col-md12">
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block m0 text-center">
+                                        <button class="layui-btn layui-btn-normal m10" lay-submit lay-filter="diagnose"
+                                            id="create" type="consulation">发起会诊/转诊</button>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="notice hg100 " id="notice">
-                <h3>我的伤口测量 <i class="layui-icon layui-icon-add-1" title="点击新增会诊" id="createConsultation">新增</i>
-                </h3>
-                <ul id="noticeUl">
-
-                </ul>
-            </div>
-            
         </div>
-        
-        <!-- <script src="../../../js/plugin/rem.min.js"></script> -->
-        <script src="../../../js/plugin/jquery.min.js"></script>
-        <script src="../../../js/plugin/jquery.cookie.js"></script>
-        <script src="../../../js/plugin/toastr/toastr.min.js"></script>
-        <script src="../../../js/plugin/layui/layui.js"></script>
-        <script src="../../../js/plugin/echarts.min.js"></script>
-        <script src="../../../js/plugin/prefixfree.js"></script>
-        <script src="../../../js/plugin/jquery.nicescroll.min.js"></script>
-        <script src="../../../js/common/config.js"></script>
-        <script src="../../../js/common/common.js"></script>
-        <script src="../../../js/common/charts.js"></script>
-        <script>
+        <div class="notice hg100 " id="notice">
+            <h3>我的伤口测量 <i class="layui-icon layui-icon-add-1" title="点击新增会诊" id="createConsultation">新增</i>
+            </h3>
+            <div class="measure-search">
+                <input type="text" placeholder="按关键词筛选" id="searchInput">
+                <span class="search-icon layui-icon layui-icon-search" id="search">
+                </span>
+            </div>
+            <ul id="noticeUl">
 
-            $(function () {
-                var utoken = $.cookie("utoken");
-                var access_token;
-                var images = [];
-                var gradingS;
-                $("#noticeUl").niceScroll({
-                    'cursorcolor': '#1E9FFF',
-                    'cursorborder': 'none',
-                    // 'smoothscroll': 'false',
-                    'autohidemode': true,
-                    "railalign": "right",
-                });
-                var workbenchNice = $("#workbench").niceScroll({
-                    'cursorcolor': '#1E9FFF',
-                    'cursorborder': 'none',
-                    // 'smoothscroll': 'false',
-                    'autohidemode': true,
-                    "railalign": "right",
-                });
-                layui.config({
-                    base: '/js/plugin/layui/lay/modules/'
-                }).extend({
-                    selectN: 'select_extend'
-                }).use(["layer", "form", "element", "selectN", "laydate"], function () {
-                    // console.log(SyntaxHighlighter)
-                    // SyntaxHighlighter.defaults["quick-code"] = false;
-                    // SyntaxHighlighter.defaults["gutter"] = false;
-                    // SyntaxHighlighter.all();
+            </ul>
+            <div class="measure-pages" id="measurePages"></div>
+        </div>
 
-                    var formSelects = layui.formSelects;
-                    var layer = layui.layer;
-                    var element = layui.element;
-                    var form = layui.form;
-                    var selectN = layui.selectN;
-                    var laydate = layui.laydate;
-                    if (!utoken) {
-                        parent.layer.msg('您尚未登陆或者,或者登陆已过期，请重登陆', {
-                            time: 20000, //20s后自动关闭
-                            btn: ['重新登陆'],
-                            btn1: function () {
-                                parent.window.location.href = "../../../login_doctor.html"
-                            }
-                        });
+    </div>
+
+
+    <!-- <script src="../../../js/plugin/rem.min.js"></script> -->
+    <script src="../../../js/plugin/jquery.min.js"></script>
+    <script src="../../../js/plugin/jquery.cookie.js"></script>
+    <script src="../../../js/plugin/toastr/toastr.min.js"></script>
+    <script src="../../../js/plugin/layui/layui.js"></script>
+    <script src="../../../js/plugin/echarts.min.js"></script>
+    <script src="../../../js/plugin/prefixfree.js"></script>
+    <script src="../../../js/plugin/jquery.nicescroll.min.js"></script>
+    <script src="../../../js/common/config.js"></script>
+    <script src="../../../js/common/common.js"></script>
+    <script src="../../../js/common/charts.js"></script>
+    <script type="text/html">
+
+        </script>
+    <script>
+
+        $(function () {
+            var utoken = $.cookie("utoken");
+            var access_token;
+            var images = [];
+            var gradingS;
+            $("#noticeUl").niceScroll({
+                'cursorcolor': '#1E9FFF',
+                'cursorborder': 'none',
+                // 'smoothscroll': 'false',
+                'autohidemode': true,
+                "railalign": "right",
+            });
+            var workbenchNice = $("#workbench").niceScroll({
+                'cursorcolor': '#1E9FFF',
+                'cursorborder': 'none',
+                // 'smoothscroll': 'false',
+                'autohidemode': true,
+                "railalign": "right",
+            });
+            layui.config({
+                base: '/js/plugin/layui/lay/modules/'
+
+            }).extend({
+                selectN: 'select_extend',
+                step: 'step'
+            }).use(["layer", "form", "element", "selectN", "laydate", "step", "laypage", "laydate"], function () {
+
+
+                var formSelects = layui.formSelects;
+                var layer = layui.layer;
+                var element = layui.element;
+                var form = layui.form;
+                var selectN = layui.selectN;
+                var laydate = layui.laydate;
+                var step = layui.step;
+                var laypage = layui.laypage;
+                if (!utoken) {
+                    parent.layer.msg('您尚未登陆或者,或者登陆已过期，请重登陆', {
+                        time: 20000, //20s后自动关闭
+                        btn: ['重新登陆'],
+                        btn1: function () {
+                            parent.window.location.href = "../../../login_doctor.html"
+                        }
+                    });
+                }
+
+
+
+                form.on('submit(diagnose)', function (data) {
+                    var type = $(data.elem).attr("type")
+
+                    var formData = data.field;
+                    var bingLiId = $("#create").attr("bingliId");
+                    var url = "/view/doctor/measure/createConsultationStep3.html?bingliId="+bingLiId;
+                    parent.layer.open({
+                        type: 2,
+                        content: url,
+                        title: "申请会诊转诊",
+                        area: ["1000px", "560px"],
+                        success: function (layero, index) {
+                            form.render()
+                        }
+                    })
+                    return false
+
+
+
+                })
+                var woundPie = echarts.init(document.getElementById('woundPie'));
+                var woundLine = echarts.init(document.getElementById('woundLine'));
+                access_token = JSON.parse(utoken).access_token;
+
+
+                // 列表
+                var listUrl = AJAX_API.measure.list;
+
+                rederList(listUrl, access_token, true)
+
+                $("#search").on("click", function () {
+                    var keyword = $("#searchInput").val();
+                    if (keyword) {
+                        var url = listUrl + "?keyword=" + keyword;
+                        rederList(url, access_token, true)
                     }
-                    $.get("../../../json/grading.json", function (grading) {
-                        gradingS = selectN({
-                            //元素容器【必填】
-                            elem: '#result'
-                            , search: [true, true, true]
-                            //候选数据【必填】
-                            , data: grading
-                            , selected: []
-                        });
+                })
+                // 新增2d 测量
+                $("#createConsultation").on("click", function () {
+                    parent.layer.open({
+                        title: "伤口测量",
+                        content: "/view/doctor/measure/create.html",
+                        type: 2,
+                        area: ['1000px', '560px']
                     })
-                    
-                    // 选中全身补充情况后 渲染input
-                    form.on('checkbox(laysituation)', function (data) {
+                });
 
-                        var value = data.value;
-                        var title = data.elem.title;
-                        if (data.elem.checked) {
-                            var html = $('<div class="layui-form-item m-t-b8 checked' + value + ' " checkedId = "' + value + '">\
-                                            <label class="layui-form-label w68">'+ title + '</label>\
-                                            <div class="layui-input-block ml68">\
-                                                <input type="text" name="'+ value + '" required lay-verify="required"\
-                                                    placeholder="请输入'+ title + '" autocomplete="off"\
-                                                    class="layui-input">\
-                                            </div>\
-                                        </div>')
-                            $("#replenishBox").append(html)
-                            form.render()
-                        } else {
-                            $("#replenishBox").find('.checked' + value + '').remove();
-                            form.render()
-                        }
+                function rederList(url, access_token, init) {
+                    var listLayerIndex = layerLoading(layer, parent)
+                    ajaxRequest(url, "get", {}, access_token, function (res) {
+                        if (init) {
+                            laypage.render({
+                                elem: 'measurePages'
+                                , count: res.data.total
+                                , limit: 5
+                                , layout: ['prev', 'next']
+                                , jump: function (e, first) {
+                                    if (!first) {
+                                        var pageNum = e.curr;
+                                        var pageurl = listUrl + "?pageNum=" + pageNum
+                                        rederList(pageurl, access_token, false)
+                                    }
 
-                        workbenchNice.resize()
-                    })
-
-                    
-                    form.on('submit(diagnose)', function (data) {
-                        var type = $(data.elem).attr("type")
-                        
-                        var formData = data.field;
-                        var s = {
-                            bingLiId: $("#save").attr("bingliId"),
-                            result: formData.result.split(",").join(" "),
-                            plain: formData.plain,
-                            bingLiSituations: []
-                        }
-                        var arr = [];
-                        var regStr = "situation"
-                        for (key in formData) {
-                            var k = key;
-                            if (k.indexOf(regStr) != -1) {
-                                s.bingLiSituations.push({
-                                    situationId: formData[k],
-                                    description: formData[formData[k]],
-                                    situationDesc: k.split("[")[1].split("]")[0]
-                                })
-                            }
-                        }
-                        
-                        if (type == "consulation") {
-                            var bingliId = $("#save").attr("bingliId");
-                            parent.layer.open({
-                                type: 2,
-                                content: './measure/crateConsultation.html?bingliId='+bingliId,
-                                area:['800px','480px'],
-                                title:"发起会诊/转诊"
+                                }
                             });
                         }
-                        return false
-                        ajaxRequest(AJAX_API.measure.update, "post", JSON.stringify(s), access_token, function (res) {
-                            if (res.code == 200) {
-                                layer.msg("保存成功", { icon: 1 })
-                            }
 
-                        })
-
-
-                        
-
-                    })
-                    var woundPie = echarts.init(document.getElementById('woundPie'));
-                    var woundLine = echarts.init(document.getElementById('woundLine'));
-                    access_token = JSON.parse(utoken).access_token;
-
-
-                    // 列表
-                    ajaxRequest(AJAX_API.measure.list, "get", {}, access_token, function (res) {
                         var data = res.data.list;
                         var html = [];
                         if (data.length != 0) {
@@ -437,120 +583,125 @@
                                     measureId = list.measureId || "",
                                     realname = list.realname || "",
                                     hospital = list.hospital || "",
-                                    createDate = list.createDate ? list.createDate.split("T")[0] : "";
-                                html.push('<li class="notice-item" bingLiId="' + bingLiId + '">\
-                                        <div class="notice-img icon iconfont icon-lingdang bgBlue"></div>\
-                                        <div class="notice-text">\
-                                            <p class="notice-illness">'+ realname + '</p>\
-                                            <p class="notice-hospital">\
-                                                <span>'+ hospital + '</span>\
-                                                <i>'+ createDate + '</i>\
-                                            </p>\
-                                        </div>\
-                                        <div class="notice-icon"></div>\
-                                    </li>')
+                                    createDate = list.date ? list.date.split(" ")[0] : "";
+                                var active = i == 0 ? "active" : null
+                                html.push('<li class="notice-item ' + active + '" bingLiId="' + bingLiId + '">\
+                                            <div class="notice-img icon iconfont icon-lingdang bgBlue"></div>\
+                                            <div class="notice-text">\
+                                                <p class="notice-illness">'+ realname + '</p>\
+                                                <p class="notice-time">'+ createDate + '</p>\
+                                            </div>\
+                                        </li>')
                                 if (i == 0) {
-                                    renderMeasure(bingLiId, access_token, form, element)
+                                    renderMeasure(bingLiId, access_token, form, element, listLayerIndex)
                                     $("#consultationSubmit").attr("bingLiId", bingLiId)
                                 }
                             });
                             $("#noticeUl").html(html.join(""));
-                            $("#noticeUl").on("click", "li", function () {
-                                var bingLiId = $(this).attr("bingLiId");
-                                renderMeasure(bingLiId, access_token, form, element)
+
+                            $("#noticeUl").on("click", ".notice-text", function () {
+                                var listLayerIndex = layerLoading(layer, parent)
+                                var bingLiId = $(this).parents(".notice-item").attr("bingLiId");
+                                renderMeasure(bingLiId, access_token, form, element, listLayerIndex)
+                            })
+                            $("#noticeUl").on("click", ".notice-opt", function () {
+                                var bingLiId = $(this).parents(".notice-item").attr("bingLiId");
+                                var obj = {
+                                    bingLiId: bingLiId
+                                }
+                                ajaxRequest(AJAX_API.measure.applyConsultation, "post", JSON.stringify(obj), access_token, function (_res) {
+                                    if (_res.code == 200) {
+                                        parent.layer.msg("申请会诊转诊成功，请等待审核通过", { icon: 1 })
+                                        rednerList(url, access_token)
+                                    }
+                                })
+
                             })
                         } else {
                             $("#noticeUl").html('<li class="notice-empty"> 没有伤口测量的数据 </li>');
+                            closeLayer(listLayerIndex, parent)
                         }
 
                     })
+                }
 
+                function renderMeasure(id, access_token, form, element, listLayerIndex) {
+                    if (id) {
+                        // 饼图
+                        ajaxRequest(AJAX_API.measure.detect + id, "get", {}, access_token, function (res) {
+                            if (res.code == 200) {
+                                $("#create").attr("bingliId", id);
+                                $("#create").attr("bingliId", id);
+                                var data = res.data;
+                                console.log(data)
+                                $("#progressIndex").attr("lay-percent", data.index + "%")
+                                element.init();
+                                element.progress('index', data[0].index + "%")
+                                $("#length").html((data[0].length - 0).toFixed(2))
+                                $("#width").html((data[0].width - 0).toFixed(2))
+                                $("#deep").html((data[0].deep - 0).toFixed(2))
+                                $("#area").html((data[0].area - 0).toFixed(2))
+                                var EchartsPieData = [{ name: "red", value: data.red }, { name: "yellow", value: data.yellow }, { name: "black", value: data.black }, { name: "white", value: data.white }, { name: "pink", value: data.pink }]
+                                renderEchartsPie(EchartsPieData, woundPie)
 
-
-
-                    // 新增2d 测量
-                    $("#createConsultation").on("click", function () {
-                        parent.layer.open({
-                            title: "新增2d测量",
-                            content: "/view/doctor/measure/create.html",
-                            type: 2,
-                            area: ['1000px', '560px']
-                        })
-                    });
-
-                    function renderMeasure(id, access_token, form, element) {
-                        if (id) {
-                            ajaxRequest(AJAX_API.measure.detect + id, "get", {}, access_token, function (res) {
-                                if (res.code == 200) {
-                                    $("#save").attr("bingliId", id);
-                                    $("#create").attr("bingliId", id);
-                                    var data = res.data;
-                                    $("#progressIndex").attr("lay-percent", data.index + "%")
-                                    element.init();
-                                    element.progress('index', data.index + "%")
-                                    $("#length").html(data.length)
-                                    $("#width").html(data.width)
-                                    $("#deep").html(data.deep)
-                                    $("#area").html(data.area)
-                                    var EchartsPieData = [{ name: "red", value: data.red }, { name: "yellow", value: data.yellow }, { name: "black", value: data.black }, { name: "white", value: data.white }, { name: "pink", value: data.pink }]
-                                    renderEchartsPie(EchartsPieData, woundPie)
-
-                                }
-                            });
-                            // 折线图
-                            ajaxRequest(AJAX_API.measure.brokenline + id, "get", {}, access_token, function (res) {
-                                if (res.code == 200) {
-                                    var data = res.data;
-                                    var woundLineData = {
-                                        series: [],
-                                        xAxis: []
-                                    }
-                                    for (j in data) {
-                                        var o = {
-                                            name: j,
-                                            data: []
-                                        }
-                                        $.each(data[j][1], function (i, item) {
-                                            o.data.push(item);
-                                            woundLineData.xAxis = data[j][0]
-                                        })
-                                        woundLineData.series.push(o)
-                                    }
-                                    renderEchartsLine(woundLineData, woundLine)
-                                }
-                            });
-
-                        }
-                        renderSituations(form)
-
-                    }
-                    // 查询全身情况补充字典 
-                    function renderSituations(form) {
-                        ajaxRequest(AJAX_API.measure.situations, "get", {}, access_token, function (res) {
-
+                            }
+                        });
+                        // 折线图
+                        ajaxRequest(AJAX_API.measure.brokenline + id, "get", {}, access_token, function (res) {
                             if (res.code == 200) {
                                 var data = res.data;
-                                var html = [];
-                                $.each(data, function (i, item) {
-                                    var id = item.situationId;
-                                    var str = item.situationDesc;
-                                    html.push('<div class="layui-col-md3 body-list"><input type="checkbox" name="situation[' + str + ']" title="' + str + '" lay-filter="laysituation" value="' + id + '"></div>')
-                                });
-
-                                $("#bodyList").html(html.join(""))
-
+                                var woundLineData = {
+                                    series: [],
+                                    xAxis: []
+                                }
+                                for (j in data) {
+                                    var o = {
+                                        name: j,
+                                        data: []
+                                    }
+                                    $.each(data[j][1], function (i, item) {
+                                        o.data.push(item);
+                                        woundLineData.xAxis = data[j][0]
+                                    })
+                                    woundLineData.series.push(o)
+                                }
+                                renderEchartsLine(woundLineData, woundLine)
+                            }
+                        });
+                        ajaxRequest(AJAX_API.measure.query + id, "get", {}, access_token, function (res) {
+                            if (res.code == 200) {
+                                var data = res.data;
+                                $("#bingLiCard").text(data.bingLiCard);
+                                $("#sex").text(data.sex);
+                                $("#cardno").text(data.cardno);
+                                $("#realname").text(data.realname);
+                                $("#age").text(data.age);
+                                $("#sex").text(data.sex == "1" ? "男" : "女");
+                                $("#result").text(data.result)
+                                var situations = data.situations;
+                                if (situations && situations.length > 0) {
+                                    $.each(situations, function (i, li) {
+                                        var html = '<li class="body-list"> <span class="body-list-name">' + li.situationDesc + '</span> <span>' + li.description + '</span></li>';
+                                        $("#bodyList").append(html)
+                                    })
+                                }
+                                $("#plain").val(data.plain || "")
                                 form.render()
+                                workbenchNice.resize()
                             }
                         })
+
                     }
 
+                    closeLayer(listLayerIndex, parent)
+                }
 
-
-                })
 
             })
 
-        </script>
-    </body>
+        })
+
+    </script>
+</body>
 
 </html>

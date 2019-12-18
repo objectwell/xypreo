@@ -13,6 +13,9 @@ var AJAX_API = {
     user:{
         webLogin:"oauth/token",                      // 登陆
         register:"web/user/register",                // 注册
+        userInfo:"android/user/user-info",            // 用户信息
+        license:"android/user/upload-license",         // 上传营业执照 
+        resetPwd:"web/user/reset-pwd",       //修改密码
     },
     // 管理系统
     admin:{  
@@ -59,25 +62,41 @@ var AJAX_API = {
     },
     upImg : {
         updata:"web/bingli/upload-img",  // 图片上传
-        delete:"web/bingli/delete-img"   // 图片删除
+        delete:"web/bingli/delete-img" ,  // 图片删除
+        license:"android/user/upload-license", // 上传执照
+        avater:"android/user/upload-avater"   // 上传头像
     },
     // 会诊
     consultation: {
-        create:"web/bingli/create",    // 创建
-        list:"web/bingli/list",        // 列表
-        dinfo:"web/bingli/find-one?bingLiId=",     // 会诊详情信息
-        images:"web/bingli/detec-image"            // 获取会诊图片
+        listStart:"web/bingli/info-start",    // 我发起的
+        listJoin:"web/bingli/info-join",    // 我参与的
+        detail:"android/bingli/detail?bingLiId=",  // 会诊详情
+        require:"android/consultation-require/find",  // 会诊需求
+        type:"android/consultation-type/read-all",  // 会诊类型
+        specialistTree:"web/specialist/tree",              //   tree  选择专家
+        applyConsultation:"android/bingli/start",          //  申请会诊转诊
+        reply:"android/bingli/reply",           // 审核   状态变更为未审核
+        complete:"android/bingli/complete",           // 审核   状态变更为已完成
+        create:"android/bingli-opinion/create",       // 会诊意见提交
     },
      // 2d伤口测量
      measure: {
         create:"android/bingli/create",    // 创建
-        list:"web/bingli/table",        // 列表
+        list:"android/measure-2d/list",        // 列表
         dinfo:"android/bingli/find-one?bingLiId=",     // 会诊详情信息
         images:"android/bingli/detec-image",            // 获取会诊图片
         query:"android/bingli/query?bingLiId=",          //查询患者资料、伤口资料
         situations:"android/bingli/query-situations",    //查询全身情况补充字典
         detect:"android/bingli/detect?bingLiId=",         // 分析结果
         brokenline:"android/bingli/brokenline?bingLiId=",  // 折线图
-        update:"android/bingli/update",                    // 保存   
+        saveMeasure:"android/bingli/update",                    // 保存测量意见   
+        saveAnalysis:"android/measure-2d/create",          //保存分析结果
+        
+        
+    },
+    // 我的患者
+    patient: {
+        patient:"web/bingli/my-patient",                            //列表
+        updata:"web/bingli/create-or-update",                       // 新建/修改
     }
 }

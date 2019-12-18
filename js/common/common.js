@@ -52,6 +52,39 @@ function ajaxRequestImg(url, param, token, callBack) {
 
     return currentAjax;
 }
+// layui upload
+function uploadInst(option) {
+    var uploadInst = option.upload.render({
+        elem: option.elem
+        , url: option.url
+        , before: function (obj) {
+            upImgLayerIndex = layerLoading(layer, parent)
+        }
+        , done: function (res) {
+           
+            if (res.code == 200) { //上传成功
+                option.imgElem.attr('src', res.data.url);
+                if(option.cb){
+                    option.cb()
+                }
+            }
+            closeLayer(upImgLayerIndex, parent)
+            //上传成功
+        }
+        , error: function () {
+            if (option.imgTextElem) {
+                //演示失败状态，并实现重传
+                option.imgTextElem.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                option.imgTextElem.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+
+        }
+    });
+
+    return uploadInst
+}
 
 
 /*退出登录 logout()
@@ -122,7 +155,6 @@ function linkage(url, form, $p) {
                 var item = item;
                 if (i == 0) {
                     organizationId = item.id;
-                    console.log(organizationId)
                 }
                 var value = (item.id) || (item.organizationId);
                 var str = (item.hospital) || (item.organizationName)
@@ -134,10 +166,12 @@ function linkage(url, form, $p) {
     })
 }
 
-function layerLoading (layer,win) {
+function layerLoading(layer, win) {
     return win.layer.load(1, { shade: [0.5, '#393D49'] });
 }
 
-function closeLayer(layerindex,win){
+function closeLayer(layerindex, win) {
     win.layer.close(layerindex)
 }
+
+

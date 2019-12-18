@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>注册 - layuiAdmin</title>
+    <title>注册 - 中南大学湘雅医院糖尿病足互联网平台</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
@@ -63,7 +63,11 @@
         }
 
         .register-box .layui-form-label {
-            width: 110px;
+            width: 160px;
+        }
+
+        .register-box .layui-input-block {
+            margin-left: 160px;
         }
 
         .register-box .btn-box {
@@ -89,10 +93,14 @@
             display: inline-block;
             float: left;
         }
+
         .submit-register-box {
             text-align: center;
             padding-left: 60px;
             margin-top: 30px;
+        }
+        .layui-upload-img {
+            height: 38px;
         }
     </style>
 </head>
@@ -103,7 +111,7 @@
     <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
         <div class="layadmin-user-login-main">
             <div class="layadmin-user-login-box layadmin-user-login-header">
-                <h2>中南大学湘雅医院糖尿病足互联网平台</h2>
+                <h2>智足管家</h2>
             </div>
             <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
 
@@ -122,14 +130,20 @@
                     <input type="password" name="loginPassword" id="LAY-user-login-password" lay-verify="required"
                         placeholder="密码" class="layui-input">
                 </div>
-                <div class="layui-form-item">
-                    <button class="layui-btn layui-btn-fluid layui-btn-normal" lay-submit lay-filter="LAY-user-login-submit">登 陆</button>
+                <div class="layui-form-item layui-row layui-col-space10">
+                    <div class="layui-col-xs6">
+                        <button class="layui-btn layui-btn-fluid layui-btn-normal" lay-submit
+                            lay-filter="LAY-user-login-submit">登 陆</button>
+                    </div>
+                    <div class="layui-col-xs6">
+                        <button class="layui-btn layui-btn-fluid layui-btn-normal" lay-filter="LAY-user-reg-submit"
+                            id="register">注
+                            册</button>
+                    </div>
+
                 </div>
                 <div class="layui-form-item layui-op">
-                    <button class="layui-btn layui-btn-sm layui-btn-warm" lay-filter="LAY-user-reg-submit"
-                        id="register">注
-                        册</button>
-                    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-filter="LAY-user-reg-submit"
+                    <button class="layui-btn layui-btn-sm layui-btn-primary" lay-filter="LAY-user-reg-submit"
                         id="forget">忘记密码</button>
                 </div>
             </div>
@@ -181,16 +195,92 @@
                             autocomplete="off" class="layui-input">
                     </div>
                 </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        职称/职务
+                    </label>
+                    <div class="layui-input-block">
+                        <select name="position" lay-verify="required" lay-search="">
+                            <option value="">请选择职称/职务</option>
+                            <option value="1">主治医师</option>
+                            <option value="2">复主治医师</option>
+                            <option value="3">主任医师</option>
+                            <option value="4">住院医师</option>
+                            <option value="5">其他</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        所属医院及科室
+                    </label>
+                    <div class="layui-input-inline">
+                        <select name="hospital" lay-search="" id="hospitalSelect" lay-filter="hospital" required lay-verify="required">
 
+                        </select>
+                    </div>
+                    <div class="layui-input-inline">
+                        <select name="organizationId" lay-search="" id="organizationSelect" required lay-verify="required">
+
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        头像
+                    </label>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn" id="avater">
+                            <i class="layui-icon">&#xe66f;</i>点击上传头像
+                        </button>
+                    </div>
+                    <div class="layui-input-inline">
+                        <img class="layui-upload-img" id="avatarImg">
+                            <p id="avatarImgText"></p>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        执照
+                    </label>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn" id="license">
+                            <i class="layui-icon">&#xe64a;</i>点击上传执照
+                        </button>
+                    </div>
+                    <div class="layui-input-inline">
+                        <img class="layui-upload-img" id="licenseImg">
+                        <p id="licenseImgText"></p>
+                    </div>
+                    
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        擅长
+                    </label>
+                    <div class="layui-input-block">
+                        <input type="text" name="adept"   placeholder="请输入擅长"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        个人简介
+                    </label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请简单的我描述" class="layui-textarea" name="introduction"></textarea>
+                    </div>
+                </div>
                 <div class="submit-register-box">
-                    <button class="layui-btn layui-btn-normal" id="submitRegister" lay-submit lay-filter="submitRegister">注册并登陆</button>
+                    <button class="layui-btn layui-btn-normal" id="submitRegister" lay-submit
+                        lay-filter="submitRegister">注册并登陆</button>
                 </div>
 
             </form>
         </div>
         <div class="layui-trans layadmin-user-login-footer">
 
-            <p>© 2019 中南大学湘雅医院糖尿病足互联网平台</p>
+            <p>© 2019 中南大学湘雅医院皮肤科互联网医院</p>
 
         </div>
 
@@ -203,9 +293,10 @@
     <script src="./js/plugin/layui/layui.js"></script>
     <script src="./js/plugin/toastr/toastr.min.js"></script>
     <script>
-        layui.use(['form', 'layer'], function () {
+        layui.use(['form', 'layer', 'upload'], function () {
             var $ = layui.$
                 , layer = layui.layer
+                , upload = layui.upload
                 , form = layui.form;
 
             form.render();
@@ -232,30 +323,81 @@
                         window.location.href = "./view/doctor/router.html"
                     },
                     complete: function (xhr, msg) {
-
                     }
 
                 });
                 return false;
             });
             $("#register").on("click", function () {
+                // 获取 医院
+                var hospitalsURL = AJAX_API.common.gethospitals;
+                ajaxRequest(hospitalsURL, "GET", {}, "", function (res) {
+                    if (res.code == 200) {
+                        var data = res.data;
+                        var html = ['<option value="">请选择医院</option>']
+                        $.each(data, function (i, item) {
+                            html.push('<option value="' + item.id + '">' + item.hospital + '</option>')
+                        })
+                        $("#hospitalSelect").html(html.join(""))
+                        form.render('select')
+                    }
+                })
                 registerLayer = layer.open({
                     title: "注册",
                     type: 1,
-                    area: ['480px', '420px'],
+                    area: ['680px', '560px'],
                     content: $("#registerBox")
                 })
 
                 return false
             })
+            //  上传执照
+            var uploadLicenseOption = {
+                upload:upload,
+                elem:"#license",
+                url:ajaxRoot + AJAX_API.upImg.license,
+                imgElem:$("#licenseImg"),
+                imgTextElem:$("#licenseImgText")
+            }
+            var licenseInst = uploadInst (uploadLicenseOption)
+            // 上传头像
+            var uploadAvaterOption = {
+                upload:upload,
+                elem:"#avater",
+                url:ajaxRoot + AJAX_API.upImg.avater,
+                imgElem:$("#avatarImg"),
+                imgTextElem:$("#avatarImgText")
+            }
+            var avaterInst = uploadInst (uploadAvaterOption)
+            form.on('select(hospital)', function (data) {
+                var val = data.value;
+                if (val) {
+                    //  获取科室
+                    var organizationURL = AJAX_API.common.getdepartments + val;
+                    ajaxRequest(organizationURL, "GET", {}, "", function (res) {
+                        if (res.code == 200) {
+                            var data = res.data;
+                            var html = ['<option value="">请选择科室</option>']
+                            $.each(data, function (i, item) {
+                                html.push('<option value="' + item.organizationId + '">' + item.organizationName + '</option>')
+                            })
+                            $("#organizationSelect").html(html.join(""))
+                            form.render('select')
+                        }
+                    })
+                }
+            });
             $("#forget").on("click", function () {
                 layer.msg("该功能需要配合短信业务，暂未开噶，敬请期待。。")
             })
             form.on('submit(submitRegister)', function (data) {
+                var regData = data.field;
+                regData.avatar = $("#avatarImg").attr("src") || "";
+                regData.license = $("#licenseImg").attr("src") || "";
                 $.ajax({
                     type: "post",
                     url: ajaxRoot + AJAX_API.user.register,
-                    data: JSON.stringify(data.field),
+                    data: JSON.stringify(regData),
                     dataType: 'json',
                     contentType: 'application/json',
                     success: function (res) {

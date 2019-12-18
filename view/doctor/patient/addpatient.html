@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>智足管家</title>
+    <link rel="stylesheet" href="../../../js/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="../../../js/plugin/toastr/toastr.min.css">
+    <link rel="stylesheet" href="../../../font/iconfont.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <style>
+        .add-patient {
+            padding: 20px 80px 0 20px;
+        }
+
+        .add-patient .layui-form-label {
+            width: 130px;
+        }
+
+        .add-patient .layui-input-block {
+            margin-left: 130px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layui-form latui-row add-patient"  id="addPatientLayer">
+        <div class="layui-col-xs6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    姓名
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" name="realname" required lay-verify="required" placeholder="姓名"
+                        autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    身份证号码
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" name="cardno" required lay-verify="identity" placeholder="身份证号码"
+                        autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    年龄
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" name="age" required lay-verify="required" placeholder="年龄" autocomplete="off"
+                        class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    性别
+                </label>
+                <div class="layui-input-block">
+                    <input type="radio" name="sex" value="1" title="男" checked="">
+                    <input type="radio" name="sex" value="0" title="女">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    手机号码
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" name="telephone" required lay-verify="phone" placeholder="手机号码" autocomplete="off"
+                        class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    诊疗卡号
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" name="bingLiCard" required lay-verify="number" placeholder="诊疗号" autocomplete="off"
+                        class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs12">
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    家庭住址
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" name="address" placeholder="家庭住址" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs12">
+            <div class="submit-register-box text-center">
+                <button class="layui-btn layui-btn-green" lay-submit lay-filter="submitUpdata">确定</button>
+            </div>
+        </div>
+    </div>
+    <script src="../../../js/plugin/jquery.min.js"></script>
+    <script src="../../../js/plugin/jquery.cookie.js"></script>
+    <script src="../../../js/plugin/toastr/toastr.min.js"></script>
+    <script src="../../../js/plugin/layui/layui.js"></script>
+    <script src="../../../js/plugin/echarts.min.js"></script>
+    <script src="../../../js/plugin/prefixfree.js"></script>
+    <script src="../../../js/plugin/jquery.nicescroll.min.js"></script>
+    <script src="../../../js/common/config.js"></script>
+    <script src="../../../js/common/common.js"></script>
+    <script>
+        layui.use(['layer', 'form'], function () {
+            var form = layui.form,
+                layer = layui.layer;
+            var utoken = JSON.parse($.cookie("utoken"));
+
+            if (!utoken) {
+                layer.msg("您还没有登陆，请重新登陆", { icon: 2 })
+                window.location.href = "../../../login_doctor.html"
+            }
+            form.on('submit(submitUpdata)', function (data) {
+                var submitdata = data.field;
+                var url = AJAX_API.patient.updata;
+                ajaxRequest(url, "post", JSON.stringify(submitdata), utoken.access_token, function (res) {
+                    if (res.code == 200) {
+                        top.layer.msg("新增成功", { icon: 1 })
+                        top.window.$("#workbenchiframe")[0].contentWindow.tableIns.reload()
+                    }
+                })
+                return false
+            })
+        })
+
+    </script>
+</body>
+
+</html>
