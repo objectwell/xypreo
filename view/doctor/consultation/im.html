@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>智足管家</title>
+    <link rel="stylesheet" href="../../../js/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+</head>
+
+<body>
+
+    <script src="../../../js/plugin/jquery.min.js"></script>
+    <script src="../../../js/plugin/jquery.cookie.js"></script>
+    <script src="../../../js/common/config.js"></script>
+    <script src="../../../js/common/common.js"></script>
+    <script src="../../../js/plugin/layui/layui.js"></script>
+    <script src="../../../js/plugin/strophe.js"></script>
+    <script>
+        layui.use(['layim'], function () {
+            var layim = layui.layim;
+            var utoken = $.cookie("utoken");
+            var RID = "0e3c4d27c96845c4ad0a44efd7355d82@muc.xyim.com";
+            // 获取用户信息
+            if (utoken == "null") {
+                window.location.href = "../../../login.html"
+            }
+            access_token = JSON.parse(utoken).access_token;
+            var roleInfoUlr = AJAX_API.user.userInfo;
+            ajaxRequest(roleInfoUlr, "get", {}, access_token, function (res) {
+                if (res.code == 200) {
+                    var data = res.data;
+                    var mine = {
+                        username: data.realname,
+                        avatar: data.avatar,
+                        id: data.mobile + "@xyim.com",
+                        mine: true
+                    };
+                    var server = AJAX_API.im.server;
+                    CONNECTION = new Strophe.Connection(server);
+                    var CONNECT = CONNECTION.connect(mine.id, "123456", CONNECTstatus)
+                    CONNECTION.addHandler(onMessage, null, 'message', null, null, null);
+                    function CONNECTstatus(status) {
+                        if (status == Strophe.Status.CONNFAIL) {
+                            console.log("连接失败！");
+                        } else if (status == Strophe.Status.AUTHFAIL) {
+                            console.log("登录失败！");
+                        } else if (status == Strophe.Status.DISCONNECTED) {
+                            console.log("连接断开！");
+                            connected = false;
+                        } else if (status == Strophe.Status.CONNECTED) {
+                            console.log("连接成功！");
+                            connected = true;
+                            CONNECTION.send($pres().tree());
+                            CONNECTION.send($pres({
+                                from: "18912340005@xyim.com",
+                                to: "0e3c4d27c96845c4ad0a44efd7355d82 @muc.xyim.com/18912340005"
+                            }).c('x', { xmlns: 'http://jabber.org/protocol/muc' }).tree());
+                            layim.config({
+                                init: {
+                                    //配置客户信息
+                                    mine: mine
+                                }
+                                , uploadImage: {
+                                    url: '' //（返回的数据格式见下文）
+                                    , type: '' //默认post
+                                }
+                                //开启客服模式
+                                , brief: true
+                            });
+                            layim.chat({
+                                name: '糖足'
+                                , type: 'group'
+                                , avatar: '//tva3.sinaimg.cn/crop.0.0.180.180.180/7f5f6861jw1e8qgp5bmzyj2050050aa8.jpg'
+                                , id: "0e3c4d27c96845c4ad0a44efd7355d82"
+                            });
+                        }
+                    }
+                    function onMessage(msg) {
+
+                        // console.log(msg);
+                        // 解析出<message>的from、type属性，以及body子元素
+                        var from = msg.getAttribute('from');
+                        var type = msg.getAttribute('type');
+                        var elems = msg.getElementsByTagName('body');
+                            var id = "0e3c4d27c96845c4ad0a44efd7355d82";
+                            var fromid = "18912340005"
+                        var obj = {
+                                username: "fromid"
+                                , avatar:"//tva3.sinaimg.cn/crop.0.0.180.180.180/7f5f6861jw1e8qgp5bmzyj2050050aa8.jpg"
+                                , id:"dddgfgf"
+                                , type:"group"
+                                , content:"gdfgf"
+                            }
+                        if (type == "groupchat" && elems.length > 0) {
+                            console.log(Strophe.getText(elems[0]))
+                            
+                            // layim.getMessage(obj)
+                            layim.getMessage(obj)
+                        }
+                        return true;
+                    }
+                }
+
+            })
+
+        })
+    </script>
+</body>
+
+</html>

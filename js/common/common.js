@@ -4,7 +4,7 @@
 * @param 传参
 * @callBack 成功回调函数
  */
-function ajaxRequest(url, method, param, token, callBack) {
+function ajaxRequest(url, method, param, token, callBack,err) {
     var pathurl = ajaxRoot + url; //'/rand/'+Math.random(1);
     var currentAjax = $.ajax({
         type: method || 'POST',
@@ -18,13 +18,16 @@ function ajaxRequest(url, method, param, token, callBack) {
         data: param || {},
         dataType: 'json',
         contentType: 'application/json',
-        timeout: 20000,
+        timeout: 60000,
         success: function (data) {
             //回调函数
             callBack(data);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             console.error('调试URL请求:' + url);
+            if(err) {
+                err()
+            }
         }
     });
     return currentAjax;

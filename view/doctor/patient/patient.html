@@ -84,10 +84,14 @@
 
         #complain_search {
             padding: 0 20px;
+            max-width: 1280px;
+            margin: 0 auto;;
         }
 
         .table-box {
             padding: 0 20px;
+            max-width: 1280px;
+            margin: 0 auto;
         }
 
         .layui-form-item.text-right .layui-btn {
@@ -113,25 +117,24 @@
 
     <body class="hg100 base-workbench">
         <div class="layout">
-            <div class="layui-row">
-                <div class="layui-form layui-col-xs12 " id="complain_search" >
+            <div class="layui-row" style="max-width: 1280px; margin: auto;">
+                <div class="layui-form layui-col-xs12 " id="complain_search">
                     <div class="layui-row layui-col-space20">
                         <div class="layui-col-xs6">
                             <div class="layui-form-item">
                                 <label class="layui-form-label">
-                                    关键词:
+                                    身份证号码:
                                 </label>
                                 <div class="layui-input-block">
-                                    <input type="text" name="keyword" placeholder="请输入关键词搜索(如:姓名/身份证号)"
-                                        autocomplete="off" class="layui-input">
+                                    <input type="text" name="keyword" placeholder="请输入身份证号" autocomplete="off"
+                                        class="layui-input">
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="layui-col-xs4">
                             <div class="layui-form-item">
-                                <button id="search" class="layui-btn layui-btn-normal " lay-submit
-                                    lay-filter="search">
+                                <button id="search" class="layui-btn layui-btn-normal " lay-submit lay-filter="search">
                                     <i class="layui-icon">&#xe615;</i>搜索
                                 </button>
                             </div>
@@ -148,6 +151,7 @@
                 <div class=" layui-col-xs12 ">
                     <div class="table-box">
                         <table class="layui-hide patient-table" id="organizationTable" lay-filter="organizationTable">
+
                         </table>
                     </div>
                 </div>
@@ -168,7 +172,7 @@
         <script src="../../../js/common/common.js"></script>
         <script type="text/html" id="operation">
             <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">查看</a>
-            <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a> -->
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
         <script>
             var tableIns;
@@ -185,9 +189,9 @@
 
                     if (!utoken) {
                         layer.msg("您还没有登陆，请重新登陆", { icon: 2 })
-                        window.location.href = "../../../login_doctor.html"
+                        window.location.href = "../../../login.html"
                     }
-                    var patientURL = ajaxRoot + AJAX_API.patient.patient ;
+                    var patientURL = ajaxRoot + AJAX_API.patient.patient;
                     var urllist = AJAX_API.admin.organization.list;
                     ajaxRequest(urllist, "get", {}, utoken.access_token, function (res) {
                         if (res.code == 200) {
@@ -211,7 +215,7 @@
                             , limitName: 'nums'
                         }
                         , page: true //开启分页
-                        , toolbar: "false"
+                        , toolbar: "default"
                         , defaultToolbar: []
                         , parseData: function (res) {
                             if (res.code == 200) {
@@ -228,25 +232,27 @@
 
                         }
                         , cols: [[ //表头
-                            { field: 'realname', title: '姓名', align: "center", flexd: "left" }
-                            , { field: 'cardno', title: '身份证', align: "center",width:220 }
-                            , { field: 'sex', title: '性别', align: "center" ,templet:function(d){
-                                var sex = d.sex;
-                                return sex==1?"男":"女"
-                            }}
+                            { field: 'realname', title: '姓名', align: "center", }
+                            , { field: 'cardno', title: '身份证', align: "center", width: 220 }
+                            , {
+                                field: 'sex', title: '性别', align: "center", templet: function (d) {
+                                    var sex = d.sex;
+                                    return sex == 1 ? "男" : "女"
+                                }
+                            }
                             , { field: 'age', title: '年龄', align: "center" }
                             , { field: 'telephone', title: '电话', align: "center" }
                             , { fixed: 'right', title: '操作', width: 260, align: 'center', toolbar: '#operation' }
+                         
                         ]]
-                        , done: function (res, curr, count) {
 
-                        }
                     });
 
                     table.on('tool(organizationTable)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
                         var data = obj.data //获得当前行数据
                             , layEvent = obj.event; //获得 lay-event 对应的值
                         var organizationId = obj.data.organizationId;
+                        console.log(data)
                         if (layEvent === 'del') {
                             layer.confirm('真的删除所选择的机构吗？', { icon: 5, title: '提示' }, function (index) {
                                 var url = AJAX_API.admin.organization.delete;
@@ -256,7 +262,7 @@
                             top.layer.open({
                                 type: 2,
                                 title: "患者详情",
-                                content: "./patient/record.html?organizationId=" + organizationId,
+                                content: "./patient/record.html?cardno=" + data.cardno,
                                 area: ['1000px', '620px']
                             })
                         }

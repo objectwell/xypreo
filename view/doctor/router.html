@@ -6,7 +6,7 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>湘雅医院皮肤科互联网医院</title>
+    <title>智足管家</title>
     <link rel="stylesheet" href="../../js/plugin/layui/css/layui.css">
     <link rel="stylesheet" href="../../js/plugin/toastr/toastr.min.css">
     <link rel="stylesheet" href="../../font/iconfont.css">
@@ -15,6 +15,7 @@
         .doctor-router {
             overflow: hidden;
         }
+
         .layout {
             width: 100%;
             height: 100%;
@@ -328,7 +329,7 @@
             <!-- <button type="button" class="layui-btn" id="btn">button</button> -->
             <h1 class="logo">
                 <p>智足管家</p>
-                
+
             </h1>
             <div class="sidebar-info">
                 <div class="user-info">
@@ -350,7 +351,7 @@
                         <li class="personal-center">
                             <i class="icon iconfont icon-edit-square"></i> <span>我的信息</span>
                         </li>
-                        <li>
+                        <li id="logoutLi">
                             <i class="icon iconfont icon-logout"></i> <span>登出</span>
                         </li>
                     </ul>
@@ -439,8 +440,10 @@
 
         </div>
     </div>
+    <div id="hideDIV" class="layui-hide"></div>
     <script src="../../js/plugin/rem.min.js"></script>
-    <script src="../../js/plugin/jquery.min.js"></script>
+    <!-- <script src="../../js/plugin/jquery.min.js"></script> -->
+    <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
     <script src="../../js/plugin/jquery.cookie.js"></script>
     <script src="../../js/plugin/toastr/toastr.min.js"></script>
     <script src="../../js/plugin/layui/layui.js"></script>
@@ -448,7 +451,11 @@
     <script src="../../js/common/config.js"></script>
     <script src="../../js/common/common.js"></script>
     <script src="../../js/doctor/nav.js"></script>
-    <script src="../../js/common/im.js"></script>
+    <!-- <script src="../../js/plugin/strophe.js"></script> -->
+    <script src="http://cdn.bootcss.com/strophe.js/1.1.3/strophe.min.js"></script>
+    <!-- <script src="../../js/utlis/layimConfig.js"></script> -->
+    <!-- <script src="../../js/utlis/stropheConfig.js"></script> -->
+    <script src="../../js/utlis/imUtils.js"></script>
     <script>
         function showPhotos(images) {
             layer.photos({
@@ -499,41 +506,46 @@
                         layer.msg("改功能暂未开发，敬请期待。。。")
                     }
                 })
-               
-                var utoken = $.cookie("utoken");
-                // 获取用户信息
-                if (!utoken) {
-                    parent.layer.msg('您尚未登陆或者,或者登陆已过期，请重登陆', {
-                        time: 20000, //20s后自动关闭
-                        btn: ['重新登陆'],
-                        btn1: function () {
-                            parent.window.location.href = "../../../login.html"
-                        }
-                    });
-                }
-                access_token = JSON.parse(utoken).access_token;
-                var roleInfoUlr = AJAX_API.user.userInfo
-                ajaxRequest(roleInfoUlr, "get", {}, access_token, function (res) {
-                    if (res.code == 200) {
-                        var data = res.data;
-                        $("#username").html(data.role)
-                        $("#department").html(data.department)
-                        $("#hospital").html(data.hospital)
-                        if (data.avatar) {
-                            $(".avatar").html(data.avatar)
-                        }
+
+                // var utoken = $.cookie("utoken");
+                // // 获取用户信息
+                // if (utoken == "null") {
+                //     window.location.href = "../../../login.html"
+                // }
+                // access_token = JSON.parse(utoken).access_token;
+                // var roleInfoUlr = AJAX_API.user.userInfo;
+                // ajaxRequest(roleInfoUlr, "get", {}, access_token, function (res) {
+
+                //     if (res.code == 200) {
+                //         var data = res.data;
+                //         console.log(data)
+                //         $("#username").html(data.role)
+                //         $("#department").html(data.department)
+                //         $("#hospital").html(data.hospital)
+                //         if (data.avatar) {
+                //             $(".avatar").html(data.avatar)
+                //         }
 
 
-                    }
+                //     }
+                // })
+                $("#logoutLi").on("click", function () {
+                    logout()
                 })
 
+                function logout() {
+                    $.removeCookie('utoken', { path: '/' });
+                    window.location.replace("../../index.html")
+                }
+               
             });
 
 
         })
-
+       
 
     </script>
+    
 </body>
 
 </html>

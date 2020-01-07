@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <link rel="stylesheet" href="./formSelects/formSelects-v4.css">
+</head>
+
+<body>
+
+    <div class="layui-form">
+        <select name="city" xm-select="example6_4" xm-select-search="" xm-select-search-type="dl">
+            <option value="">请选择</option>
+        </select>
+    </div>
+    <script src="./layui/layui.js"></script>
+    <script src="./formSelects/formSelects-v4.js"></script>
+    <script>
+
+        layui.config({
+            base: './formSelects/'
+        }).extend({
+            formSelects: 'formSelects-v4'
+        });
+        //加载模块
+        layui.use(['jquery', 'formSelects'], function () {
+            var formSelects = layui.formSelects;
+            var $ = layui.$;
+            formSelects.data('example6_4', 'local', {
+                arr: [
+                    {
+                        "name": "北京",
+                        "value": 1,
+                        "xslkdf": "123",
+                        "icon": "group-iconfont",
+                        "type": "text",
+                        "children": [
+                            {
+                                "name": "朝阳",
+                                "icon": "group-iconfont",
+                                "type": "text",
+                                "value": 11,
+                                "children": [
+                                    { "name": "酒仙桥", "value": 111, "icon": "xm-iconfont", "type": "item", },
+                                    { "name": "望京东", "value": 121, "icon": "xm-iconfont", "type": "item", }
+                                ]
+                            },
+                            { "name": "海淀", "value": 12, "icon": "xm-iconfont", "type": "item", }
+                        ]
+                    },
+                    {
+                        "name": "深圳",
+                        "icon": "group-iconfont",
+                        "type": "text",
+                        "value": 2,
+                        "children": [
+                            { "name": "龙岗", "value": 21, "icon": "xm-iconfont", "type": "item", }
+                        ]
+                    }
+                ]
+            });
+          
+            
+            formSelects.on('example6_4', function (id, vals, val, isAdd, isDisabled) {
+                console.log(vals)
+            }, true);
+        });
+
+
+
+
+
+    </script>
+</body>
+
+</html>

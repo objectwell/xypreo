@@ -1,6 +1,7 @@
 var ajaxRoot = "http://192.168.1.102:8080/";    
 // var ajaxRoot = "http://122.207.81.240:1602/"; 
 var ajaxRoot = " http://yldhez.natapp1.cc/";  
+
 var AJAX_API = {
     //通用
     common:{
@@ -98,5 +99,13 @@ var AJAX_API = {
     patient: {
         patient:"web/bingli/my-patient",                            //列表
         updata:"web/bingli/create-or-update",                       // 新建/修改
+    },
+    // im
+    im: {
+        server:"http://xyim.com:5280",                              // 服务器地址
+        domaian:"@xyim.com",                                  // 后缀
+        allList:"",                            //全部列表
+        frend:"",                              // 好友列表
+        roomid:"web/bingli/roomid",            // 群列表
     }
 }

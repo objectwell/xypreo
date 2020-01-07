@@ -261,6 +261,12 @@
         .img-item {
             width: 200px;
             height: 200px;
+            margin: 6px 30px;
+        }
+        #measureTabTitle span {
+           font-size: 16px;
+           cursor: pointer;
+           margin: 0 10px;
         }
     </style>
 </head>
@@ -277,18 +283,18 @@
                             <h4 class="info-tips">会诊信息</h4>
                             <div class="layui-col-md12 info-list">
                                 <div class="layui-row layui-col-space5">
-                                    <div class="layui-col-md4 ">
+                                    <div class="layui-col-md6 ">
                                         <p class="wound-info"><em>会诊类型:</em> <span id="consultationTypeName"></span></p>
                                     </div>
-                                    <div class="layui-col-md4 ">
+                                    <div class="layui-col-md6 ">
                                         <p class="wound-info"><em>会诊需求:</em> <span id="consultationRequireName"></span>
                                         </p>
                                     </div>
-                                    <div class="layui-col-md4 ">
+                                    <div class="layui-col-md6 ">
                                         <p class="wound-info"><em>会诊时间:</em> <span id="consultationRequiTime"></span>
                                         </p>
                                     </div>
-                                    <div class="layui-col-md12 ">
+                                    <div class="layui-col-md6 ">
                                         <p class="wound-info"><em>会诊团队:</em> <span id="consultationRequiTeam"></span>
                                         </p>
                                     </div>
@@ -320,6 +326,17 @@
                                 </div>
 
                             </div>
+                        </div>
+                        <div class=" layui-col-md12">
+                            <div class="measure-tab">
+                                <div class="layui-tab layui-tab-brief" lay-filter="measureTabBrief">
+                                    <ul class="layui-tab-title" id="measureTabTitle">
+    
+                                    </ul>
+    
+                                </div>
+                            </div>
+                            
                         </div>
                         <div class="layui-col-md12">
                             <h4 class="info-tips">伤口深度指数</h4>
@@ -480,7 +497,6 @@
                         if (res.code == 200) {
                             var data = res.data;
                             role = data.role;
-                            console.log(role)
                             if (role == "医生") {
                                 $("#create").html("提交会诊/转诊")
 
@@ -498,6 +514,29 @@
                             var data = res.data;
                             state = data.state;
                             rednerConsutation(data)
+                            ajaxRequest(AJAX_API.measure.brokenline + bingliId, "get", {}, access_token, function (res) {
+                                if (res.code == 200) {
+                                    var data = res.data;
+                                    var woundLineData = {
+                                        series: [],
+                                        xAxis: []
+                                    }
+                                    for (j in data) {
+                                        var o = {
+                                            name: j,
+                                            data: []
+                                        }
+                                        $.each(data[j][1], function (i, item) {
+                                            o.data.push(item);
+                                            woundLineData.xAxis = data[j][0]
+                                        })
+                                        woundLineData.series.push(o)
+                                    }
+                                    var woundLine = echarts.init(document.getElementById('woundLine'));
+
+                                    renderEchartsLine(woundLineData, woundLine)
+                                }
+                            });
                         } else {
                             layer.msg("服务器错误", { icon: 2 })
                         }
@@ -559,6 +598,8 @@
                         } else {
 
                         }
+                        var time = [data.startDate || "", data.endDate || ""]
+                        $("#consultationRequiTime").html( time.join("--"))
                         $("#bingLiCard").html(data.bingLiCard)
                         $("#cardno").html(data.cardno)
                         $("#realname").html(data.realname)
@@ -571,10 +612,23 @@
                         })
                         $("#infoImageList").html(infoImageListStr.join(""))
                         var woundImageListStr = []
+                        var woundImageListHtml = [];
                         $.each(data.woundImageList, function (j, li) {
-                            woundImageListStr.push('<img src="' + li + '" alt="伤口图片" class="img-item">')
+                            var pics = li.pics;
+                            var picsArr = pics.split(",http")
+                            $.each(picsArr,function(ke,p){
+                                if(ke == 0) {
+                                    woundImageListStr.push(p)
+                                }else {
+                                    woundImageListStr.push("http"+p)
+                                }
+                            })
                         })
-                        $("#woundImageList").html(woundImageListStr.join(""))
+                        $.each(woundImageListStr,function(ii,item){
+                           
+                            woundImageListHtml.push('<img src="' + item + '" alt="伤口图片" class="img-item">')
+                        })
+                        $("#woundImageList").html(woundImageListHtml.join(""))
                         var detecImageList = []
                         $.each(data.detecImageList, function (j, li) {
                             detecImageList.push('<img src="' + li + '" alt="检验检查报告图片" class="img-item">')
@@ -587,17 +641,42 @@
                                 $("#bodyList").append(html)
                             })
                         }
-                        $("#progressIndex").attr("lay-percent", data.index + "%")
-                        element.init();
-                        element.progress('index', data.index + "%")
-                        $("#length").html((data.length - 0).toFixed(2))
-                        $("#width").html((data.width - 0).toFixed(2))
-                        $("#deep").html((data.deep - 0).toFixed(2))
-                        $("#area").html((data.area - 0).toFixed(2))
-                        var woundPie = echarts.init(document.getElementById('woundPie'));
-                        var woundLine = echarts.init(document.getElementById('woundLine'));
-                        var EchartsPieData = [{ name: "red", value: data.red }, { name: "yellow", value: data.yellow }, { name: "black", value: data.black }, { name: "white", value: data.white }, { name: "pink", value: data.pink }]
-                        renderEchartsPie(EchartsPieData, woundPie)
+                        var detect = data.measures;
+                        if (detect && detect.length > 0) {
+                            var woundPie = echarts.init(document.getElementById('woundPie'));
+
+                            renderAnalysis(detect[0],woundPie)
+                            var woundLength =data.woundImageList;
+                            if (woundLength.length > 1) {
+                                var breadcrumbHtml = [];
+                                $.each(woundLength, function (i, item) {
+                                    var title = item.title;
+                                    if(i==0) {
+                                        breadcrumbHtml.push('<span class="layui-this" analysisIndex = "' + i + '">' + title + '</span>')
+
+                                    }else {
+                                        breadcrumbHtml.push('<span analysisIndex = "' + i + '">' + title + '</span>')
+
+                                    }
+                                })
+                                
+                                $("#measureTabTitle").html(breadcrumbHtml.join(""))
+                                $("#measureTabTitle").on("click", "span", function () {
+                                    var ind = $(this).attr("analysisIndex")-0;
+                                    $("#measureTabTitle").find("span").removeClass("layui-this");
+                                    $(this).addClass('layui-this')
+                                    renderAnalysis(detect[ind],woundPie)
+                                })
+                                element.init()
+                            }
+
+                            form.render()
+                            // workbenchNice.resize()
+                        } else {
+                            // $("#workbench").html("<iframe src='../../error/error.html' frameborder='0' style='width:100%;height:100%'></iframe>")
+                        }
+
+                        
                         var opinions = data.opinions;
                         if (opinions && opinions.length > 0) {
                             var html = [];
@@ -631,6 +710,21 @@
                             form.render()
                         }
                     }
+                    function renderAnalysis(obj,woundPie) {
+                        $("#progressIndex").attr("lay-percent", obj.index + "%")
+                        element.init();
+                        element.progress('index', obj.index + "%")
+                        $("#length").html((obj.length - 0).toFixed(2))
+                        $("#width").html((obj.width - 0).toFixed(2))
+                        $("#deep").html((obj.deep - 0).toFixed(2))
+                        $("#area").html((obj.area - 0).toFixed(2))
+                        var EchartsPieData = [{ name: "red", value: obj.red }, { name: "yellow", value: obj.yellow }, { name: "black", value: obj.black }, { name: "white", value: obj.white }, { name: "pink", value: obj.pink }]
+                        renderEchartsPie(EchartsPieData, woundPie)
+                        
+                    }
+
+
+
 
 
                 })

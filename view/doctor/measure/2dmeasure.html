@@ -31,6 +31,19 @@
             border-bottom: 1px dashed #c0c0c0;
         }
 
+        .workbench .info-tips .analysis-tab {
+            margin-left: 60px;
+        }
+
+        .workbench .info-tips .analysis-tab span {
+            height: 40px;
+            line-height: 40px;
+            font-size: 16px;
+            color: #c0c0c0;
+            box-sizing: border-box;
+            border-bottom: 1px dashed #c0c0c0;
+        }
+
         .workbench .info-list {
             padding: 10px 0;
             line-height: 18px;
@@ -338,7 +351,8 @@
                         </div>
                     </div>
                     <div class="layui-col-md12">
-                        <h4 class="info-tips">伤口深度指数</h4>
+                        <h4 class="info-tips">伤口深度指数 <span class="layui-breadcrumb analysis-tab" lay-separator="—"
+                                id="analysisTab"></span></h4>
                     </div>
 
                     <div class="layui-col-md12 info-list" id="loader-mater">
@@ -509,10 +523,9 @@
 
                 form.on('submit(diagnose)', function (data) {
                     var type = $(data.elem).attr("type")
-
                     var formData = data.field;
                     var bingLiId = $("#create").attr("bingliId");
-                    var url = "/view/doctor/measure/createConsultationStep3.html?bingliId="+bingLiId;
+                    var url = "/view/doctor/measure/createConsultationStep3.html?bingliId=" + bingLiId;
                     parent.layer.open({
                         type: 2,
                         content: url,
@@ -627,25 +640,7 @@
 
                 function renderMeasure(id, access_token, form, element, listLayerIndex) {
                     if (id) {
-                        // 饼图
-                        ajaxRequest(AJAX_API.measure.detect + id, "get", {}, access_token, function (res) {
-                            if (res.code == 200) {
-                                $("#create").attr("bingliId", id);
-                                $("#create").attr("bingliId", id);
-                                var data = res.data;
-                                console.log(data)
-                                $("#progressIndex").attr("lay-percent", data.index + "%")
-                                element.init();
-                                element.progress('index', data[0].index + "%")
-                                $("#length").html((data[0].length - 0).toFixed(2))
-                                $("#width").html((data[0].width - 0).toFixed(2))
-                                $("#deep").html((data[0].deep - 0).toFixed(2))
-                                $("#area").html((data[0].area - 0).toFixed(2))
-                                var EchartsPieData = [{ name: "red", value: data.red }, { name: "yellow", value: data.yellow }, { name: "black", value: data.black }, { name: "white", value: data.white }, { name: "pink", value: data.pink }]
-                                renderEchartsPie(EchartsPieData, woundPie)
-
-                            }
-                        });
+                       
                         // 折线图
                         ajaxRequest(AJAX_API.measure.brokenline + id, "get", {}, access_token, function (res) {
                             if (res.code == 200) {
@@ -685,16 +680,67 @@
                                         $("#bodyList").append(html)
                                     })
                                 }
-                                $("#plain").val(data.plain || "")
-                                form.render()
-                                workbenchNice.resize()
+                                $("#plain").val(data.plain || "");
+                                var detect = res.data.detect;
+                                if (detect && detect.length > 0) {
+                                    $("#create").attr("bingliId", id);
+                                    renderAnalysis(detect[0])
+                                    var woundLength = res.data.woundImageList;
+                                    if (woundLength.length > 1) {
+                                        var breadcrumbHtml = [];
+                                        $.each(woundLength, function (i, item) {
+                                            var title = item.title;
+                                            breadcrumbHtml.push('<span analysisIndex = "' + i + '">' + title + '</span>')
+                                        })
+                                        $("#analysisTab").html(breadcrumbHtml.join(""))
+                                        $("#analysisTab").on("click", "span", function () {
+                                            var ind = $(this).attr("analysisIndex");
+                                            renderAnalysis(detect[ind])
+                                        })
+                                        element.init()
+                                    }
+                                    form.render()
+                                    workbenchNice.resize()
+                                    closeLayer(listLayerIndex, parent)
+                                } else {
+                                    $("#workbench").html("<iframe src='../../error/error.html' frameborder='0' style='width:100%;height:100%'></iframe>")
+                                }
+
                             }
                         })
 
                     }
 
-                    closeLayer(listLayerIndex, parent)
+                    
                 }
+
+                function renderAnalysis(obj) {
+                    $("#progressIndex").attr("lay-percent", obj.index + "%")
+                    element.init();
+                    element.progress('index', obj.index + "%")
+                    $("#length").html((obj.length - 0).toFixed(2))
+                    $("#width").html((obj.width - 0).toFixed(2))
+                    $("#deep").html((obj.deep - 0).toFixed(2))
+                    $("#area").html((obj.area - 0).toFixed(2))
+                    var EchartsPieData = [{ name: "red", value: obj.red }, { name: "yellow", value: obj.yellow }, { name: "black", value: obj.black }, { name: "white", value: obj.white }, { name: "pink", value: obj.pink }]
+                    renderEchartsPie(EchartsPieData, woundPie)
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             })

@@ -23,10 +23,10 @@ b {
     margin:10px;
 }
 .text-center {
-    text-align: center;
+    text-align: center !important;
 }
 .text-right {
-    text-align: right;
+    text-align: right !important;
 }
 html,body {
     width: 100%;
@@ -170,4 +170,9 @@ body.base-workbench {
 }
 
 /* layui style reset end */
-
+.layout .layui-form .layui-form-label {
+    width: 140px;
+}
+.layout .layui-form .layui-input-block {
+   margin-left: 140px;
+}

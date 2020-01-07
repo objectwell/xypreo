@@ -106,7 +106,7 @@
                             手机号码
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="mobile" required lay-verify="phone" placeholder="手机号码"
+                            <input type="text" name="telephone" required lay-verify="phone" placeholder="手机号码"
                                 autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -117,7 +117,7 @@
                             诊疗卡号
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="car" required lay-verify="phone" placeholder="诊疗号"
+                            <input type="text" name="bingLiCard" required lay-verify="phone" placeholder="诊疗号"
                                 autocomplete="off" class="layui-input" disabled>
                         </div>
                     </div>
@@ -146,20 +146,6 @@
                 <div class="layui-col-xs12 padding10"></div>
                 <div class="layui-col-xs12">
                     <ul class="layui-timeline" id="recordUl">
-                        <li class="layui-timeline-item">
-                            <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
-                            <div class="layui-timeline-content layui-text">
-                                <h3 class="layui-timeline-title">8月18日</h3>
-                                <p>
-                                    <b>初步诊断:</b> <span>助诊断待</span>
-                                </p>
-                                <p>
-                                    <b>病情描述:</b> <span>助诊断待</span>
-                                </p>
-
-                            </div>
-                        </li>
-
                     </ul>
                 </div>
             </div>
@@ -176,22 +162,22 @@
     <script src="../../../js/common/config.js"></script>
     <script src="../../../js/common/common.js"></script>
     <script id="record" type="text/html">
-        {{#  layui.each(d.list, function(index, item){ }}
+        {{#  layui.each(d.illnessVOs, function(index, item){ }}
             <li class="layui-timeline-item">
                 <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
                 <div class="layui-timeline-content layui-text">
-                    <h3 class="layui-timeline-title">{{ item.modname }}</h3>
+                    <h3 class="layui-timeline-title">{{ item.date }}</h3>
                     <p>
-                        <b>初步诊断:</b> <span>{{ item.alias }}</span>
+                        <b>初步诊断:</b> <span>{{ item.description || "" }}</span>
                     </p>
                     <p>
-                        <b>病情描述:</b> <span>{{ item.site || '' }}</span>
+                        <b>病情描述:</b> <span>{{ item.diagnosis || '' }}</span>
                     </p>
 
                 </div>
             </li>
         {{#  }); }}
-        {{#  if(d.list.length === 0){ }}
+        {{#  if(d.illnessVOs.length === 0){ }}
           无数据
         {{#  } }} 
         </ul>
@@ -202,18 +188,32 @@
         var form = layui.form,
             laytpl = layui.laytpl,
             $ = layui.$;
-        
-        return  false
+        var cardno = getQueryString("cardno")
+        var utoken = JSON.parse($.cookie("utoken"));
 
-        // 基本信息 
-        form.val("userInfo", data);
-        // 病历
-        var recordTpl = record.innerHTML
-            , view = document.getElementById('recordUl');
-        laytpl(recordTpl).render(data, function (html) {
-            view.innerHTML = html;
-        });
-       
+        if (!utoken && !cardno) {
+            layer.msg("您还没有登陆，请重新登陆", { icon: 2 })
+            window.location.href = "../../../login.html"
+        }
+        var patientURL = AJAX_API.patient.patient + "?keyword=" + cardno;
+
+        ajaxRequest(patientURL, "get", {}, utoken.access_token, function (res) {
+            var res = res.data.list[0];
+            // 基本信息 
+            form.val("userInfo", res);
+            console.log(res)
+            // 病历
+            var recordTpl = record.innerHTML
+                , view = document.getElementById('recordUl');
+            laytpl(recordTpl).render(res, function (html) {
+                view.innerHTML = html;
+            });
+            return false
+
+        })
+
+
+
     })
 </script>
 

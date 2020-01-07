@@ -216,7 +216,23 @@
         }
 
         .remove-list {
-            float: right;
+            margin: 0 10px;
+        }
+
+        .name-th {
+            width: 200px;
+        }
+
+        .btn-th {
+            width: 400px;
+        }
+
+        .file-img {
+            text-align: center;
+        }
+
+        .file-img img {
+            height: 40px;
         }
     </style>
 </head>
@@ -264,38 +280,48 @@
                             </div>
                         </div>
 
-                        <h4 class="form-title"> 伤口图片采集<span>(一个伤口部位最多上传3张图片，如有多个伤口部位，请点击下面增加伤口部位)</span> </h4>
-                        <div class="layui-upload">
-                            <button type="button" class="layui-btn layui-btn-normal" id="woundImageList">选择伤口图片</button>
-                            <div class="layui-upload-list">
-                                <table class="layui-table">
-                                    <thead>
-                                        <tr>
-                                            <th>伤口文件名</th>
-                                            <th>大小</th>
-                                            <th>状态</th>
-                                            <th>操作</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="woundImage"></tbody>
-                                </table>
+                        <h4 class="form-title">
+                            伤口图片采集<span>(一个伤口部位最多上传3张图片，如有多个伤口部位，请点击下面增加伤口部位)</span>
+                            <button type="button" class="layui-btn layui-btn-sm add-measure-btn fl" title="点击新增伤口"
+                                id="addMeasure">
+                                <i class="layui-icon">&#xe654;</i>新增伤口
+                            </button>
+                        </h4>
+                        <div id="woundGroup">
+                            <div class="layui-upload">
+
+                                <div class="layui-upload-list">
+                                    <table class="layui-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center name-th">伤口图片</th>
+                                                <th class="text-center">大小</th>
+                                                <th class="text-center">状态</th>
+                                                <th class="text-center btn-th"> <button type="button"
+                                                        class="layui-btn  layui-btn-xs layui-btn-normal"
+                                                        id="woundImageList">选择伤口图片</button></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="woundImage"></tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                        <button type="button" class="layui-btn layui-btn-sm add-measure-btn" title="点击新增伤口"
-                            id="addMeasure">
-                            <i class="layui-icon">&#xe654;</i>新增伤口
-                        </button>
+
+
                         <h4 class="form-title"> 病历采集<span>(最多上传3张图片)</span></h4>
                         <div class="layui-upload">
-                            <button type="button" class="layui-btn layui-btn-normal" id="infoImageList">选择病历图片</button>
                             <div class="layui-upload-list">
                                 <table class="layui-table">
                                     <thead>
                                         <tr>
-                                            <th>病历文件名</th>
-                                            <th>大小</th>
-                                            <th>状态</th>
-                                            <th>操作</th>
+                                            <th class="text-center name-th">病历图片</th>
+                                            <th class="text-center">大小</th>
+                                            <th class="text-center">状态</th>
+                                            <th class="text-center btn-th">
+                                                <button type="button" class="layui-btn layui-btn-xs layui-btn-normal"
+                                                    id="infoImageList">选择病历图片</button>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody id="infoImage"></tbody>
@@ -304,16 +330,18 @@
                         </div>
                         <h4 class="form-title"> 检验检查报告采集<span>(最多上传9张图片)</span></h4>
                         <div class="layui-upload">
-                            <button type="button" class="layui-btn layui-btn-normal"
-                                id="detecImageList">选择检验检查报告图片</button>
+
                             <div class="layui-upload-list">
                                 <table class="layui-table">
                                     <thead>
                                         <tr>
-                                            <th>检验检查报告文件名</th>
-                                            <th>大小</th>
-                                            <th>状态</th>
-                                            <th>操作</th>
+                                            <th class="text-center name-th">检验检查报告图片</th>
+                                            <th class="text-center">大小</th>
+                                            <th class="text-center">状态</th>
+                                            <th class="text-center btn-th">
+                                                <button type="button" class="layui-btn layui-btn-normal layui-btn-xs"
+                                                    id="detecImageList">选择检验检查报告图片</button>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody id="detecImage"></tbody>
@@ -332,11 +360,7 @@
                         <div class="measure-tab">
                             <div class="layui-tab layui-tab-brief" lay-filter="measureTabBrief">
                                 <ul class="layui-tab-title" id="measureTabTitle">
-                                    <li class="layui-this">伤口一</li>
-                                    <li>伤口二</li>
-                                    <li>伤口三</li>
-                                    <li>伤口四</li>
-                                    <li>伤口五</li>
+
                                 </ul>
 
                             </div>
@@ -543,10 +567,10 @@
             var consultationDate = "";
             var consulationTime = "";
             var consultationTeam = [];
-            var analysisChartsData = {};
+            var analysisChartsData = [];
             if (!utoken) {
                 layer.msg('您尚未登陆或者,或者登陆已过期，请重登陆', {
-                    time: 3000, 
+                    time: 3000,
                     btn: ['重新登陆'],
                     btn1: function () {
                         window.location.href = "../../../login_doctor.html"
@@ -607,7 +631,7 @@
                 var submitData = data.field;
                 submitData.detecImageList = detecImageList;
                 submitData.infoImageList = infoImageList;
-                submitData.woundImageList = getPostimgs (woundImageList);
+                submitData.woundImageList = getPostimgs(woundImageList);
                 var createUrl = ajaxRoot + AJAX_API.measure.create;
                 $.ajax({
                     data: JSON.stringify(submitData),
@@ -625,30 +649,48 @@
                             // 需要返回id
                             var id = res.data.bingLiId;
                             step.next('#stepForm');
+                            var step2LayerLoad = layerLoading(layer, parent)
                             // 渲染echarts
                             var woundPie = echarts.init(document.getElementById('woundPie'));
                             var woundLine = echarts.init(document.getElementById('woundLine'));
                             // 饼图
                             ajaxRequest(AJAX_API.measure.detect + id, "get", {}, access_token, function (res) {
                                 if (res.code == 200) {
+                                    var data = res.data;
+                                    if(data.length==0) {
+                                        $("body").html("<iframe src='../../error/error.html' frameborder='0' style='width:100%;height:100%'></iframe>")
+                                        closeLayer(step2LayerLoad, parent)
+                                        return false
+                                    }
+                                    analysisChartsData = data;
+                                    renderAnalysis(data[0], woundPie)
+                                    if (data.length > 1) {
+                                        var html = [];
+
+                                        for (var i = 0; i < data.length; i++) {
+                                            if (i == 0) {
+                                                html.push(' <li class="layui-this" ind=' + (i) + '>伤口' + (i + 1) + '</li>')
+                                            } else {
+                                                html.push(' <li ind=' + (i) + '>伤口' + (i + 1) + '</li>')
+                                            }
+                                        }
+                                        $("#measureTabTitle").html(html.join(""));
+                                        $("#measureTabTitle").on("click", "li", function () {
+                                            var ind = ($(this).attr("inx") - 0)
+                                            renderAnalysis(data[ind], woundPie)
+                                        })
+                                    }
                                     $("#save").attr("bingliId", id);
                                     $("#create").attr("bingliId", id);
-                                    var data = res.data;
-                                    $("#progressIndex").attr("lay-percent", data.index + "%")
-                                    element.init();
-                                    element.progress('index', data.index + "%")
-                                    $("#length").html(data.length)
-                                    $("#width").html(data.width)
-                                    $("#deep").html(data.deep)
-                                    $("#area").html(data.area)
-                                    var EchartsPieData = [{ name: "red", value: data.red }, { name: "yellow", value: data.yellow }, { name: "black", value: data.black }, { name: "white", value: data.white }, { name: "pink", value: data.pink }]
-                                    renderEchartsPie(EchartsPieData, woundPie)
-
-                                    for (k in data) {
-                                        analysisChartsData[k] = data[k]
-                                    }
+                                    
+                                    closeLayer(step2LayerLoad, parent)
                                 }
-                            });
+                            },
+                                function () {
+                                    closeLayer(step2LayerLoad, parent)
+                                    $("body").html("<iframe src='../../error/error.html' frameborder='0' style='width:100%;height:100%'></iframe>")
+                                }
+                            );
                             // 折线图
                             ajaxRequest(AJAX_API.measure.brokenline + id, "get", {}, access_token, function (res) {
                                 if (res.code == 200) {
@@ -676,7 +718,7 @@
                         }
                     },
                     error: function () {
-                        console.error('调试URL请求:' + createUrl);
+                        $("body").html("<iframe src='../../error/error.html' frameborder='0' style='width:100%;height:100%'></iframe>")
                     }
                 })
                 return false;
@@ -707,7 +749,6 @@
                         })
                     }
                 }
-                analysisChartsData.bingLiId = $("#save").attr("bingliId");
                 // 保存 测量数据
                 ajaxRequest(AJAX_API.measure.saveAnalysis, "post", JSON.stringify(analysisChartsData), access_token, function (res) {
                     if (res.code == 200) {
@@ -849,16 +890,17 @@
                     length = 1
                 }
                 var $uploadDom = $(['<div class="layui-upload">'
-                    , '<button type="button" class="layui-btn layui-btn-normal" id="woundImageList-' + length + '">选择伤口图片</button>'
-                    , '<button type="button" class="layui-btn layui-btn-danger remove-list" id="removeWoundImageList-' + length + '">删除</button>'
                     , '<div class="layui-upload-list">'
                     , '<table class="layui-table">'
                     , '<thead>'
                     , '<tr>'
-                    , '<th>伤口文件名</th>'
-                    , '<th>大小</th>'
-                    , '<th>状态</th>'
-                    , '<th>操作</th>'
+                    , '<th class="text-center name-th">伤口图片</th>'
+                    , '<th class="text-center">大小</th>'
+                    , '<th class="text-center">状态</th>'
+                    , '<th class="text-center btn-th">'
+                    , '<button type="button" class="layui-btn layui-btn-xs layui-btn-normal" id="woundImageList-' + length + '">选择伤口图片</button>'
+                    , '<button type="button" class="layui-btn layui-btn-xs layui-btn-danger remove-list" id="removeWoundImageList-' + length + '">删除</button>'
+                    , '</th>'
                     , '</tr>'
                     , '</thead>'
                     , '<tbody id="woundImage-' + length + '"></tbody>'
@@ -866,7 +908,7 @@
                     , '</div>'
                     , '</div>'].join(''));
 
-                $this.before($uploadDom)
+                $("#woundGroup").append($uploadDom)
                 $uploadDom.attr("listIndex", length);
                 woundImageList[length] = [];
                 var indexList = $uploadDom.attr("listIndex");
@@ -900,10 +942,10 @@
                         //读取本地文件
                         obj.preview(function (index, file, result) {
                             var tr = $(['<tr id="upload-' + index + '">'
-                                , '<td>' + file.name + '</td>'
-                                , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
-                                , '<td>等待上传</td>'
-                                , '<td>'
+                                , '<td class="file-img"><img src = ' + result + ' alt="img" title="' + file.name + '"></td>'
+                                , '<td class="text-center">' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                                , '<td class="text-center">等待上传</td>'
+                                , '<td class="text-center">'
                                 , '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
                                 , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
                                 , '</td>'
@@ -994,10 +1036,10 @@
                     //读取本地文件
                     obj.preview(function (index, file, result) {
                         var tr = $(['<tr id="upload-' + index + '">'
-                            , '<td>' + file.name + '</td>'
-                            , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
-                            , '<td>等待上传</td>'
-                            , '<td>'
+                            , '<td class="text-center file-img"><img src = ' + result + ' alt="img" title="' + file.name + '"></td>'
+                            , '<td class="text-center">' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                            , '<td class="text-center">等待上传</td>'
+                            , '<td class="text-center">'
                             , '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
                             , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
                             , '</td>'
@@ -1087,10 +1129,10 @@
                     //读取本地文件
                     obj.preview(function (index, file, result) {
                         var tr = $(['<tr id="upload-' + index + '">'
-                            , '<td>' + file.name + '</td>'
-                            , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
-                            , '<td>等待上传</td>'
-                            , '<td>'
+                            , '<td class="text-center file-img"><img src = ' + result + ' alt="img" title="' + file.name + '"></td>'
+                            , '<td class="text-center">' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                            , '<td class="text-center">等待上传</td>'
+                            , '<td class="text-center">'
                             , '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
                             , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
                             , '</td>'
@@ -1116,7 +1158,6 @@
                                         //删除提交的数据
                                         $.each(infoImageList, function (i, item) {
                                             var item = item;
-                                            console.log(item)
                                             if (item) {
                                                 var itemid = item.split("/").pop();
                                                 if (itemid == fileid) {
@@ -1177,10 +1218,10 @@
                     //读取本地文件
                     obj.preview(function (index, file, result) {
                         var tr = $(['<tr id="upload-' + index + '">'
-                            , '<td>' + file.name + '</td>'
-                            , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
-                            , '<td>等待上传</td>'
-                            , '<td>'
+                            , '<td class="text-center file-img"><img src = ' + result + ' alt="img" title="' + file.name + '"></td>'
+                            , '<td class="text-center">' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                            , '<td class="text-center">等待上传</td>'
+                            , '<td class="text-center">'
                             , '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
                             , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
                             , '</td>'
@@ -1206,7 +1247,6 @@
                                         //删除提交的数据
                                         $.each(detecImageList, function (i, item) {
                                             var item = item;
-                                            console.log(item)
                                             if (item) {
                                                 var itemid = item.split("/").pop();
                                                 if (itemid == fileid) {
@@ -1281,21 +1321,35 @@
                 })
             }
 
-            function getPostimgs (arr) {
-               var newArr = $.map(arr,function(n,i){
-                   var b = 0;
-                   if(n.length > 0) {
-                       b++;
-                       return {
-                           title:"伤口"+b,
-                           pics:n.join(",")
-                       }
-                   }
-               }) 
+            function getPostimgs(arr) {
+                var newArr = $.map(arr, function (n, i) {
+                    var b = 0;
+                    if (n.length > 0) {
+                        b++;
+                        return {
+                            title: "伤口" + b,
+                            pics: n.join(",")
+                        }
+                    }
+                })
 
-               return newArr
+                return newArr
             }
 
+
+
+
+            function renderAnalysis(obj, woundPie) {
+                $("#progressIndex").attr("lay-percent", obj.index + "%")
+                element.init();
+                element.progress('index', obj.index + "%")
+                $("#length").html((obj.length - 0).toFixed(2))
+                $("#width").html((obj.width - 0).toFixed(2))
+                $("#deep").html((obj.deep - 0).toFixed(2))
+                $("#area").html((obj.area - 0).toFixed(2))
+                var EchartsPieData = [{ name: "red", value: obj.red }, { name: "yellow", value: obj.yellow }, { name: "black", value: obj.black }, { name: "white", value: obj.white }, { name: "pink", value: obj.pink }]
+                renderEchartsPie(EchartsPieData, woundPie)
+            }
         })
     })
 </script>
